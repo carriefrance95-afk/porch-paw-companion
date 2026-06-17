@@ -1,10 +1,13 @@
 import React from 'react';
 import { usePets } from '../context/PetContext';
-import { PawPrint, Heart, Bell, Calendar, Syringe, Plus, ShieldAlert, Clock, MapPin } from 'lucide-react';
+import { 
+  PawPrint, Heart, Bell, Calendar, Syringe, Plus, ShieldAlert, 
+  Clock, MapPin, Book, Users, ChefHat, ShoppingBag 
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
-  const { profiles, vaccines, medications, appointments } = usePets();
+  const { profiles, vaccines, medications, appointments, journal } = usePets();
 
   const upcomingVaccines = vaccines
     .filter(v => new Date(v.nextDueDate) > new Date())
@@ -43,16 +46,16 @@ const Dashboard: React.FC = () => {
             <div className="stat-figure text-primary"><PawPrint size={32} /></div>
             <div className="stat-title font-semibold">Dog Profiles</div>
             <div className="stat-value text-primary">{profiles.length}</div>
-            <div className="stat-desc"><Link to="/profiles" className="link link-hover">Manage profiles</Link></div>
+            <div className="stat-desc"><Link to="/profiles" className="link link-hover text-xs">Manage profiles</Link></div>
           </div>
         </div>
         
         <div className="stats shadow bg-base-100 border border-base-200 rounded-3xl">
           <div className="stat">
             <div className="stat-figure text-secondary"><Heart size={32} /></div>
-            <div className="stat-title font-semibold">Medications</div>
+            <div className="stat-title font-semibold">Active Meds</div>
             <div className="stat-value text-secondary">{activeMeds.length}</div>
-            <div className="stat-desc"><Link to="/health" className="link link-hover text-secondary">Active doses</Link></div>
+            <div className="stat-desc"><Link to="/health" className="link link-hover text-secondary text-xs">View health center</Link></div>
           </div>
         </div>
 
@@ -61,22 +64,23 @@ const Dashboard: React.FC = () => {
             <div className="stat-figure text-accent"><Bell size={32} /></div>
             <div className="stat-title font-semibold">Reminders</div>
             <div className="stat-value text-accent">{allReminders.length}</div>
-            <div className="stat-desc"><Link to="/reminders" className="link link-hover text-accent">Next 7 days</Link></div>
+            <div className="stat-desc"><Link to="/reminders" className="link link-hover text-accent text-xs">Next 7 days</Link></div>
           </div>
         </div>
 
         <div className="stats shadow bg-base-100 border border-base-200 rounded-3xl">
           <div className="stat">
-            <div className="stat-figure text-info"><Calendar size={32} /></div>
+            <div className="stat-figure text-info"><Book size={32} /></div>
             <div className="stat-title font-semibold">Journal</div>
-            <div className="stat-value text-info">0</div>
-            <div className="stat-desc">Memories captured</div>
+            <div className="stat-value text-info">{journal.length}</div>
+            <div className="stat-desc"><Link to="/journal" className="link link-hover text-info text-xs">Captured moments</Link></div>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
+          {/* Reminders Section */}
           <div className="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold flex items-center gap-3">
@@ -115,6 +119,18 @@ const Dashboard: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* Secondary Quick Links */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link to="/directory" className="bg-base-100 p-6 rounded-[2rem] border border-base-200 flex items-center gap-4 hover:shadow-lg transition-shadow">
+              <div className="bg-info/10 p-4 rounded-2xl text-info"><Users /></div>
+              <div><h4 className="font-bold">Care Directory</h4><p className="text-xs opacity-60">Vets, groomers & more</p></div>
+            </Link>
+            <Link to="/content" className="bg-base-100 p-6 rounded-[2rem] border border-base-200 flex items-center gap-4 hover:shadow-lg transition-shadow">
+              <div className="bg-secondary/10 p-4 rounded-2xl text-secondary"><ChefHat /></div>
+              <div><h4 className="font-bold">Cookbook</h4><p className="text-xs opacity-60">Healthy dog recipes</p></div>
+            </Link>
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -132,11 +148,11 @@ const Dashboard: React.FC = () => {
           <div className="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200">
             <h3 className="text-xl font-bold mb-6">Quick Actions</h3>
             <div className="grid grid-cols-1 gap-3">
-              <Link to="/profiles" className="btn btn-ghost bg-base-200 hover:bg-primary hover:text-primary-content rounded-2xl justify-start gap-4 h-auto py-3">
+              <Link to="/journal" className="btn btn-ghost bg-base-200 hover:bg-primary hover:text-primary-content rounded-2xl justify-start gap-4 h-auto py-3">
                 <Plus size={20} /> 
                 <div className="text-left">
-                  <div className="font-bold">Add Profile</div>
-                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">New Dog</div>
+                  <div className="font-bold">New Journal Entry</div>
+                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Track Today</div>
                 </div>
               </Link>
               <Link to="/reminders" className="btn btn-ghost bg-base-200 hover:bg-accent hover:text-accent-content rounded-2xl justify-start gap-4 h-auto py-3">
@@ -146,11 +162,18 @@ const Dashboard: React.FC = () => {
                   <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Reminders</div>
                 </div>
               </Link>
-              <Link to="/emergency" className="btn btn-ghost bg-base-200 hover:bg-error hover:text-error-content rounded-2xl justify-start gap-4 h-auto py-3">
-                <ShieldAlert size={20} /> 
+              <Link to="/travel" className="btn btn-ghost bg-base-200 hover:bg-info hover:text-info-content rounded-2xl justify-start gap-4 h-auto py-3">
+                <ShoppingBag size={20} /> 
                 <div className="text-left">
-                  <div className="font-bold">Emergency Kit</div>
-                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Safety First</div>
+                  <div className="font-bold">Packing List</div>
+                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Travel Ready</div>
+                </div>
+              </Link>
+              <Link to="/store" className="btn btn-ghost bg-base-200 hover:bg-secondary hover:text-secondary-content rounded-2xl justify-start gap-4 h-auto py-3">
+                <ShoppingBag size={20} /> 
+                <div className="text-left">
+                  <div className="font-bold">Shop Boutique</div>
+                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Premium Gear</div>
                 </div>
               </Link>
             </div>
