@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { DogProfile, VaccineRecord, Medication, Allergy, Surgery } from '../types';
+import { 
+  type DogProfile, type VaccineRecord, type Medication, type Allergy, type Surgery, type VetVisit, type WeightEntry,
+  type Appointment, type EmergencyContact, type PetSitterInstructions, type LostPetFlyer
+} from '../types';
 
 interface PetContextType {
   profiles: DogProfile[];
@@ -7,13 +10,56 @@ interface PetContextType {
   medications: Medication[];
   allergies: Allergy[];
   surgeries: Surgery[];
+  vetVisits: VetVisit[];
+  appointments: Appointment[];
+  emergencyContacts: EmergencyContact[];
+  sitterInstructions: PetSitterInstructions[];
+  lostPetFlyers: LostPetFlyer[];
+  
+  // Profile Methods
   addProfile: (profile: DogProfile) => void;
   updateProfile: (profile: DogProfile) => void;
   deleteProfile: (id: string) => void;
+  
+  // Record Methods
   addVaccine: (vaccine: VaccineRecord) => void;
+  updateVaccine: (vaccine: VaccineRecord) => void;
+  deleteVaccine: (id: string) => void;
+  
   addMedication: (medication: Medication) => void;
+  updateMedication: (medication: Medication) => void;
+  deleteMedication: (id: string) => void;
+  
   addAllergy: (allergy: Allergy) => void;
+  updateAllergy: (allergy: Allergy) => void;
+  deleteAllergy: (id: string) => void;
+  
   addSurgery: (surgery: Surgery) => void;
+  updateSurgery: (surgery: Surgery) => void;
+  deleteSurgery: (id: string) => void;
+  
+  addVetVisit: (visit: VetVisit) => void;
+  updateVetVisit: (visit: VetVisit) => void;
+  deleteVetVisit: (id: string) => void;
+
+  // Appointment Methods
+  addAppointment: (appointment: Appointment) => void;
+  updateAppointment: (appointment: Appointment) => void;
+  deleteAppointment: (id: string) => void;
+
+  // Emergency Contact Methods
+  addEmergencyContact: (contact: EmergencyContact) => void;
+  updateEmergencyContact: (contact: EmergencyContact) => void;
+  deleteEmergencyContact: (id: string) => void;
+
+  // Sitter Instructions Methods
+  updateSitterInstructions: (instructions: PetSitterInstructions) => void;
+
+  // Lost Pet Flyer Methods
+  updateLostPetFlyer: (flyer: LostPetFlyer) => void;
+  
+  // Helper Methods
+  addWeightEntry: (dogId: string, entry: WeightEntry) => void;
 }
 
 const PetContext = createContext<PetContextType | undefined>(undefined);
@@ -24,55 +70,136 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [medications, setMedications] = useState<Medication[]>([]);
   const [allergies, setAllergies] = useState<Allergy[]>([]);
   const [surgeries, setSurgeries] = useState<Surgery[]>([]);
+  const [vetVisits, setVetVisits] = useState<VetVisit[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
+  const [sitterInstructions, setSitterInstructions] = useState<PetSitterInstructions[]>([]);
+  const [lostPetFlyers, setLostPetFlyers] = useState<LostPetFlyer[]>([]);
 
+  // Load from LocalStorage
   useEffect(() => {
-    const storedProfiles = localStorage.getItem('pet_profiles');
-    const storedVaccines = localStorage.getItem('pet_vaccines');
-    const storedMedications = localStorage.getItem('pet_medications');
-    const storedAllergies = localStorage.getItem('pet_allergies');
-    const storedSurgeries = localStorage.getItem('pet_surgeries');
+    const dataHandlers: Record<string, (val: any) => void> = {
+      pet_profiles: setProfiles,
+      pet_vaccines: setVaccines,
+      pet_medications: setMedications,
+      pet_allergies: setAllergies,
+      pet_surgeries: setSurgeries,
+      pet_vet_visits: setVetVisits,
+      pet_appointments: setAppointments,
+      pet_emergency_contacts: setEmergencyContacts,
+      pet_sitter_instructions: setSitterInstructions,
+      pet_lost_pet_flyers: setLostPetFlyers,
+    };
 
-    if (storedProfiles) setProfiles(JSON.parse(storedProfiles));
-    if (storedVaccines) setVaccines(JSON.parse(storedVaccines));
-    if (storedMedications) setMedications(JSON.parse(storedMedications));
-    if (storedAllergies) setAllergies(JSON.parse(storedAllergies));
-    if (storedSurgeries) setSurgeries(JSON.parse(storedSurgeries));
+    Object.entries(dataHandlers).forEach(([key, setter]) => {
+      const stored = localStorage.getItem(key);
+      if (stored) {
+        try {
+          setter(JSON.parse(stored));
+        } catch (e) {
+          console.error(`Error parsing ${key}`, e);
+        }
+      }
+    });
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('pet_profiles', JSON.stringify(profiles));
-  }, [profiles]);
+  // Save to LocalStorage
+  useEffect(() => { localStorage.setItem('pet_profiles', JSON.stringify(profiles)); }, [profiles]);
+  useEffect(() => { localStorage.setItem('pet_vaccines', JSON.stringify(vaccines)); }, [vaccines]);
+  useEffect(() => { localStorage.setItem('pet_medications', JSON.stringify(medications)); }, [medications]);
+  useEffect(() => { localStorage.setItem('pet_allergies', JSON.stringify(allergies)); }, [allergies]);
+  useEffect(() => { localStorage.setItem('pet_surgeries', JSON.stringify(surgeries)); }, [surgeries]);
+  useEffect(() => { localStorage.setItem('pet_vet_visits', JSON.stringify(vetVisits)); }, [vetVisits]);
+  useEffect(() => { localStorage.setItem('pet_appointments', JSON.stringify(appointments)); }, [appointments]);
+  useEffect(() => { localStorage.setItem('pet_emergency_contacts', JSON.stringify(emergencyContacts)); }, [emergencyContacts]);
+  useEffect(() => { localStorage.setItem('pet_sitter_instructions', JSON.stringify(sitterInstructions)); }, [sitterInstructions]);
+  useEffect(() => { localStorage.setItem('pet_lost_pet_flyers', JSON.stringify(lostPetFlyers)); }, [lostPetFlyers]);
 
-  useEffect(() => {
-    localStorage.setItem('pet_vaccines', JSON.stringify(vaccines));
-  }, [vaccines]);
+  // Handlers
+  const addProfile = (p: DogProfile) => setProfiles(prev => [...prev, p]);
+  const updateProfile = (p: DogProfile) => setProfiles(prev => prev.map(item => item.id === p.id ? p : item));
+  const deleteProfile = (id: string) => {
+    setProfiles(prev => prev.filter(p => p.id !== id));
+    setVaccines(prev => prev.filter(v => v.dogId !== id));
+    setMedications(prev => prev.filter(m => m.dogId !== id));
+    setAllergies(prev => prev.filter(a => a.dogId !== id));
+    setSurgeries(prev => prev.filter(s => s.dogId !== id));
+    setVetVisits(prev => prev.filter(v => v.dogId !== id));
+    setAppointments(prev => prev.filter(a => a.dogId !== id));
+    setSitterInstructions(prev => prev.filter(s => s.dogId !== id));
+    setLostPetFlyers(prev => prev.filter(f => f.dogId !== id));
+  };
 
-  useEffect(() => {
-    localStorage.setItem('pet_medications', JSON.stringify(medications));
-  }, [medications]);
+  const addVaccine = (v: VaccineRecord) => setVaccines(prev => [...prev, v]);
+  const updateVaccine = (v: VaccineRecord) => setVaccines(prev => prev.map(i => i.id === v.id ? v : i));
+  const deleteVaccine = (id: string) => setVaccines(prev => prev.filter(i => i.id !== id));
 
-  useEffect(() => {
-    localStorage.setItem('pet_allergies', JSON.stringify(allergies));
-  }, [allergies]);
+  const addMedication = (m: Medication) => setMedications(prev => [...prev, m]);
+  const updateMedication = (m: Medication) => setMedications(prev => prev.map(i => i.id === m.id ? m : i));
+  const deleteMedication = (id: string) => setMedications(prev => prev.filter(i => i.id !== id));
 
-  useEffect(() => {
-    localStorage.setItem('pet_surgeries', JSON.stringify(surgeries));
-  }, [surgeries]);
+  const addAllergy = (a: Allergy) => setAllergies(prev => [...prev, a]);
+  const updateAllergy = (a: Allergy) => setAllergies(prev => prev.map(i => i.id === a.id ? a : i));
+  const deleteAllergy = (id: string) => setAllergies(prev => prev.filter(i => i.id !== id));
 
-  const addProfile = (profile: DogProfile) => setProfiles([...profiles, profile]);
-  const updateProfile = (profile: DogProfile) => setProfiles(profiles.map(p => p.id === profile.id ? profile : p));
-  const deleteProfile = (id: string) => setProfiles(profiles.filter(p => p.id !== id));
-  
-  const addVaccine = (vaccine: VaccineRecord) => setVaccines([...vaccines, vaccine]);
-  const addMedication = (medication: Medication) => setMedications([...medications, medication]);
-  const addAllergy = (allergy: Allergy) => setAllergies([...allergies, allergy]);
-  const addSurgery = (surgery: Surgery) => setSurgeries([...surgeries, surgery]);
+  const addSurgery = (s: Surgery) => setSurgeries(prev => [...prev, s]);
+  const updateSurgery = (s: Surgery) => setSurgeries(prev => prev.map(i => i.id === s.id ? s : i));
+  const deleteSurgery = (id: string) => setSurgeries(prev => prev.filter(i => i.id !== id));
+
+  const addVetVisit = (v: VetVisit) => setVetVisits(prev => [...prev, v]);
+  const updateVetVisit = (v: VetVisit) => setVetVisits(prev => prev.map(i => i.id === v.id ? v : i));
+  const deleteVetVisit = (id: string) => setVetVisits(prev => prev.filter(i => i.id !== id));
+
+  const addAppointment = (a: Appointment) => setAppointments(prev => [...prev, a]);
+  const updateAppointment = (a: Appointment) => setAppointments(prev => prev.map(item => item.id === a.id ? a : item));
+  const deleteAppointment = (id: string) => setAppointments(prev => prev.filter(a => a.id !== id));
+
+  const addEmergencyContact = (c: EmergencyContact) => setEmergencyContacts(prev => [...prev, c]);
+  const updateEmergencyContact = (c: EmergencyContact) => setEmergencyContacts(prev => prev.map(item => item.id === c.id ? c : item));
+  const deleteEmergencyContact = (id: string) => setEmergencyContacts(prev => prev.filter(c => c.id !== id));
+
+  const updateSitterInstructions = (instr: PetSitterInstructions) => {
+    setSitterInstructions(prev => {
+      const exists = prev.find(s => s.dogId === instr.dogId);
+      if (exists) return prev.map(s => s.dogId === instr.dogId ? instr : s);
+      return [...prev, instr];
+    });
+  };
+
+  const updateLostPetFlyer = (flyer: LostPetFlyer) => {
+    setLostPetFlyers(prev => {
+      const exists = prev.find(f => f.dogId === flyer.dogId);
+      if (exists) return prev.map(f => f.dogId === flyer.dogId ? flyer : f);
+      return [...prev, flyer];
+    });
+  };
+
+  const addWeightEntry = (dogId: string, entry: WeightEntry) => {
+    setProfiles(prev => prev.map(p => {
+      if (p.id === dogId) {
+        return {
+          ...p,
+          currentWeight: entry.weight,
+          weightHistory: [...(p.weightHistory || []), entry].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        };
+      }
+      return p;
+    }));
+  };
 
   return (
     <PetContext.Provider value={{
-      profiles, vaccines, medications, allergies, surgeries,
+      profiles, vaccines, medications, allergies, surgeries, vetVisits, appointments, emergencyContacts, sitterInstructions, lostPetFlyers,
       addProfile, updateProfile, deleteProfile,
-      addVaccine, addMedication, addAllergy, addSurgery
+      addVaccine, updateVaccine, deleteVaccine,
+      addMedication, updateMedication, deleteMedication,
+      addAllergy, updateAllergy, deleteAllergy,
+      addSurgery, updateSurgery, deleteSurgery,
+      addVetVisit, updateVetVisit, deleteVetVisit,
+      addAppointment, updateAppointment, deleteAppointment,
+      addEmergencyContact, updateEmergencyContact, deleteEmergencyContact,
+      updateSitterInstructions, updateLostPetFlyer,
+      addWeightEntry
     }}>
       {children}
     </PetContext.Provider>

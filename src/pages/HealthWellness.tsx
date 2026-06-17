@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { usePets } from '../context/PetContext';
 import HealthSection from '../components/HealthSection';
-import { Syringe, Pill, AlertTriangle, Activity, ChevronRight, PawPrint, X } from 'lucide-react';
-import { VaccineRecord, Medication, Allergy, Surgery } from '../types';
+import HealthTimeline from '../components/HealthTimeline';
+import WeightHistory from '../components/WeightHistory';
+import WellnessReport from '../components/WellnessReport';
+import { 
+  Syringe, Pill, AlertTriangle, Activity, ChevronRight, 
+  PawPrint, X, Stethoscope, Clock, FileText, Printer, Scale
+} from 'lucide-react';
+import { type VaccineRecord, type Medication, type Allergy, type Surgery, type VetVisit } from '../types';
 
 const HealthWellness: React.FC = () => {
   const { 
-    profiles, vaccines, medications, allergies, surgeries,
-    addVaccine, addMedication, addAllergy, addSurgery 
+    profiles, vaccines, medications, allergies, surgeries, vetVisits,
+    addVaccine, addMedication, addAllergy, addSurgery, addVetVisit 
   } = usePets();
   
-  const [selectedDogId, setSelectedDogId] = useState<string>(profiles[0]?.id || '');
-  const [modalType, setModalType] = useState<'vaccine' | 'medication' | 'allergy' | 'surgery' | null>(null);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const dogIdFromUrl = queryParams.get('dogId');
+
+  const [selectedDogId, setSelectedDogId] = useState<string>(dogIdFromUrl || profiles[0]?.id || '');
+  const [modalType, setModalType] = useState<'vaccine' | 'medication' | 'allergy' | 'surgery' | 'vetVisit' | 'report' | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'timeline' | 'weight'>('overview');
+
+  useEffect(() => {
+    if (dogIdFromUrl) setSelectedDogId(dogIdFromUrl);
+  }, [dogIdFromUrl]);
 
   const selectedDog = profiles.find(p => p.id === selectedDogId);
   
@@ -19,166 +35,315 @@ const HealthWellness: React.FC = () => {
   const dogMedications = medications.filter(m => m.dogId === selectedDogId);
   const dogAllergies = allergies.filter(a => a.dogId === selectedDogId);
   const dogSurgeries = surgeries.filter(s => s.dogId === selectedDogId);
+  const dogVetVisits = vetVisits.filter(v => v.dogId === selectedDogId);
 
-  const [newVaccine, setNewVaccine] = useState<Partial<VaccineRecord>>({ vaccineName: '', dateAdministered: '', nextDueDate: '' });
-  const [newMedication, setNewMedication] = useState<Partial<Medication>>({ name: '', dosage: '', frequency: '', startDate: '', active: true });
-  const [newAllergy, setNewAllergy] = useState<Partial<Allergy>>({ allergen: '', severity: 'low' });
-  const [newSurgery, setNewSurgery] = useState<Partial<Surgery>>({ procedure: '', date: '' });
+  // Form States
+  const [newVaccine, setNewVaccine] = useState<Partial<VaccineRecord>>({ vaccineName: '', dateAdministered: '', nextDueDate: '', notes: '' });
+  const [newMedication, setNewMedication] = useState<Partial<Medication>>({ name: '', dosage: '', frequency: '', startDate: '', active: true, notes: '' });
+  const [newAllergy, setNewAllergy] = useState<Partial<Allergy>>({ allergen: '', severity: 'low', notes: '' });
+  const [newSurgery, setNewSurgery] = useState<Partial<Surgery>>({ procedure: '', date: '', notes: '' });
+  const [newVetVisit, setNewVetVisit] = useState<Partial<VetVisit>>({ date: '', reason: '', notes: '', veterinarian: '' });
 
   const handleAddVaccine = (e: React.FormEvent) => {
     e.preventDefault();
     addVaccine({ ...newVaccine as VaccineRecord, id: crypto.randomUUID(), dogId: selectedDogId });
     setModalType(null);
-    setNewVaccine({ vaccineName: '', dateAdministered: '', nextDueDate: '' });
+    setNewVaccine({ vaccineName: '', dateAdministered: '', nextDueDate: '', notes: '' });
   };
 
   const handleAddMedication = (e: React.FormEvent) => {
     e.preventDefault();
     addMedication({ ...newMedication as Medication, id: crypto.randomUUID(), dogId: selectedDogId });
     setModalType(null);
-    setNewMedication({ name: '', dosage: '', frequency: '', startDate: '', active: true });
+    setNewMedication({ name: '', dosage: '', frequency: '', startDate: '', active: true, notes: '' });
   };
 
   const handleAddAllergy = (e: React.FormEvent) => {
     e.preventDefault();
     addAllergy({ ...newAllergy as Allergy, id: crypto.randomUUID(), dogId: selectedDogId });
     setModalType(null);
-    setNewAllergy({ allergen: '', severity: 'low' });
+    setNewAllergy({ allergen: '', severity: 'low', notes: '' });
   };
 
   const handleAddSurgery = (e: React.FormEvent) => {
     e.preventDefault();
     addSurgery({ ...newSurgery as Surgery, id: crypto.randomUUID(), dogId: selectedDogId });
     setModalType(null);
-    setNewSurgery({ procedure: '', date: '' });
+    setNewSurgery({ procedure: '', date: '', notes: '' });
+  };
+
+  const handleAddVetVisit = (e: React.FormEvent) => {
+    e.preventDefault();
+    addVetVisit({ ...newVetVisit as VetVisit, id: crypto.randomUUID(), dogId: selectedDogId });
+    setModalType(null);
+    setNewVetVisit({ date: '', reason: '', notes: '', veterinarian: '' });
   };
 
   if (profiles.length === 0) {
     return (
-      <div className="p-6 text-center py-20">
-        <h2 className="text-2xl font-bold mb-4">No Dog Profiles Found</h2>
-        <p className="opacity-70 mb-6">Please create a dog profile first to track their health.</p>
-        <a href="/profiles" className="btn btn-primary">Go to Profiles</a>
+      <div className="p-6 text-center py-24 bg-base-200 min-h-screen">
+        <div className="max-w-md mx-auto bg-base-100 p-10 rounded-[3rem] shadow-xl border border-base-300">
+          <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <PawPrint size={40} className="text-primary" />
+          </div>
+          <h2 className="text-3xl font-bold mb-4">No Dog Profiles Found</h2>
+          <p className="opacity-70 mb-8">Please create a dog profile first to start tracking their medical records and wellness history.</p>
+          <a href="/profiles" className="btn btn-primary rounded-full px-8">Create First Profile</a>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <div>
-          <h1 className="text-4xl font-bold text-primary">Health & Wellness</h1>
-          <p className="text-neutral-content opacity-70">Track medical records and wellness history</p>
+    <div className="p-6 max-w-7xl mx-auto mb-20">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
+        <div className="flex items-center gap-5">
+          <div className="avatar">
+            <div className="w-20 rounded-[2rem] bg-primary/10 flex items-center justify-center overflow-hidden border-2 border-primary/20">
+              {selectedDog?.photoUrl ? (
+                <img src={selectedDog.photoUrl} alt="Dog" />
+              ) : (
+                <PawPrint size={32} className="text-primary" />
+              )}
+            </div>
+          </div>
+          <div>
+            <h1 className="text-4xl font-black text-primary tracking-tight">{selectedDog?.name}'s Wellness</h1>
+            <p className="text-neutral-content font-bold opacity-60 flex items-center gap-2">
+              {selectedDog?.breed} <span className="text-primary/30 text-xs">•</span> {selectedDog?.currentWeight} kg
+            </p>
+          </div>
         </div>
         
-        <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn btn-outline btn-primary gap-2 bg-base-100">
-            <PawPrint size={18} />
-            {selectedDog?.name || 'Select Dog'}
-            <ChevronRight size={18} className="rotate-90" />
+        <div className="flex items-center gap-3">
+          <button className="btn btn-ghost border-base-300 bg-base-100 rounded-2xl gap-2" onClick={() => setModalType('report')}>
+            <Printer size={18} /> <span className="hidden sm:inline">Wellness Report</span>
+          </button>
+          
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="btn btn-primary rounded-2xl gap-2 shadow-lg">
+              <ChevronRight size={18} className="rotate-90" />
+              Switch Profile
+            </div>
+            <ul tabIndex={0} className="dropdown-content z-[10] menu p-2 shadow-2xl bg-base-100 rounded-2xl w-60 mt-2 border border-base-200">
+              <li className="menu-title opacity-50">Your Furry Family</li>
+              {profiles.map(p => (
+                <li key={p.id}>
+                  <button 
+                    className={`rounded-xl py-3 ${selectedDogId === p.id ? 'bg-primary/10 text-primary font-bold' : ''}`}
+                    onClick={() => setSelectedDogId(p.id)}
+                  >
+                    <PawPrint size={14} /> {p.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-            {profiles.map(p => (
-              <li key={p.id}><button onClick={() => setSelectedDogId(p.id)}>{p.name}</button></li>
-            ))}
-          </ul>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <HealthSection title="Vaccinations" icon={<Syringe size={20} />} onAdd={() => setModalType('vaccine')}>
-          {dogVaccines.length === 0 ? (
-            <p className="text-sm opacity-50 py-4 text-center">No vaccine records found.</p>
-          ) : (
-            dogVaccines.map(v => (
-              <div key={v.id} className="flex justify-between items-center p-3 bg-base-200 rounded-xl border border-base-300">
-                <div>
-                  <p className="font-bold text-sm">{v.vaccineName}</p>
-                  <p className="text-xs opacity-70">Administered: {v.dateAdministered}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs font-semibold text-primary">Next due:</p>
-                  <p className="text-xs">{v.nextDueDate}</p>
-                </div>
-              </div>
-            ))
-          )}
-        </HealthSection>
-
-        <HealthSection title="Medications" icon={<Pill size={20} />} onAdd={() => setModalType('medication')}>
-          {dogMedications.length === 0 ? (
-            <p className="text-sm opacity-50 py-4 text-center">No current medications.</p>
-          ) : (
-            dogMedications.map(m => (
-              <div key={m.id} className="flex justify-between items-center p-3 bg-base-200 rounded-xl border border-base-300">
-                <div>
-                  <p className="font-bold text-sm">{m.name}</p>
-                  <p className="text-xs opacity-70">{m.dosage} - {m.frequency}</p>
-                </div>
-                <div className={`badge badge-sm ${m.active ? 'badge-success' : 'badge-ghost opacity-50'}`}>
-                  {m.active ? 'Active' : 'Completed'}
-                </div>
-              </div>
-            ))
-          )}
-        </HealthSection>
-
-        <HealthSection title="Allergies" icon={<AlertTriangle size={20} />} onAdd={() => setModalType('allergy')}>
-          {dogAllergies.length === 0 ? (
-            <p className="text-sm opacity-50 py-4 text-center">No known allergies.</p>
-          ) : (
-            dogAllergies.map(a => (
-              <div key={a.id} className="flex justify-between items-center p-3 bg-base-200 rounded-xl border border-base-300">
-                <p className="font-bold text-sm">{a.allergen}</p>
-                <div className={`badge badge-sm ${
-                  a.severity === 'high' ? 'badge-error' : a.severity === 'medium' ? 'badge-warning' : 'badge-info'
-                }`}>
-                  {a.severity}
-                </div>
-              </div>
-            ))
-          )}
-        </HealthSection>
-
-        <HealthSection title="Surgeries & Procedures" icon={<Activity size={20} />} onAdd={() => setModalType('surgery')}>
-          {dogSurgeries.length === 0 ? (
-            <p className="text-sm opacity-50 py-4 text-center">No surgery records.</p>
-          ) : (
-            dogSurgeries.map(s => (
-              <div key={s.id} className="p-3 bg-base-200 rounded-xl border border-base-300">
-                <p className="font-bold text-sm">{s.procedure}</p>
-                <p className="text-xs opacity-70">{s.date}</p>
-              </div>
-            ))
-          )}
-        </HealthSection>
+      <div className="tabs tabs-box bg-base-200 p-1 rounded-[2rem] inline-flex mb-8">
+        <button 
+          className={`tab px-8 h-12 rounded-[1.8rem] font-bold transition-all ${activeTab === 'overview' ? 'tab-active bg-base-100 shadow-md !text-primary' : 'opacity-50'}`}
+          onClick={() => setActiveTab('overview')}
+        >
+          Overview
+        </button>
+        <button 
+          className={`tab px-8 h-12 rounded-[1.8rem] font-bold transition-all ${activeTab === 'timeline' ? 'tab-active bg-base-100 shadow-md !text-primary' : 'opacity-50'}`}
+          onClick={() => setActiveTab('timeline')}
+        >
+          History
+        </button>
+        <button 
+          className={`tab px-8 h-12 rounded-[1.8rem] font-bold transition-all ${activeTab === 'weight' ? 'tab-active bg-base-100 shadow-md !text-primary' : 'opacity-50'}`}
+          onClick={() => setActiveTab('weight')}
+        >
+          Weight
+        </button>
       </div>
+
+      {activeTab === 'overview' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <HealthSection title="Vaccinations" icon={<Syringe size={20} />} onAdd={() => setModalType('vaccine')}>
+              {dogVaccines.length === 0 ? (
+                <p className="text-sm opacity-50 py-10 text-center bg-base-200/50 rounded-2xl border border-dashed border-base-300">No vaccine records found.</p>
+              ) : (
+                dogVaccines.map(v => (
+                  <div key={v.id} className="group flex justify-between items-center p-4 bg-base-100 border border-base-200 rounded-2xl hover:border-primary/30 transition-colors">
+                    <div>
+                      <p className="font-black text-sm uppercase tracking-tight">{v.vaccineName}</p>
+                      <p className="text-xs opacity-60 flex items-center gap-1 mt-0.5"><Clock size={10}/> Administered: {v.dateAdministered}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] font-black uppercase text-primary tracking-widest opacity-50">Next due</p>
+                      <p className="text-xs font-bold">{v.nextDueDate}</p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </HealthSection>
+
+            <HealthSection title="Medications" icon={<Pill size={20} />} onAdd={() => setModalType('medication')}>
+              {dogMedications.length === 0 ? (
+                <p className="text-sm opacity-50 py-10 text-center bg-base-200/50 rounded-2xl border border-dashed border-base-300">No current medications.</p>
+              ) : (
+                dogMedications.map(m => (
+                  <div key={m.id} className="flex justify-between items-center p-4 bg-base-100 border border-base-200 rounded-2xl">
+                    <div>
+                      <p className="font-black text-sm uppercase tracking-tight">{m.name}</p>
+                      <p className="text-xs opacity-60 mt-0.5">{m.dosage} <span className="opacity-30">|</span> {m.frequency}</p>
+                    </div>
+                    <div className={`badge badge-sm font-black uppercase text-[10px] ${m.active ? 'badge-success text-white' : 'badge-ghost opacity-50'}`}>
+                      {m.active ? 'Active' : 'Completed'}
+                    </div>
+                  </div>
+                ))
+              )}
+            </HealthSection>
+
+            <HealthSection title="Allergies" icon={<AlertTriangle size={20} />} onAdd={() => setModalType('allergy')}>
+              {dogAllergies.length === 0 ? (
+                <p className="text-sm opacity-50 py-10 text-center bg-base-200/50 rounded-2xl border border-dashed border-base-300">No known allergies.</p>
+              ) : (
+                dogAllergies.map(a => (
+                  <div key={a.id} className="flex justify-between items-center p-4 bg-base-100 border border-base-200 rounded-2xl">
+                    <p className="font-black text-sm uppercase tracking-tight">{a.allergen}</p>
+                    <div className={`badge badge-sm font-black uppercase text-[10px] ${
+                      a.severity === 'high' ? 'badge-error text-white' : a.severity === 'medium' ? 'badge-warning text-white' : 'badge-info text-white'
+                    }`}>
+                      {a.severity}
+                    </div>
+                  </div>
+                ))
+              )}
+            </HealthSection>
+
+            <HealthSection title="Surgeries" icon={<Activity size={20} />} onAdd={() => setModalType('surgery')}>
+              {dogSurgeries.length === 0 ? (
+                <p className="text-sm opacity-50 py-10 text-center bg-base-200/50 rounded-2xl border border-dashed border-base-300">No surgery records.</p>
+              ) : (
+                dogSurgeries.map(s => (
+                  <div key={s.id} className="p-4 bg-base-100 border border-base-200 rounded-2xl">
+                    <p className="font-black text-sm uppercase tracking-tight">{s.procedure}</p>
+                    <p className="text-xs opacity-60 flex items-center gap-1 mt-0.5"><Clock size={10}/> {s.date}</p>
+                  </div>
+                ))
+              )}
+            </HealthSection>
+          </div>
+
+          <div className="space-y-8">
+            <HealthSection title="Vet Visits" icon={<Stethoscope size={20} />} onAdd={() => setModalType('vetVisit')}>
+               {dogVetVisits.length === 0 ? (
+                <p className="text-sm opacity-50 py-10 text-center bg-base-200/50 rounded-2xl border border-dashed border-base-300">No vet visits logged.</p>
+              ) : (
+                <div className="space-y-4">
+                  {dogVetVisits.slice(0, 3).map(v => (
+                    <div key={v.id} className="p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                      <div className="flex justify-between items-start mb-2">
+                        <p className="font-bold text-sm">{v.reason}</p>
+                        <p className="text-[10px] font-black opacity-40">{v.date}</p>
+                      </div>
+                      <p className="text-xs opacity-70 line-clamp-2 italic">"{v.notes}"</p>
+                    </div>
+                  ))}
+                  {dogVetVisits.length > 3 && (
+                    <button className="btn btn-ghost btn-sm btn-block text-primary">View All Visits</button>
+                  )}
+                </div>
+              )}
+            </HealthSection>
+
+            <div className="bg-primary text-primary-content rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden">
+              <div className="absolute -right-4 -bottom-4 opacity-10 rotate-12">
+                <Stethoscope size={120} />
+              </div>
+              <h3 className="text-2xl font-black mb-2">Health Tip</h3>
+              <p className="text-sm opacity-90 leading-relaxed font-medium mb-6">
+                Keep a digital copy of all medical records. It makes emergency vet visits much smoother!
+              </p>
+              <button className="btn btn-secondary btn-sm rounded-full px-6" onClick={() => setModalType('report')}>Generate Report</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'timeline' && (
+        <div className="bg-base-100 rounded-[3rem] p-10 border border-base-300 shadow-sm">
+          <h2 className="text-3xl font-black text-primary mb-10 flex items-center gap-3">
+            <Clock className="text-secondary" /> Complete History
+          </h2>
+          <HealthTimeline dogId={selectedDogId} />
+        </div>
+      )}
+
+      {activeTab === 'weight' && (
+        <div className="bg-base-100 rounded-[3rem] p-10 border border-base-300 shadow-sm">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+            <h2 className="text-3xl font-black text-primary flex items-center gap-3">
+              <Scale className="text-secondary" /> Weight Log
+            </h2>
+            <div className="badge badge-lg badge-primary rounded-full font-bold px-4 h-10">
+              Current: {selectedDog?.currentWeight} kg
+            </div>
+          </div>
+          <WeightHistory dogId={selectedDogId} />
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {modalType === 'report' && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-4xl bg-base-200 p-0 rounded-[3rem] overflow-hidden">
+             <div className="flex justify-between items-center p-6 bg-base-100 border-b border-base-300">
+                <h3 className="font-black text-xl text-primary flex items-center gap-2"><FileText size={20}/> Wellness Summary</h3>
+                <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setModalType(null)}><X size={20}/></button>
+             </div>
+             <div className="p-8 max-h-[80vh] overflow-y-auto">
+                <WellnessReport dogId={selectedDogId} />
+             </div>
+             <div className="p-6 bg-base-100 border-t border-base-300 flex justify-center">
+                <button className="btn btn-primary rounded-full px-10" onClick={() => window.print()}>
+                  <Printer size={18}/> Print / Save PDF
+                </button>
+             </div>
+          </div>
+          <div className="modal-backdrop" onClick={() => setModalType(null)}></div>
+        </div>
+      )}
 
       {/* Vaccine Modal */}
       {modalType === 'vaccine' && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-xl text-primary">Log Vaccination</h3>
-              <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setModalType(null)}><X size={20}/></button>
+        <div className="modal modal-open backdrop-blur-sm">
+          <div className="modal-box rounded-[2.5rem] p-0 overflow-hidden shadow-2xl border border-base-300">
+            <div className="bg-primary p-8 text-primary-content flex justify-between items-center">
+              <h3 className="font-black text-2xl">Log Vaccination</h3>
+              <button className="btn btn-sm btn-circle btn-ghost bg-white/20 border-none" onClick={() => setModalType(null)}><X size={20}/></button>
             </div>
-            <form onSubmit={handleAddVaccine} className="space-y-4">
+            <form onSubmit={handleAddVaccine} className="p-8 space-y-6">
               <div className="form-control">
-                <label className="label"><span className="label-text">Vaccine Name</span></label>
-                <input type="text" required className="input input-bordered" value={newVaccine.vaccineName} onChange={e => setNewVaccine({...newVaccine, vaccineName: e.target.value})} />
+                <label className="label"><span className="label-text font-bold">Vaccine Name</span></label>
+                <input type="text" required className="input input-bordered rounded-2xl bg-base-200" placeholder="e.g. Rabies, DHPP" value={newVaccine.vaccineName} onChange={e => setNewVaccine({...newVaccine, vaccineName: e.target.value})} />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div className="form-control">
-                  <label className="label"><span className="label-text">Administered Date</span></label>
-                  <input type="date" required className="input input-bordered" value={newVaccine.dateAdministered} onChange={e => setNewVaccine({...newVaccine, dateAdministered: e.target.value})} />
+                  <label className="label"><span className="label-text font-bold">Administered Date</span></label>
+                  <input type="date" required className="input input-bordered rounded-2xl bg-base-200" value={newVaccine.dateAdministered} onChange={e => setNewVaccine({...newVaccine, dateAdministered: e.target.value})} />
                 </div>
                 <div className="form-control">
-                  <label className="label"><span className="label-text">Next Due Date</span></label>
-                  <input type="date" required className="input input-bordered" value={newVaccine.nextDueDate} onChange={e => setNewVaccine({...newVaccine, nextDueDate: e.target.value})} />
+                  <label className="label"><span className="label-text font-bold">Next Due Date</span></label>
+                  <input type="date" required className="input input-bordered rounded-2xl bg-base-200" value={newVaccine.nextDueDate} onChange={e => setNewVaccine({...newVaccine, nextDueDate: e.target.value})} />
                 </div>
               </div>
-              <div className="modal-action">
-                <button type="submit" className="btn btn-primary">Add Record</button>
+              <div className="form-control">
+                <label className="label"><span className="label-text font-bold">Notes (Optional)</span></label>
+                <textarea className="textarea textarea-bordered rounded-2xl bg-base-200" placeholder="Batch #, vet details, etc." value={newVaccine.notes} onChange={e => setNewVaccine({...newVaccine, notes: e.target.value})}></textarea>
+              </div>
+              <div className="modal-action gap-4">
+                <button type="button" className="btn btn-ghost rounded-2xl flex-1" onClick={() => setModalType(null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary rounded-2xl flex-1 shadow-lg">Save Record</button>
               </div>
             </form>
           </div>
@@ -188,33 +353,34 @@ const HealthWellness: React.FC = () => {
 
       {/* Medication Modal */}
       {modalType === 'medication' && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-xl text-primary">Add Medication</h3>
-              <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setModalType(null)}><X size={20}/></button>
+        <div className="modal modal-open backdrop-blur-sm">
+          <div className="modal-box rounded-[2.5rem] p-0 overflow-hidden shadow-2xl border border-base-300">
+             <div className="bg-primary p-8 text-primary-content flex justify-between items-center">
+              <h3 className="font-black text-2xl">Add Medication</h3>
+              <button className="btn btn-sm btn-circle btn-ghost bg-white/20 border-none" onClick={() => setModalType(null)}><X size={20}/></button>
             </div>
-            <form onSubmit={handleAddMedication} className="space-y-4">
+            <form onSubmit={handleAddMedication} className="p-8 space-y-6">
               <div className="form-control">
-                <label className="label"><span className="label-text">Medication Name</span></label>
-                <input type="text" required className="input input-bordered" value={newMedication.name} onChange={e => setNewMedication({...newMedication, name: e.target.value})} />
+                <label className="label"><span className="label-text font-bold">Medication Name</span></label>
+                <input type="text" required className="input input-bordered rounded-2xl bg-base-200" placeholder="e.g. Heartgard, Apoquel" value={newMedication.name} onChange={e => setNewMedication({...newMedication, name: e.target.value})} />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div className="form-control">
-                  <label className="label"><span className="label-text">Dosage</span></label>
-                  <input type="text" placeholder="e.g. 5mg" required className="input input-bordered" value={newMedication.dosage} onChange={e => setNewMedication({...newMedication, dosage: e.target.value})} />
+                  <label className="label"><span className="label-text font-bold">Dosage</span></label>
+                  <input type="text" placeholder="e.g. 5mg, 1 tablet" required className="input input-bordered rounded-2xl bg-base-200" value={newMedication.dosage} onChange={e => setNewMedication({...newMedication, dosage: e.target.value})} />
                 </div>
                 <div className="form-control">
-                  <label className="label"><span className="label-text">Frequency</span></label>
-                  <input type="text" placeholder="e.g. Daily" required className="input input-bordered" value={newMedication.frequency} onChange={e => setNewMedication({...newMedication, frequency: e.target.value})} />
+                  <label className="label"><span className="label-text font-bold">Frequency</span></label>
+                  <input type="text" placeholder="e.g. Daily, Monthly" required className="input input-bordered rounded-2xl bg-base-200" value={newMedication.frequency} onChange={e => setNewMedication({...newMedication, frequency: e.target.value})} />
                 </div>
               </div>
               <div className="form-control">
-                <label className="label"><span className="label-text">Start Date</span></label>
-                <input type="date" required className="input input-bordered" value={newMedication.startDate} onChange={e => setNewMedication({...newMedication, startDate: e.target.value})} />
+                <label className="label"><span className="label-text font-bold">Start Date</span></label>
+                <input type="date" required className="input input-bordered rounded-2xl bg-base-200" value={newMedication.startDate} onChange={e => setNewMedication({...newMedication, startDate: e.target.value})} />
               </div>
-              <div className="modal-action">
-                <button type="submit" className="btn btn-primary">Add Medication</button>
+              <div className="modal-action gap-4">
+                <button type="button" className="btn btn-ghost rounded-2xl flex-1" onClick={() => setModalType(null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary rounded-2xl flex-1 shadow-lg">Add Medication</button>
               </div>
             </form>
           </div>
@@ -224,27 +390,28 @@ const HealthWellness: React.FC = () => {
       
       {/* Allergy Modal */}
       {modalType === 'allergy' && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-xl text-primary">Log Allergy</h3>
-              <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setModalType(null)}><X size={20}/></button>
+        <div className="modal modal-open backdrop-blur-sm">
+          <div className="modal-box rounded-[2.5rem] p-0 overflow-hidden shadow-2xl border border-base-300">
+             <div className="bg-primary p-8 text-primary-content flex justify-between items-center">
+              <h3 className="font-black text-2xl">Log Allergy</h3>
+              <button className="btn btn-sm btn-circle btn-ghost bg-white/20 border-none" onClick={() => setModalType(null)}><X size={20}/></button>
             </div>
-            <form onSubmit={handleAddAllergy} className="space-y-4">
+            <form onSubmit={handleAddAllergy} className="p-8 space-y-6">
               <div className="form-control">
-                <label className="label"><span className="label-text">Allergen</span></label>
-                <input type="text" required className="input input-bordered" value={newAllergy.allergen} onChange={e => setNewAllergy({...newAllergy, allergen: e.target.value})} />
+                <label className="label"><span className="label-text font-bold">Allergen</span></label>
+                <input type="text" required className="input input-bordered rounded-2xl bg-base-200" placeholder="e.g. Chicken, Grass, Bee stings" value={newAllergy.allergen} onChange={e => setNewAllergy({...newAllergy, allergen: e.target.value})} />
               </div>
               <div className="form-control">
-                <label className="label"><span className="label-text">Severity</span></label>
-                <select className="select select-bordered" value={newAllergy.severity} onChange={e => setNewAllergy({...newAllergy, severity: e.target.value as any})}>
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
+                <label className="label"><span className="label-text font-bold">Severity</span></label>
+                <select className="select select-bordered rounded-2xl bg-base-200" value={newAllergy.severity} onChange={e => setNewAllergy({...newAllergy, severity: e.target.value as any})}>
+                  <option value="low">Low (Mild itching/sneezing)</option>
+                  <option value="medium">Medium (Hives/Redness)</option>
+                  <option value="high">High (Difficulty breathing/Emergency)</option>
                 </select>
               </div>
-              <div className="modal-action">
-                <button type="submit" className="btn btn-primary">Log Allergy</button>
+              <div className="modal-action gap-4">
+                <button type="button" className="btn btn-ghost rounded-2xl flex-1" onClick={() => setModalType(null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary rounded-2xl flex-1 shadow-lg">Log Allergy</button>
               </div>
             </form>
           </div>
@@ -254,23 +421,61 @@ const HealthWellness: React.FC = () => {
 
       {/* Surgery Modal */}
       {modalType === 'surgery' && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-xl text-primary">Log Surgery / Procedure</h3>
-              <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setModalType(null)}><X size={20}/></button>
+        <div className="modal modal-open backdrop-blur-sm">
+          <div className="modal-box rounded-[2.5rem] p-0 overflow-hidden shadow-2xl border border-base-300">
+             <div className="bg-primary p-8 text-primary-content flex justify-between items-center">
+              <h3 className="font-black text-2xl">Log Surgery / Procedure</h3>
+              <button className="btn btn-sm btn-circle btn-ghost bg-white/20 border-none" onClick={() => setModalType(null)}><X size={20}/></button>
             </div>
-            <form onSubmit={handleAddSurgery} className="space-y-4">
+            <form onSubmit={handleAddSurgery} className="p-8 space-y-6">
               <div className="form-control">
-                <label className="label"><span className="label-text">Procedure Name</span></label>
-                <input type="text" required className="input input-bordered" value={newSurgery.procedure} onChange={e => setNewSurgery({...newSurgery, procedure: e.target.value})} />
+                <label className="label"><span className="label-text font-bold">Procedure Name</span></label>
+                <input type="text" required className="input input-bordered rounded-2xl bg-base-200" placeholder="e.g. Neuter, Teeth Cleaning" value={newSurgery.procedure} onChange={e => setNewSurgery({...newSurgery, procedure: e.target.value})} />
               </div>
               <div className="form-control">
-                <label className="label"><span className="label-text">Date</span></label>
-                <input type="date" required className="input input-bordered" value={newSurgery.date} onChange={e => setNewSurgery({...newSurgery, date: e.target.value})} />
+                <label className="label"><span className="label-text font-bold">Date</span></label>
+                <input type="date" required className="input input-bordered rounded-2xl bg-base-200" value={newSurgery.date} onChange={e => setNewSurgery({...newSurgery, date: e.target.value})} />
               </div>
-              <div className="modal-action">
-                <button type="submit" className="btn btn-primary">Log Surgery</button>
+              <div className="modal-action gap-4">
+                <button type="button" className="btn btn-ghost rounded-2xl flex-1" onClick={() => setModalType(null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary rounded-2xl flex-1 shadow-lg">Log Surgery</button>
+              </div>
+            </form>
+          </div>
+          <div className="modal-backdrop" onClick={() => setModalType(null)}></div>
+        </div>
+      )}
+
+      {/* Vet Visit Modal */}
+      {modalType === 'vetVisit' && (
+        <div className="modal modal-open backdrop-blur-sm">
+          <div className="modal-box rounded-[2.5rem] p-0 overflow-hidden shadow-2xl border border-base-300">
+             <div className="bg-primary p-8 text-primary-content flex justify-between items-center">
+              <h3 className="font-black text-2xl">Log Vet Visit</h3>
+              <button className="btn btn-sm btn-circle btn-ghost bg-white/20 border-none" onClick={() => setModalType(null)}><X size={20}/></button>
+            </div>
+            <form onSubmit={handleAddVetVisit} className="p-8 space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="form-control">
+                  <label className="label"><span className="label-text font-bold">Date</span></label>
+                  <input type="date" required className="input input-bordered rounded-2xl bg-base-200" value={newVetVisit.date} onChange={e => setNewVetVisit({...newVetVisit, date: e.target.value})} />
+                </div>
+                <div className="form-control">
+                  <label className="label"><span className="label-text font-bold">Reason</span></label>
+                  <input type="text" required className="input input-bordered rounded-2xl bg-base-200" placeholder="e.g. Annual Checkup" value={newVetVisit.reason} onChange={e => setNewVetVisit({...newVetVisit, reason: e.target.value})} />
+                </div>
+              </div>
+              <div className="form-control">
+                <label className="label"><span className="label-text font-bold">Veterinarian / Clinic</span></label>
+                <input type="text" className="input input-bordered rounded-2xl bg-base-200" placeholder="Clinic name" value={newVetVisit.veterinarian} onChange={e => setNewVetVisit({...newVetVisit, veterinarian: e.target.value})} />
+              </div>
+              <div className="form-control">
+                <label className="label"><span className="label-text font-bold">Notes & Findings</span></label>
+                <textarea rows={4} className="textarea textarea-bordered rounded-2xl bg-base-200" placeholder="What did the vet say?" value={newVetVisit.notes} onChange={e => setNewVetVisit({...newVetVisit, notes: e.target.value})}></textarea>
+              </div>
+              <div className="modal-action gap-4">
+                <button type="button" className="btn btn-ghost rounded-2xl flex-1" onClick={() => setModalType(null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary rounded-2xl flex-1 shadow-lg">Save Visit</button>
               </div>
             </form>
           </div>
