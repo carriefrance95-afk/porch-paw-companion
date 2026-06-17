@@ -1,2 +1,16 @@
-# porch-paw-companion
-Porch &amp; Paw Companion is an all-in-one dog life management platform that helps pet parents organize health records, track appointments, preserve memories, manage emergency plans, and access wellness resources from a single dashboard.
+# Porch & Paw Companion
+
+An all-in-one dog life-management ecosystem.
+
+## Tech Stack
+- Vite
+- React
+- TypeScript
+- Tailwind CSS
+- DaisyUI
+
+## Development
+```bash
+npm install
+npm run dev
+```
