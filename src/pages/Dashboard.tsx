@@ -80,7 +80,6 @@ const Dashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          {/* Reminders Section */}
           <div className="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold flex items-center gap-3">
@@ -120,7 +119,6 @@ const Dashboard: React.FC = () => {
             )}
           </div>
 
-          {/* Secondary Quick Links */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Link to="/directory" className="bg-base-100 p-6 rounded-[2rem] border border-base-200 flex items-center gap-4 hover:shadow-lg transition-shadow">
               <div className="bg-info/10 p-4 rounded-2xl text-info"><Users /></div>

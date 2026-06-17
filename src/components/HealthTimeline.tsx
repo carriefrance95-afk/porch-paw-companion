@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePets } from '../context/PetContext';
-import { HealthEvent } from '../types';
+import type { HealthEvent } from '../types';
 import { Syringe, Pill, Activity, Stethoscope, AlertTriangle } from 'lucide-react';
 
 interface HealthTimelineProps {

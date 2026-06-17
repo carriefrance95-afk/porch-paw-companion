@@ -1,5 +1,5 @@
 import React from 'react';
-import { DogProfile, VaccineRecord, Medication, Allergy, EmergencyContact, PetSitterInstructions } from '../types';
+import type { DogProfile, VaccineRecord, Medication, Allergy, EmergencyContact, PetSitterInstructions } from '../types';
 import { ShieldAlert, Phone, Heart, ClipboardList, Info } from 'lucide-react';
 
 interface EmergencyPacketProps {

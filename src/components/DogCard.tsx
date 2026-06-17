@@ -1,5 +1,5 @@
 import React from 'react';
-import { DogProfile } from '../types';
+import type { DogProfile } from '../types';
 import { PawPrint, Calendar, Weight, Tag, ShieldCheck, Edit, Trash2 } from 'lucide-react';
 
 interface DogCardProps {

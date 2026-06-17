@@ -44,6 +44,7 @@ export interface Allergy {
   dogId: string;
   allergen: string;
   severity: 'low' | 'medium' | 'high';
+  date: string;
   notes?: string;
 }
 
