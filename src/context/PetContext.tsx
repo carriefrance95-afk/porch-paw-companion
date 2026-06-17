@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
   type DogProfile, type VaccineRecord, type Medication, type Allergy, type Surgery, type VetVisit, type WeightEntry,
-  type Appointment, type EmergencyContact, type PetSitterInstructions, type LostPetFlyer
+  type Appointment, type EmergencyContact, type PetSitterInstructions, type LostPetFlyer,
+  type DirectoryEntry, type JournalEntry, type MemoryItem, type Album, type TravelChecklistItem
 } from '../types';
 
 interface PetContextType {
@@ -15,6 +16,11 @@ interface PetContextType {
   emergencyContacts: EmergencyContact[];
   sitterInstructions: PetSitterInstructions[];
   lostPetFlyers: LostPetFlyer[];
+  directory: DirectoryEntry[];
+  journal: JournalEntry[];
+  memories: MemoryItem[];
+  albums: Album[];
+  travelChecklist: TravelChecklistItem[];
   
   // Profile Methods
   addProfile: (profile: DogProfile) => void;
@@ -58,6 +64,27 @@ interface PetContextType {
   // Lost Pet Flyer Methods
   updateLostPetFlyer: (flyer: LostPetFlyer) => void;
   
+  // Directory Methods
+  addDirectoryEntry: (entry: DirectoryEntry) => void;
+  updateDirectoryEntry: (entry: DirectoryEntry) => void;
+  deleteDirectoryEntry: (id: string) => void;
+
+  // Journal Methods
+  addJournalEntry: (entry: JournalEntry) => void;
+  updateJournalEntry: (entry: JournalEntry) => void;
+  deleteJournalEntry: (id: string) => void;
+
+  // Memory Methods
+  addMemoryItem: (item: MemoryItem) => void;
+  updateMemoryItem: (item: MemoryItem) => void;
+  deleteMemoryItem: (id: string) => void;
+  addAlbum: (album: Album) => void;
+  deleteAlbum: (id: string) => void;
+
+  // Travel Checklist Methods
+  updateTravelChecklist: (items: TravelChecklistItem[]) => void;
+  toggleTravelItem: (id: string) => void;
+  
   // Helper Methods
   addWeightEntry: (dogId: string, entry: WeightEntry) => void;
 }
@@ -75,6 +102,11 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
   const [sitterInstructions, setSitterInstructions] = useState<PetSitterInstructions[]>([]);
   const [lostPetFlyers, setLostPetFlyers] = useState<LostPetFlyer[]>([]);
+  const [directory, setDirectory] = useState<DirectoryEntry[]>([]);
+  const [journal, setJournal] = useState<JournalEntry[]>([]);
+  const [memories, setMemories] = useState<MemoryItem[]>([]);
+  const [albums, setAlbums] = useState<Album[]>([]);
+  const [travelChecklist, setTravelChecklist] = useState<TravelChecklistItem[]>([]);
 
   // Load from LocalStorage
   useEffect(() => {
@@ -89,6 +121,11 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       pet_emergency_contacts: setEmergencyContacts,
       pet_sitter_instructions: setSitterInstructions,
       pet_lost_pet_flyers: setLostPetFlyers,
+      pet_directory: setDirectory,
+      pet_journal: setJournal,
+      pet_memories: setMemories,
+      pet_albums: setAlbums,
+      pet_travel_checklist: setTravelChecklist,
     };
 
     Object.entries(dataHandlers).forEach(([key, setter]) => {
@@ -114,6 +151,11 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => { localStorage.setItem('pet_emergency_contacts', JSON.stringify(emergencyContacts)); }, [emergencyContacts]);
   useEffect(() => { localStorage.setItem('pet_sitter_instructions', JSON.stringify(sitterInstructions)); }, [sitterInstructions]);
   useEffect(() => { localStorage.setItem('pet_lost_pet_flyers', JSON.stringify(lostPetFlyers)); }, [lostPetFlyers]);
+  useEffect(() => { localStorage.setItem('pet_directory', JSON.stringify(directory)); }, [directory]);
+  useEffect(() => { localStorage.setItem('pet_journal', JSON.stringify(journal)); }, [journal]);
+  useEffect(() => { localStorage.setItem('pet_memories', JSON.stringify(memories)); }, [memories]);
+  useEffect(() => { localStorage.setItem('pet_albums', JSON.stringify(albums)); }, [albums]);
+  useEffect(() => { localStorage.setItem('pet_travel_checklist', JSON.stringify(travelChecklist)); }, [travelChecklist]);
 
   // Handlers
   const addProfile = (p: DogProfile) => setProfiles(prev => [...prev, p]);
@@ -128,6 +170,9 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setAppointments(prev => prev.filter(a => a.dogId !== id));
     setSitterInstructions(prev => prev.filter(s => s.dogId !== id));
     setLostPetFlyers(prev => prev.filter(f => f.dogId !== id));
+    setJournal(prev => prev.filter(j => j.dogId !== id));
+    setMemories(prev => prev.filter(m => m.dogId !== id));
+    setAlbums(prev => prev.filter(a => a.dogId !== id));
   };
 
   const addVaccine = (v: VaccineRecord) => setVaccines(prev => [...prev, v]);
@@ -174,6 +219,28 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
+  const addDirectoryEntry = (e: DirectoryEntry) => setDirectory(prev => [...prev, e]);
+  const updateDirectoryEntry = (e: DirectoryEntry) => setDirectory(prev => prev.map(i => i.id === e.id ? e : i));
+  const deleteDirectoryEntry = (id: string) => setDirectory(prev => prev.filter(i => i.id !== id));
+
+  const addJournalEntry = (e: JournalEntry) => setJournal(prev => [...prev, e]);
+  const updateJournalEntry = (e: JournalEntry) => setJournal(prev => prev.map(i => i.id === e.id ? e : i));
+  const deleteJournalEntry = (id: string) => setJournal(prev => prev.filter(i => i.id !== id));
+
+  const addMemoryItem = (i: MemoryItem) => setMemories(prev => [...prev, i]);
+  const updateMemoryItem = (i: MemoryItem) => setMemories(prev => prev.map(m => m.id === i.id ? i : m));
+  const deleteMemoryItem = (id: string) => setMemories(prev => prev.filter(i => i.id !== id));
+  const addAlbum = (a: Album) => setAlbums(prev => [...prev, a]);
+  const deleteAlbum = (id: string) => {
+    setAlbums(prev => prev.filter(a => a.id !== id));
+    setMemories(prev => prev.map(m => m.albumId === id ? { ...m, albumId: undefined } : m));
+  };
+
+  const updateTravelChecklist = (items: TravelChecklistItem[]) => setTravelChecklist(items);
+  const toggleTravelItem = (id: string) => {
+    setTravelChecklist(prev => prev.map(i => i.id === id ? { ...i, completed: !i.completed } : i));
+  };
+
   const addWeightEntry = (dogId: string, entry: WeightEntry) => {
     setProfiles(prev => prev.map(p => {
       if (p.id === dogId) {
@@ -190,6 +257,7 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <PetContext.Provider value={{
       profiles, vaccines, medications, allergies, surgeries, vetVisits, appointments, emergencyContacts, sitterInstructions, lostPetFlyers,
+      directory, journal, memories, albums, travelChecklist,
       addProfile, updateProfile, deleteProfile,
       addVaccine, updateVaccine, deleteVaccine,
       addMedication, updateMedication, deleteMedication,
@@ -199,6 +267,10 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       addAppointment, updateAppointment, deleteAppointment,
       addEmergencyContact, updateEmergencyContact, deleteEmergencyContact,
       updateSitterInstructions, updateLostPetFlyer,
+      addDirectoryEntry, updateDirectoryEntry, deleteDirectoryEntry,
+      addJournalEntry, updateJournalEntry, deleteJournalEntry,
+      addMemoryItem, updateMemoryItem, deleteMemoryItem, addAlbum, deleteAlbum,
+      updateTravelChecklist, toggleTravelItem,
       addWeightEntry
     }}>
       {children}
