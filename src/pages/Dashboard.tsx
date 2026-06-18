@@ -1,13 +1,30 @@
 import React from 'react';
 import { usePets } from '../context/PetContext';
-import { 
-  PawPrint, Heart, Bell, Calendar, Syringe, Plus, ShieldAlert, 
-  Clock, MapPin, Book, Users, ChefHat, ShoppingBag 
-} from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  PawPrint,
+  Heart,
+  Bell,
+  Calendar,
+  Syringe,
+  Plus,
+  ShieldAlert,
+  Clock,
+  MapPin,
+  Book,
+  Users,
+  ChefHat,
+  ShoppingBag
+} from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { profiles, vaccines, medications, appointments, journal } = usePets();
+  const {
+    profiles,
+    vaccines,
+    medications,
+    appointments,
+    journal
+  } = usePets();
 
   const upcomingVaccines = vaccines
     .filter(v => new Date(v.nextDueDate) > new Date())
