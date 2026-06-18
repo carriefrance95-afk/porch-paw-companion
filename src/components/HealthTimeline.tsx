@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePets } from '../context/PetContext';
-import { HealthEvent } from '../types';
+import type { HealthEvent } from '../types';
 import { Syringe, Pill, Activity, Stethoscope, AlertTriangle } from 'lucide-react';
 
 interface HealthTimelineProps {
@@ -17,8 +17,13 @@ const HealthTimeline: React.FC<HealthTimelineProps> = ({ dogId }) => {
     ...vetVisits.filter(v => v.dogId === dogId).map(v => ({ type: 'vetVisit' as const, ...v })),
     ...allergies.filter(a => a.dogId === dogId).map(a => ({ type: 'allergy' as const, ...a })),
   ].sort((a, b) => {
-    const dateA = 'dateAdministered' in a ? a.dateAdministered : 'startDate' in a ? a.startDate : a.date;
-    const dateB = 'dateAdministered' in b ? b.dateAdministered : 'startDate' in b ? b.startDate : b.date;
+    const getDateString = (event: HealthEvent) => {
+      if (event.type === 'vaccine') return event.dateAdministered;
+      if (event.type === 'medication') return event.startDate;
+      return event.date;
+    };
+    const dateA = getDateString(a);
+    const dateB = getDateString(b);
     return new Date(dateB).getTime() - new Date(dateA).getTime();
   });
 
@@ -44,8 +49,8 @@ const HealthTimeline: React.FC<HealthTimelineProps> = ({ dogId }) => {
   };
 
   const getDate = (event: HealthEvent) => {
-    if ('dateAdministered' in event) return event.dateAdministered;
-    if ('startDate' in event) return event.startDate;
+    if (event.type === 'vaccine') return event.dateAdministered;
+    if (event.type === 'medication') return event.startDate;
     return event.date;
   };
 

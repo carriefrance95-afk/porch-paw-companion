@@ -11,6 +11,7 @@ export interface DogProfile {
   birthDate: string;
   gotchaDate?: string;
   currentWeight: number;
+  goalWeight?: number;
   weightHistory: WeightEntry[];
   microchipId?: string;
   insuranceProvider?: string;
@@ -44,6 +45,7 @@ export interface Allergy {
   dogId: string;
   allergen: string;
   severity: 'low' | 'medium' | 'high';
+  date: string;
   notes?: string;
 }
 
@@ -177,4 +179,18 @@ export interface Product {
   description: string;
   imageUrl: string;
   category: 'Cookbooks' | 'Gear' | 'Digital';
+}
+
+export type SubscriptionPlan = 'Free' | 'Wellness' | 'Memory' | 'Premium';
+
+export interface VetVisitPrep {
+  id: string;
+  dogId: string;
+  title: string;
+  date: string;
+  questions: string[];
+  notes?: string;
+  includeWeightHistory: boolean;
+  includeMedications: boolean;
+  includeVaccines: boolean;
 }

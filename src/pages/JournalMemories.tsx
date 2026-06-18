@@ -4,17 +4,17 @@ import { type JournalEntry, type MemoryItem, type Album } from '../types';
 import { 
   Plus, Calendar as CalendarIcon, Image as ImageIcon, Book, Camera, 
   Smile, Frown, Zap, Moon, AlertCircle, Tag, Trash2, Layout, MoreVertical,
-  ChevronRight, ChevronLeft, MapPin, Clock, Filter, Search
-} from 'lucide-react';
+  ChevronRight, ChevronLeft, MapPin, Clock} from 'lucide-react';
+import MemoryBookCreator from '../components/MemoryBookCreator';
 
 const JournalMemories: React.FC = () => {
   const { 
     profiles, journal, memories, albums, 
-    addJournalEntry, updateJournalEntry, deleteJournalEntry,
-    addMemoryItem, deleteMemoryItem, addAlbum, deleteAlbum 
+    addJournalEntry,  deleteJournalEntry,
+    addMemoryItem, deleteMemoryItem, addAlbum 
   } = usePets();
 
-  const [activeTab, setActiveTab] = useState<'journal' | 'memories'>('journal');
+  const [activeTab, setActiveTab] = useState<'journal' | 'memories' | 'book'>('journal');
   const [selectedDogId, setSelectedDogId] = useState<string>(profiles[0]?.id || '');
   
   // Modals
@@ -50,8 +50,7 @@ const JournalMemories: React.FC = () => {
     addJournalEntry({
       ...journalForm,
       id: Math.random().toString(36).substr(2, 9),
-      dogId: selectedDogId,
-    } as JournalEntry);
+      dogId: selectedDogId} as JournalEntry);
     setIsJournalModalOpen(false);
   };
 
@@ -60,12 +59,11 @@ const JournalMemories: React.FC = () => {
     addMemoryItem({
       ...memoryForm,
       id: Math.random().toString(36).substr(2, 9),
-      dogId: selectedDogId,
-    } as MemoryItem);
+      dogId: selectedDogId} as MemoryItem);
     setIsMemoryModalOpen(false);
   };
 
-  const currentDog = profiles.find(p => p.id === selectedDogId);
+  
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -121,6 +119,13 @@ const JournalMemories: React.FC = () => {
         >
           <ImageIcon size={18} className="mr-2" />
           Memory Vault
+        </button>
+        <button 
+          className={`tab flex-1 rounded-xl h-12 ${activeTab === 'book' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('book')}
+        >
+          <Layout size={18} className="mr-2" />
+          Memory Book
         </button>
       </div>
 
@@ -187,7 +192,7 @@ const JournalMemories: React.FC = () => {
             </div>
           )}
         </div>
-      ) : (
+      ) : activeTab === 'memories' ? (
         <div className="space-y-8">
           {/* Albums & Filters */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -243,6 +248,8 @@ const JournalMemories: React.FC = () => {
             </div>
           )}
         </div>
+      ) : (
+        <MemoryBookCreator />
       )}
 
       {/* Journal Modal */}

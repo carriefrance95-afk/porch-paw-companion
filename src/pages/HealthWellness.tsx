@@ -252,7 +252,12 @@ const HealthWellness: React.FC = () => {
                   {dogVetVisits.length > 3 && (
                     <button className="btn btn-ghost btn-sm btn-block text-primary">View All Visits</button>
                   )}
-                </div>
+                  <div className="pt-4 border-t border-base-200 mt-4">
+                    <a href="/vet-visit-prep" className="btn btn-outline btn-sm btn-block rounded-xl gap-2 text-primary border-primary/20 hover:bg-primary/5">
+                      <FileText size={14} /> Prepare for Next Visit
+                    </a>
+                  </div>
+                  </div>
               )}
             </HealthSection>
 

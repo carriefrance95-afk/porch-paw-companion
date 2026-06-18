@@ -1,13 +1,16 @@
 import React from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { usePets } from '../context/PetContext';
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
+  const { plan, setPlan } = usePets();
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: '🏠' },
     { name: 'Dog Profiles', path: '/profiles', icon: '🐕' },
     { name: 'Health & Wellness', path: '/health', icon: '🏥' },
+    { name: 'Vet Prep', path: '/vet-visit-prep', icon: '📋' },
     { name: 'Reminders', path: '/reminders', icon: '⏰' },
     { name: 'Emergency', path: '/emergency', icon: '🆘' },
     { name: 'Care Directory', path: '/directory', icon: '📚' },
@@ -68,9 +71,16 @@ const MainLayout: React.FC = () => {
           </ul>
           
           <div className="mt-auto p-4 bg-base-200 rounded-xl mt-8">
-            <p className="text-sm font-semibold mb-1">Premium Plan</p>
-            <p className="text-xs mb-3">Unlock unlimited profiles and memory vault.</p>
-            <button className="btn btn-primary btn-sm btn-block">Upgrade Now</button>
+            <p className="text-sm font-semibold mb-1">Plan: {plan}</p>
+            <p className="text-xs mb-3">
+              {plan === 'Premium' ? 'Full access unlocked!' : 'Unlock unlimited profiles and memory vault.'}
+            </p>
+            <button 
+              className={`btn btn-sm btn-block ${plan === 'Premium' ? 'btn-outline' : 'btn-primary'}`}
+              onClick={() => setPlan(plan === 'Premium' ? 'Free' : 'Premium')}
+            >
+              {plan === 'Premium' ? 'Downgrade (Debug)' : 'Upgrade to Premium'}
+            </button>
           </div>
         </div>
       </div>
