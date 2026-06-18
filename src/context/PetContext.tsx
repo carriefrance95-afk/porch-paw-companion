@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { 
   DogProfile, VaccineRecord, Medication, Allergy, Surgery, VetVisit, WeightEntry,
   Appointment, EmergencyContact, PetSitterInstructions, LostPetFlyer,
-  DirectoryEntry, JournalEntry, MemoryItem, Album, TravelChecklistItem, Product
+  DirectoryEntry, JournalEntry, MemoryItem, Album, TravelChecklistItem, Product, VetVisitPrep, SubscriptionPlan
 } from '../types';
 
 interface PetContextType {
@@ -22,6 +22,11 @@ interface PetContextType {
   albums: Album[];
   travelChecklist: TravelChecklistItem[];
   products: Product[];
+  vetVisitPreps: VetVisitPrep[];
+  plan: SubscriptionPlan;
+  
+  // Plan Methods
+  setPlan: (plan: SubscriptionPlan) => void;
   
   // Profile Methods
   addProfile: (profile: DogProfile) => void;
@@ -88,6 +93,11 @@ interface PetContextType {
   deleteTravelItem: (id: string) => void;
   toggleTravelItem: (id: string) => void;
   
+  // Vet Visit Preparation Methods
+  addVetVisitPrep: (prep: VetVisitPrep) => void;
+  updateVetVisitPrep: (prep: VetVisitPrep) => void;
+  deleteVetVisitPrep: (id: string) => void;
+  
   // Helper Methods
   addWeightEntry: (dogId: string, entry: WeightEntry) => void;
 }
@@ -110,6 +120,8 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [memories, setMemories] = useState<MemoryItem[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [travelChecklist, setTravelChecklist] = useState<TravelChecklistItem[]>([]);
+  const [vetVisitPreps, setVetVisitPreps] = useState<VetVisitPrep[]>([]);
+  const [plan, setPlan] = useState<SubscriptionPlan>('Free');
 
   const products: Product[] = [
     {
@@ -156,6 +168,8 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       pet_memories: setMemories,
       pet_albums: setAlbums,
       pet_travel_checklist: setTravelChecklist,
+      pet_vet_visit_preps: setVetVisitPreps,
+      pet_subscription_plan: setPlan,
     };
 
     Object.entries(dataHandlers).forEach(([key, setter]) => {
@@ -186,6 +200,8 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => { localStorage.setItem('pet_memories', JSON.stringify(memories)); }, [memories]);
   useEffect(() => { localStorage.setItem('pet_albums', JSON.stringify(albums)); }, [albums]);
   useEffect(() => { localStorage.setItem('pet_travel_checklist', JSON.stringify(travelChecklist)); }, [travelChecklist]);
+  useEffect(() => { localStorage.setItem('pet_vet_visit_preps', JSON.stringify(vetVisitPreps)); }, [vetVisitPreps]);
+  useEffect(() => { localStorage.setItem('pet_subscription_plan', JSON.stringify(plan)); }, [plan]);
 
   // Handlers
   const addProfile = (p: DogProfile) => setProfiles(prev => [...prev, p]);
@@ -273,6 +289,10 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTravelChecklist(prev => prev.map(i => i.id === id ? { ...i, completed: !i.completed } : i));
   };
 
+  const addVetVisitPrep = (p: VetVisitPrep) => setVetVisitPreps(prev => [...prev, p]);
+  const updateVetVisitPrep = (p: VetVisitPrep) => setVetVisitPreps(prev => prev.map(i => i.id === p.id ? p : i));
+  const deleteVetVisitPrep = (id: string) => setVetVisitPreps(prev => prev.filter(i => i.id !== id));
+
   const addWeightEntry = (dogId: string, entry: WeightEntry) => {
     setProfiles(prev => prev.map(p => {
       if (p.id === dogId) {
@@ -289,7 +309,7 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <PetContext.Provider value={{
       profiles, vaccines, medications, allergies, surgeries, vetVisits, appointments, emergencyContacts, sitterInstructions, lostPetFlyers,
-      directory, journal, memories, albums, travelChecklist, products,
+      directory, journal, memories, albums, travelChecklist, products, vetVisitPreps, plan,
       addProfile, updateProfile, deleteProfile,
       addVaccine, updateVaccine, deleteVaccine,
       addMedication, updateMedication, deleteMedication,
@@ -303,7 +323,8 @@ export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       addJournalEntry, updateJournalEntry, deleteJournalEntry,
       addMemoryItem, updateMemoryItem, deleteMemoryItem, addAlbum, deleteAlbum,
       updateTravelChecklist, addTravelItem, deleteTravelItem, toggleTravelItem,
-      addWeightEntry
+      addVetVisitPrep, updateVetVisitPrep, deleteVetVisitPrep,
+      addWeightEntry, setPlan
     }}>
       {children}
     </PetContext.Provider>

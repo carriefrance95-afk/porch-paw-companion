@@ -11,6 +11,7 @@ import JournalMemories from './pages/JournalMemories';
 import Travel from './pages/Travel';
 import ContentLibrary from './pages/ContentLibrary';
 import Store from './pages/Store';
+import VetVisitHub from './pages/VetVisitHub';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="travel" element={<Travel />} />
             <Route path="content" element={<ContentLibrary />} />
             <Route path="store" element={<Store />} />
+            <Route path="vet-visit-prep" element={<VetVisitHub />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

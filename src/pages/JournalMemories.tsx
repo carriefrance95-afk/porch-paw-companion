@@ -5,6 +5,7 @@ import {
   Plus, Calendar as CalendarIcon, Image as ImageIcon, Book, Camera, 
   Smile, Frown, Zap, Moon, AlertCircle, Tag, Trash2, Layout, MoreVertical,
   ChevronRight, ChevronLeft, MapPin, Clock} from 'lucide-react';
+import MemoryBookCreator from '../components/MemoryBookCreator';
 
 const JournalMemories: React.FC = () => {
   const { 
@@ -13,7 +14,7 @@ const JournalMemories: React.FC = () => {
     addMemoryItem, deleteMemoryItem, addAlbum 
   } = usePets();
 
-  const [activeTab, setActiveTab] = useState<'journal' | 'memories'>('journal');
+  const [activeTab, setActiveTab] = useState<'journal' | 'memories' | 'book'>('journal');
   const [selectedDogId, setSelectedDogId] = useState<string>(profiles[0]?.id || '');
   
   // Modals
@@ -119,6 +120,13 @@ const JournalMemories: React.FC = () => {
           <ImageIcon size={18} className="mr-2" />
           Memory Vault
         </button>
+        <button 
+          className={`tab flex-1 rounded-xl h-12 ${activeTab === 'book' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('book')}
+        >
+          <Layout size={18} className="mr-2" />
+          Memory Book
+        </button>
       </div>
 
       {/* Content Area */}
@@ -184,7 +192,7 @@ const JournalMemories: React.FC = () => {
             </div>
           )}
         </div>
-      ) : (
+      ) : activeTab === 'memories' ? (
         <div className="space-y-8">
           {/* Albums & Filters */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -240,6 +248,8 @@ const JournalMemories: React.FC = () => {
             </div>
           )}
         </div>
+      ) : (
+        <MemoryBookCreator />
       )}
 
       {/* Journal Modal */}
