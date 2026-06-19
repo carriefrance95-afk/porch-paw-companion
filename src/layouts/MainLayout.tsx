@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { usePets } from '../context/PetContext';
+import OnboardingWizard from '../components/OnboardingWizard';
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
-  const { plan, setPlan } = usePets();
+  const { profiles, plan, setPlan } = usePets();
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: '🏠' },
@@ -19,6 +20,11 @@ const MainLayout: React.FC = () => {
     { name: 'Content & Library', path: '/content', icon: '📑' },
     { name: 'Store', path: '/store', icon: '🛒' },
   ];
+
+  // Interception Logic: Show onboarding wizard if no dogs exist
+  if (profiles.length === 0) {
+    return <OnboardingWizard />;
+  }
 
   return (
     <div className="drawer lg:drawer-open">

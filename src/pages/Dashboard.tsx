@@ -1,30 +1,13 @@
 import React from 'react';
 import { usePets } from '../context/PetContext';
-import { Link } from 'react-router-dom';
-import {
-  PawPrint,
-  Heart,
-  Bell,
-  Calendar,
-  Syringe,
-  Plus,
-  ShieldAlert,
-  Clock,
-  MapPin,
-  Book,
-  Users,
-  ChefHat,
-  ShoppingBag
+import { 
+  PawPrint, Heart, Bell, Calendar, Syringe, Plus, ShieldAlert, 
+  Clock, MapPin, Book, Users, ChefHat, ShoppingBag 
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
-  const {
-    profiles,
-    vaccines,
-    medications,
-    appointments,
-    journal
-  } = usePets();
+  const { profiles, vaccines, medications, appointments, journal } = usePets();
 
   const upcomingVaccines = vaccines
     .filter(v => new Date(v.nextDueDate) > new Date())
@@ -170,6 +153,13 @@ const Dashboard: React.FC = () => {
                   <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Track Today</div>
                 </div>
               </Link>
+              <Link to="/profiles" className="btn btn-ghost bg-base-200 hover:bg-primary hover:text-primary-content rounded-2xl justify-start gap-4 h-auto py-3">
+                <Plus size={20} /> 
+                <div className="text-left">
+                  <div className="font-bold">Add Profile</div>
+                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">New Dog</div>
+                </div>
+              </Link>
               <Link to="/reminders" className="btn btn-ghost bg-base-200 hover:bg-accent hover:text-accent-content rounded-2xl justify-start gap-4 h-auto py-3">
                 <Calendar size={20} /> 
                 <div className="text-left">
@@ -189,6 +179,13 @@ const Dashboard: React.FC = () => {
                 <div className="text-left">
                   <div className="font-bold">Shop Boutique</div>
                   <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Premium Gear</div>
+                </div>
+              </Link>
+              <Link to="/emergency" className="btn btn-ghost bg-base-200 hover:bg-error hover:text-error-content rounded-2xl justify-start gap-4 h-auto py-3">
+                <ShieldAlert size={20} /> 
+                <div className="text-left">
+                  <div className="font-bold">Emergency Kit</div>
+                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Safety First</div>
                 </div>
               </Link>
             </div>
