@@ -17,7 +17,7 @@ const MainLayout: React.FC = () => {
     { name: 'Care Directory', path: '/directory', icon: '📚' },
     { name: 'Journal & Memories', path: '/journal', icon: '📖' },
     { name: 'Travel & Adventure', path: '/travel', icon: '⛺' },
-    { name: 'Content & Library', path: '/content', icon: '📑' },
+    { name: 'From The Porch & Paw Kitchen', path: '/content', icon: '🍳' },
     { name: 'Store', path: '/store', icon: '🛒' },
   ];
 

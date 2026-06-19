@@ -126,7 +126,7 @@ const Dashboard: React.FC = () => {
             </Link>
             <Link to="/content" className="bg-base-100 p-6 rounded-[2rem] border border-base-200 flex items-center gap-4 hover:shadow-lg transition-shadow">
               <div className="bg-secondary/10 p-4 rounded-2xl text-secondary"><ChefHat /></div>
-              <div><h4 className="font-bold">Cookbook</h4><p className="text-xs opacity-60">Healthy dog recipes</p></div>
+              <div><h4 className="font-bold">From The Porch & Paw Kitchen</h4><p className="text-xs opacity-60">Healthy dog recipes</p></div>
             </Link>
           </div>
         </div>

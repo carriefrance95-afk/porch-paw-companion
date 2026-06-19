@@ -166,10 +166,22 @@ export interface TravelChecklistItem {
 export interface Recipe {
   id: string;
   title: string;
-  category: 'Treats' | 'Meals' | 'Special Occasions';
+  category: 'Treats' | 'Meals' | 'Special Occasions' | 'Wellness';
   ingredients: string[];
   instructions: string;
   imageUrl?: string;
+  prepTime?: string;
+  kitchenTip?: string;
+  nutritionalWarning?: string;
+}
+
+export interface DigitalResource {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  category: 'Guides' | 'Printables' | 'Articles' | 'Products';
+  tag?: string;
 }
 
 export interface Product {
