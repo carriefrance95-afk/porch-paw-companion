@@ -69,11 +69,11 @@ const HealthTimeline: React.FC<HealthTimelineProps> = ({ dogId }) => {
           <hr className={idx === 0 ? 'bg-primary' : ''} />
           <div className="timeline-middle">
             <div className={`p-2 rounded-full ${
-              event.type === 'vaccine' ? 'bg-blue-100 text-blue-600' :
-              event.type === 'medication' ? 'bg-green-100 text-green-600' :
-              event.type === 'surgery' ? 'bg-red-100 text-red-600' :
-              event.type === 'vetVisit' ? 'bg-purple-100 text-purple-600' :
-              'bg-orange-100 text-orange-600'
+              event.type === 'vaccine' ? 'bg-sage-light text-sage' :
+              event.type === 'medication' ? 'bg-taupe-light text-taupe' :
+              event.type === 'surgery' ? 'bg-terracotta-light text-terracotta' :
+              event.type === 'vetVisit' ? 'bg-terracotta-light text-terracotta' :
+              'bg-taupe-light text-taupe'
             }`}>
               {getIcon(event.type)}
             </div>

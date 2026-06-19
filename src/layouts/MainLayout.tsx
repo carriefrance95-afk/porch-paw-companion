@@ -63,10 +63,10 @@ const MainLayout: React.FC = () => {
               <li key={item.path}>
                 <Link 
                   to={item.path} 
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     location.pathname === item.path 
-                    ? 'bg-primary text-primary-content font-semibold' 
-                    : 'hover:bg-base-200 text-neutral'
+                    ? 'bg-secondary text-secondary-content font-bold shadow-md scale-[1.02]' 
+                    : 'hover:bg-base-200 text-neutral opacity-80 hover:opacity-100'
                   }`}
                 >
                   <span className="text-xl">{item.icon}</span>

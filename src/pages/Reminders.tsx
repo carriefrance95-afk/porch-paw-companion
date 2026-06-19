@@ -103,7 +103,7 @@ const Reminders: React.FC = () => {
                     <div key={app.id} className="bg-base-100 rounded-[2rem] p-6 shadow-sm border border-base-200 hover:shadow-md transition-shadow">
                       <div className="flex justify-between items-start">
                         <div className="flex gap-4">
-                          <div className={`p-4 rounded-2xl ${app.type === 'Vet' ? 'bg-blue-100 text-blue-600' : app.type === 'Groomer' ? 'bg-purple-100 text-purple-600' : 'bg-orange-100 text-orange-600'}`}>
+                          <div className={`p-4 rounded-2xl ${app.type === 'Vet' ? 'bg-sage-light text-sage' : app.type === 'Groomer' ? 'bg-terracotta-light text-terracotta' : 'bg-taupe-light text-taupe'}`}>
                             <CalendarIcon size={24} />
                           </div>
                           <div>

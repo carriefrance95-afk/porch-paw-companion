@@ -65,15 +65,15 @@ const OnboardingWizard: React.FC = () => {
   };
 
   const branding = {
-    ivory: 'bg-[#FDFCF0]',
-    terracotta: 'bg-[#E2725B]',
-    terracottaText: 'text-[#E2725B]',
-    terracottaBorder: 'border-[#E2725B]',
-    sage: 'bg-[#8F9779]',
-    sageText: 'text-[#8F9779]',
-    charcoal: 'text-[#333333]',
-    taupe: 'text-[#8D7A6D]',
-    taupeLight: 'text-[#8D7A6D]/70'
+    ivory: 'bg-base-100',
+    terracotta: 'bg-primary',
+    terracottaText: 'text-primary',
+    terracottaBorder: 'border-primary',
+    sage: 'bg-secondary',
+    sageText: 'text-secondary',
+    charcoal: 'text-neutral',
+    taupe: 'text-accent',
+    taupeLight: 'text-accent/70'
   };
 
   return (
