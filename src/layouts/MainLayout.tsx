@@ -19,6 +19,7 @@ const MainLayout: React.FC = () => {
     { name: 'Travel & Adventure', path: '/travel', icon: '⛺' },
     { name: 'From The Porch & Paw Kitchen', path: '/content', icon: '🍳' },
     { name: 'Store', path: '/store', icon: '🛒' },
+    { name: 'Partner Perks', path: '/partners', icon: '🎁' },
   ];
 
   // Interception Logic: Show onboarding wizard if no dogs exist
