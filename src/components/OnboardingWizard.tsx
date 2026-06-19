@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 const OnboardingWizard: React.FC = () => {
-  const { addProfile, addWeightEntry } = usePets();
+  const { addProfile, addWeightEntry, addDirectoryEntry } = usePets();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -50,6 +50,16 @@ const OnboardingWizard: React.FC = () => {
       });
     }
 
+    if (formData.vetName) {
+      addDirectoryEntry({
+        id: Math.random().toString(36).substr(2, 9),
+        name: formData.vetName,
+        category: 'Vet',
+        phone: formData.vetContact || 'Not provided',
+        notes: `Primary vet for ${formData.name}`
+      });
+    }
+
     setLoading(false);
     nextStep(); // Move to success step
   };
@@ -61,6 +71,7 @@ const OnboardingWizard: React.FC = () => {
     terracottaBorder: 'border-[#E2725B]',
     sage: 'bg-[#8F9779]',
     sageText: 'text-[#8F9779]',
+    charcoal: 'text-[#333333]',
     taupe: 'text-[#8D7A6D]',
     taupeLight: 'text-[#8D7A6D]/70'
   };
@@ -91,7 +102,7 @@ const OnboardingWizard: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-4">
-                <h1 className="text-4xl md:text-5xl font-black text-[#8b5a2b]">Welcome to Porch & Paw</h1>
+                <h1 className={`text-4xl md:text-5xl font-black ${branding.charcoal}`}>Welcome to Porch & Paw</h1>
                 <p className={`text-xl ${branding.taupe} max-w-md mx-auto leading-relaxed`}>
                   We're so glad you're here. Let's start building a beautiful life story for your furry best friend.
                 </p>
@@ -113,7 +124,7 @@ const OnboardingWizard: React.FC = () => {
                   <User size={24} />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-[#8b5a2b]">Your Dog's Profile</h2>
+                  <h2 className={`text-2xl font-bold ${branding.charcoal}`}>Your Dog's Profile</h2>
                   <p className={branding.taupeLight}>Tell us the basics about your companion.</p>
                 </div>
               </div>
@@ -175,7 +186,7 @@ const OnboardingWizard: React.FC = () => {
                   <Camera size={24} />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-[#8b5a2b]">Capture the Cuteness</h2>
+                  <h2 className={`text-2xl font-bold ${branding.charcoal}`}>Capture the Cuteness</h2>
                   <p className={branding.taupeLight}>A profile isn't complete without a photo.</p>
                 </div>
               </div>
@@ -243,7 +254,7 @@ const OnboardingWizard: React.FC = () => {
                   <Heart size={24} />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-[#8b5a2b]">Initial Wellness</h2>
+                  <h2 className={`text-2xl font-bold ${branding.charcoal}`}>Initial Wellness</h2>
                   <p className={branding.taupeLight}>Let's record some starting health metrics.</p>
                 </div>
               </div>
@@ -266,7 +277,7 @@ const OnboardingWizard: React.FC = () => {
                 <div className="space-y-4 pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-2">
                     <Stethoscope size={20} className={branding.terracottaText} />
-                    <h3 className="font-bold text-[#8b5a2b]">Veterinarian Details</h3>
+                    <h3 className={`font-bold ${branding.charcoal}`}>Veterinarian Details</h3>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="form-control">
@@ -327,7 +338,7 @@ const OnboardingWizard: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-4">
-                <h1 className="text-4xl font-black text-[#8b5a2b]">All Set! 🐶</h1>
+                <h1 className={`text-4xl font-black ${branding.charcoal}`}>All Set! 🐶</h1>
                 <p className={`text-xl ${branding.taupe} max-w-md mx-auto leading-relaxed`}>
                   {formData.name}'s profile is ready. You're all set to start tracking wellness, preserving memories, and planning adventures.
                 </p>
@@ -336,7 +347,7 @@ const OnboardingWizard: React.FC = () => {
                 onClick={() => window.location.reload()} // Quickest way to clear interceptor
                 className={`${branding.terracotta} hover:opacity-90 text-white btn btn-lg rounded-2xl px-12 border-none shadow-xl transition-all hover:scale-105 active:scale-95 mt-4`}
               >
-                Go to Dashboard
+                Start Tracking
               </button>
             </div>
           )}
