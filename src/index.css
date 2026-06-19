@@ -5,26 +5,117 @@
 
 @theme {
   --font-sans: "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif";
-  --color-primary: #8b5a2b; /* Warm Wood */
-  --color-secondary: #f5f5dc; /* Beige/Cream */
-  --color-accent: #e67e22; /* Carrot Orange */
-  --color-neutral: #3d4451;
-  --color-base-100: #ffffff;
-  --color-base-200: #faf7f2; /* Warm paper */
-  --color-base-300: #f4ece1;
+  --font-serif: "Georgia", "Cambria", "Times New Roman", "Times", "serif";
+  
+  --color-primary: #C85A32; /* Warm Terracotta */
+  --color-primary-content: #ffffff;
+  --color-secondary: #7D9B76; /* Sage Green */
+  --color-secondary-content: #ffffff;
+  --color-accent: #B3A398; /* Soft Taupe */
+  --color-accent-content: #333333;
+  --color-neutral: #333333; /* Charcoal */
+  --color-neutral-content: #FAF9F6;
+  --color-base-100: #FAF9F6; /* Cream/Ivory background */
+  --color-base-200: #FDFBF7; /* Slightly warmer Ivory */
+  --color-base-300: #8D8276; /* Soft Taupe for borders/secondary */
+  
+  /* Additional Brand Shades */
+  --color-terracotta-light: #F9EBE6;
+  --color-terracotta: #C85A32;
+  --color-sage-light: #EDF1EC;
+  --color-sage: #7D9B76;
+  --color-taupe-light: #F2F0EE;
+  --color-taupe: #8D8276;
+  
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+}
+
+/* DaisyUI Overrides */
+.tab-active {
+  background-color: var(--color-secondary) !important;
+  color: var(--color-secondary-content) !important;
+  font-weight: 700 !important;
+}
+
+.btn-primary {
+  color: var(--color-primary-content) !important;
 }
 
 :root {
-  background-color: var(--color-base-200);
+  background-color: var(--color-base-100);
   color: var(--color-neutral);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
-  color: #333333; /* Charcoal */
+  font-family: var(--font-serif);
+  color: var(--color-neutral);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Global Component Styling */
+.card {
+  border-radius: var(--radius-3xl) !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05) !important;
+  background-color: #ffffff;
+  border: 1px solid rgba(141, 130, 118, 0.1) !important;
+}
+
+.btn {
+  border-radius: var(--radius-2xl) !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.input, .select, .textarea {
+  border-radius: var(--radius-2xl) !important;
+  background-color: #ffffff !important;
+  border: 1px solid rgba(141, 130, 118, 0.2) !important;
+  transition: all 0.2s ease;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 4px rgba(200, 90, 50, 0.1) !important;
+}
+
+.badge {
+  border-radius: 0.75rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-size: 0.65rem !important;
+  padding: 0.75rem 0.75rem !important;
+  border: none !important;
+}
+
+.modal-box {
+  border-radius: var(--radius-3xl) !important;
+  border: 1px solid rgba(141, 130, 118, 0.1) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.stats {
+  border-radius: var(--radius-3xl) !important;
+  background-color: #ffffff !important;
+  border: 1px solid rgba(141, 130, 118, 0.1) !important;
+}
+
+/* Custom shadow for extra premium feel */
+.shadow-premium {
+  box-shadow: 0 20px 25px -5px rgba(141, 130, 118, 0.1), 0 10px 10px -5px rgba(141, 130, 118, 0.04) !important;
 }
