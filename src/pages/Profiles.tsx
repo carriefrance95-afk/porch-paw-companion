@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { usePets } from '../context/PetContext';
 import DogCard from '../components/DogCard';
-import { Plus, X, Camera } from 'lucide-react';
+import { Plus, X, Camera, Loader2 } from 'lucide-react';
 import { type DogProfile } from '../types';
+import { useFileUpload } from '../hooks/useFileUpload';
 
 const Profiles: React.FC = () => {
   const { profiles, addProfile, updateProfile, deleteProfile } = usePets();
+  const { upload, isUploading } = useFileUpload();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProfile, setEditingProfile] = useState<DogProfile | null>(null);
   
@@ -38,6 +41,19 @@ const Profiles: React.FC = () => {
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this profile? This will also remove all their health records.')) {
       deleteProfile(id);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const { url } = await upload('dog-media', file);
+        setFormData({ ...formData, photoUrl: url });
+      } catch (err) {
+        console.error('Upload failed:', err);
+        alert('Failed to upload photo. Please try again.');
+      }
     }
   };
 
@@ -116,10 +132,25 @@ const Profiles: React.FC = () => {
             <form onSubmit={handleSubmit} className="p-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2 flex flex-col items-center mb-4">
-                   <div className="avatar">
-                      <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 bg-base-200 flex items-center justify-center cursor-pointer relative group">
+                   <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                   />
+                   <div 
+                    className="avatar"
+                    onClick={() => fileInputRef.current?.click()}
+                   >
+                      <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 bg-base-200 flex items-center justify-center cursor-pointer relative group overflow-hidden">
+                        {isUploading ? (
+                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-10">
+                            <Loader2 size={24} className="text-primary animate-spin" />
+                          </div>
+                        ) : null}
                         {formData.photoUrl ? (
-                          <img src={formData.photoUrl} alt="Preview" />
+                          <img src={formData.photoUrl} alt="Preview" className="w-full h-full object-cover" />
                         ) : (
                           <Camera size={32} className="text-primary/40" />
                         )}
@@ -128,13 +159,7 @@ const Profiles: React.FC = () => {
                         </div>
                       </div>
                    </div>
-                   <input 
-                    type="text" 
-                    placeholder="Photo URL (optional)" 
-                    className="input input-xs input-bordered w-48 mt-3 rounded-full text-center"
-                    value={formData.photoUrl}
-                    onChange={(e) => setFormData({...formData, photoUrl: e.target.value})}
-                  />
+                   <p className="text-xs opacity-60 mt-2">Click avatar to upload photo</p>
                 </div>
 
                 <div className="form-control">

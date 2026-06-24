@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { usePets } from '../context/PetContext';
 import { type JournalEntry, type MemoryItem, type Album } from '../types';
 import { 
   Plus, Calendar as CalendarIcon, Image as ImageIcon, Book, Camera, 
   Smile, Frown, Zap, Moon, AlertCircle, Tag, Trash2, Layout, MoreVertical,
-  ChevronRight, ChevronLeft, MapPin, Clock} from 'lucide-react';
+  ChevronRight, ChevronLeft, MapPin, Clock, Loader2} from 'lucide-react';
 import MemoryBookCreator from '../components/MemoryBookCreator';
+import { useFileUpload } from '../hooks/useFileUpload';
 
 const JournalMemories: React.FC = () => {
   const { 
@@ -13,6 +14,9 @@ const JournalMemories: React.FC = () => {
     addJournalEntry,  deleteJournalEntry,
     addMemoryItem, deleteMemoryItem, addAlbum 
   } = usePets();
+
+  const { upload, isUploading } = useFileUpload();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [activeTab, setActiveTab] = useState<'journal' | 'memories' | 'book'>('journal');
   const [selectedDogId, setSelectedDogId] = useState<string>(profiles[0]?.id || '');
@@ -34,7 +38,8 @@ const JournalMemories: React.FC = () => {
 
   const [memoryForm, setMemoryForm] = useState<Partial<MemoryItem>>({
     type: 'Photo',
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split('T')[0],
+    imageUrl: '',
   });
 
   const filteredJournal = journal
@@ -45,11 +50,24 @@ const JournalMemories: React.FC = () => {
     .filter(m => m.dogId === selectedDogId && (selectedAlbumId === 'all' || m.albumId === selectedAlbumId))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const { url } = await upload('dog-media', file);
+        setMemoryForm({ ...memoryForm, imageUrl: url });
+      } catch (err) {
+        console.error('Upload failed:', err);
+        alert('Failed to upload image. Please try again.');
+      }
+    }
+  };
+
   const handleJournalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addJournalEntry({
       ...journalForm,
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       dogId: selectedDogId} as JournalEntry);
     setIsJournalModalOpen(false);
   };
@@ -58,9 +76,10 @@ const JournalMemories: React.FC = () => {
     e.preventDefault();
     addMemoryItem({
       ...memoryForm,
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       dogId: selectedDogId} as MemoryItem);
     setIsMemoryModalOpen(false);
+    setMemoryForm({ ...memoryForm, imageUrl: '', title: '' });
   };
 
   
@@ -347,15 +366,32 @@ const JournalMemories: React.FC = () => {
                 />
               </div>
               <div className="form-control">
-                <label className="label"><span className="label-text font-bold">Image URL</span></label>
+                <label className="label"><span className="label-text font-bold">Photo</span></label>
                 <input 
-                  type="url" 
-                  className="input input-bordered rounded-2xl" 
-                  placeholder="https://images.unsplash.com/..."
-                  value={memoryForm.imageUrl}
-                  onChange={e => setMemoryForm({...memoryForm, imageUrl: e.target.value})}
-                  required 
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden" 
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
                 />
+                <div 
+                  className="w-full h-48 bg-base-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-base-300 hover:bg-base-300 transition-colors relative overflow-hidden"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {isUploading ? (
+                    <div className="absolute inset-0 bg-black/10 flex items-center justify-center z-10">
+                      <Loader2 size={32} className="text-primary animate-spin" />
+                    </div>
+                  ) : null}
+                  {memoryForm.imageUrl ? (
+                    <img src={memoryForm.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <>
+                      <ImageIcon size={32} className="opacity-30 mb-2" />
+                      <span className="text-xs opacity-50">Click to upload photo</span>
+                    </>
+                  )}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="form-control">

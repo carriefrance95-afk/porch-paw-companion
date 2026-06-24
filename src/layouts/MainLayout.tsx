@@ -26,6 +26,7 @@ const MainLayout: React.FC = () => {
     { name: 'From The Porch & Paw Kitchen', path: '/content', icon: '🍳' },
     { name: 'Store', path: '/store', icon: '🛒' },
     { name: 'Partner Perks', path: '/partners', icon: '🎁' },
+    { name: 'Family & Sharing', path: '/family', icon: '👨‍👩‍👧‍👦' },
   ];
 
   // Interception Logic: Show onboarding wizard if no dogs exist
