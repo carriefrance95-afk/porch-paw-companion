@@ -104,7 +104,10 @@ interface PetContextType {
 
 const PetContext = createContext<PetContextType | undefined>(undefined);
 
+import { useAuth } from './AuthContext';
+
 export const PetProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
   const [profiles, setProfiles] = useState<DogProfile[]>([]);
   const [vaccines, setVaccines] = useState<VaccineRecord[]>([]);
   const [medications, setMedications] = useState<Medication[]>([]);

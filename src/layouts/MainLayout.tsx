@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { usePets } from '../context/PetContext';
+import { useAuth } from '../context/AuthContext';
+import { useMigration } from '../hooks/useMigration';
 import OnboardingWizard from '../components/OnboardingWizard';
+import AuthModal from '../components/AuthModal';
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
   const { profiles, plan, setPlan } = usePets();
+  const { user, signOut } = useAuth();
+  const { isMigrating } = useMigration();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: '🏠' },
@@ -29,6 +35,21 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="drawer lg:drawer-open">
+      {isMigrating && (
+        <div className="fixed inset-0 bg-base-100/80 backdrop-blur-md z-[9999] flex flex-col items-center justify-center p-8 text-center">
+          <div className="w-24 h-24 mb-6">
+            <span className="text-6xl animate-bounce inline-block">🚚</span>
+          </div>
+          <h2 className="text-3xl font-serif font-bold text-neutral mb-4">Moving into your Cloud Home...</h2>
+          <p className="text-accent max-w-md mx-auto">
+            We're securely syncing your local dog records and memories to our secure cloud. 
+            This will only take a moment.
+          </p>
+          <div className="mt-8">
+            <span className="loading loading-spinner loading-lg text-primary"></span>
+          </div>
+        </div>
+      )}
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* Navbar for mobile */}
@@ -77,20 +98,59 @@ const MainLayout: React.FC = () => {
             ))}
           </ul>
           
-          <div className="mt-auto p-4 bg-base-200 rounded-xl mt-8">
-            <p className="text-sm font-semibold mb-1">Plan: {plan}</p>
-            <p className="text-xs mb-3">
-              {plan === 'Premium' ? 'Full access unlocked!' : 'Unlock unlimited profiles and memory vault.'}
-            </p>
-            <button 
-              className={`btn btn-sm btn-block ${plan === 'Premium' ? 'btn-outline' : 'btn-primary'}`}
-              onClick={() => setPlan(plan === 'Premium' ? 'Free' : 'Premium')}
-            >
-              {plan === 'Premium' ? 'Downgrade (Debug)' : 'Upgrade to Premium'}
-            </button>
+          <div className="mt-8 space-y-4">
+            {/* Account Section */}
+            <div className="p-4 bg-base-200 rounded-xl">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="avatar placeholder">
+                  <div className="bg-primary text-primary-content rounded-full w-8">
+                    <span>{user ? user.email?.charAt(0).toUpperCase() : '?'}</span>
+                  </div>
+                </div>
+                <div className="overflow-hidden">
+                  <p className="text-sm font-bold truncate">
+                    {user ? user.email : 'Guest Mode'}
+                  </p>
+                  <p className="text-xs opacity-60">
+                    {user ? 'Cloud Synced' : 'Local Storage Only'}
+                  </p>
+                </div>
+              </div>
+              
+              {user ? (
+                <button 
+                  className="btn btn-xs btn-ghost btn-block text-error"
+                  onClick={() => signOut()}
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <button 
+                  className="btn btn-sm btn-primary btn-block rounded-lg"
+                  onClick={() => setIsAuthModalOpen(true)}
+                >
+                  Sign In / Register
+                </button>
+              )}
+            </div>
+
+            {/* Plan Section */}
+            <div className="p-4 bg-terracotta/10 rounded-xl border border-terracotta/20">
+              <p className="text-sm font-semibold mb-1">Plan: {plan}</p>
+              <p className="text-xs mb-3">
+                {plan === 'Premium' ? 'Full access unlocked!' : 'Unlock unlimited profiles and memory vault.'}
+              </p>
+              <button 
+                className={`btn btn-sm btn-block ${plan === 'Premium' ? 'btn-outline' : 'btn-primary'}`}
+                onClick={() => setPlan(plan === 'Premium' ? 'Free' : 'Premium')}
+              >
+                {plan === 'Premium' ? 'Downgrade (Debug)' : 'Upgrade to Premium'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 };
