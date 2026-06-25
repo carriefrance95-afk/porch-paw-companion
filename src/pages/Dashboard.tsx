@@ -29,9 +29,12 @@ const Dashboard: React.FC = () => {
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-4xl font-bold text-primary mb-1">Hello, Pet Parent! 🐾</h1>
-          <p className="opacity-70 font-medium">Here's what's happening with your furry family today.</p>
+        <div className="flex items-center gap-4">
+          <img src="/logo.svg" alt="Porch & Paw logo" className="w-16 h-16 rounded-full" />
+          <div>
+            <h1 className="text-4xl font-bold text-primary mb-1">Hello, Pet Parent! 🐾</h1>
+            <p className="opacity-70 font-medium">Here's what's happening with your furry family today.</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <Link to="/emergency" className="btn btn-error btn-outline rounded-2xl">

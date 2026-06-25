@@ -20,9 +20,12 @@ const EmergencyPacket: React.FC<EmergencyPacketProps> = ({
     <div className="bg-white text-black p-10 max-w-4xl mx-auto border-2 border-gray-200">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-black pb-6 mb-8 gap-6">
-        <div>
-          <h1 className="text-4xl font-black uppercase tracking-tight mb-1">Emergency Care Packet</h1>
-          <p className="text-xl font-bold text-gray-600 tracking-wide">Essential info for {dog.name}</p>
+        <div className="flex items-center gap-4">
+          <img src="/logo.svg" alt="Porch & Paw logo" className="w-20 h-20 rounded-full" />
+          <div>
+            <h1 className="text-4xl font-black uppercase tracking-tight mb-1">Emergency Care Packet</h1>
+            <p className="text-xl font-bold text-gray-600 tracking-wide">Essential info for {dog.name}</p>
+          </div>
         </div>
         <div className="bg-[#D47B4C] text-white rounded-3xl px-6 py-4 shadow-lg">
           <p className="text-xs uppercase tracking-[0.3em] opacity-90">Porch & Paw Companion</p>
