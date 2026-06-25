@@ -1,35 +1,70 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { usePets } from '../context/PetContext';
-import { FileText, Plus, Trash2, CheckCircle2, ClipboardList, Printer, MessageSquare } from 'lucide-react';
-import type { VetVisitPrep } from '../types';
+import { FileText, Plus, Trash2, CheckCircle2, ClipboardList, Printer, MessageSquare, Camera, Video } from 'lucide-react';
+import type { Attachment, DirectoryEntry, VetVisitPrep } from '../types';
 
 const VetDiscussionHub: React.FC = () => {
-  const { profiles, vetVisitPreps, addVetVisitPrep, updateVetVisitPrep, deleteVetVisitPrep, medications, vaccines } = usePets();
+  const { profiles, directory, vetVisitPreps, addVetVisitPrep, updateVetVisitPrep, deleteVetVisitPrep, medications, vaccines } = usePets();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [selectedDogId, setSelectedDogId] = useState(profiles[0]?.id || '');
+  const [providerContext, setProviderContext] = useState<DirectoryEntry | null>(null);
+  const [providerPrefillApplied, setProviderPrefillApplied] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [activePrepId, setActivePrepId] = useState<string | null>(null);
 
   // Form State for new/editing prep
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [symptoms, setSymptoms] = useState<string[]>(['']);
   const [questions, setQuestions] = useState<string[]>(['']);
+  const [attachments, setAttachments] = useState<{ photos: Attachment[]; videos: Attachment[]; documents: Attachment[] }>({ photos: [], videos: [], documents: [] });
+  const [notes, setNotes] = useState('');
   const [includeWeight, setIncludeWeight] = useState(true);
   const [includeMedications, setIncludeMedications] = useState(true);
   const [includeVaccines, setIncludeVaccines] = useState(true);
+  const [summaryEditState, setSummaryEditState] = useState({ prepId: '', diagnosis: '', recommendations: '', completed: false });
 
   const activePrep = vetVisitPreps.find(p => p.id === activePrepId);
-  const selectedDog = profiles.find(p => p.id === selectedDogId);
+  const activeSummary = activePrep && summaryEditState.prepId === activePrep.id
+    ? summaryEditState
+    : {
+        prepId: activePrep?.id || '',
+        diagnosis: activePrep?.diagnosis || '',
+        recommendations: activePrep?.recommendations || '',
+        completed: !!activePrep?.completed,
+      };
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const providerId = params.get('providerId');
+    if (!providerId || providerPrefillApplied) return;
+
+    const provider = directory.find(item => item.id === providerId);
+    if (!provider) return;
+
+    setProviderContext(provider);
+    setProviderPrefillApplied(true);
+    navigate('/vet-visit-prep', { replace: true });
+  }, [location.search, directory, providerPrefillApplied, navigate]);
 
   const handleCreate = () => {
     const newPrep: VetVisitPrep = {
       id: crypto.randomUUID(),
       dogId: selectedDogId,
-      title: title || 'Vet Visit Preparation',
+      title: title || `Prep for ${providerContext?.name ?? 'Vet Visit'}`,
       date,
+      symptoms: symptoms.filter(s => s.trim() !== ''),
       questions: questions.filter(q => q.trim() !== ''),
+      notes: notes.trim() || undefined,
+      photos: attachments.photos,
+      videos: attachments.videos,
+      documents: attachments.documents,
       includeWeightHistory: includeWeight,
       includeMedications: includeMedications,
-      includeVaccines: includeVaccines
+      includeVaccines: includeVaccines,
+      completed: false,
     };
     addVetVisitPrep(newPrep);
     setIsCreating(false);
@@ -39,19 +74,84 @@ const VetDiscussionHub: React.FC = () => {
   const resetForm = () => {
     setTitle('');
     setDate(new Date().toISOString().split('T')[0]);
+    setSymptoms(['']);
     setQuestions(['']);
+    setAttachments({ photos: [], videos: [], documents: [] });
+    setNotes('');
+    setIncludeWeight(true);
+    setIncludeMedications(true);
+    setIncludeVaccines(true);
   };
 
   const addQuestionField = () => setQuestions([...questions, '']);
+  const addSymptomField = () => setSymptoms([...symptoms, '']);
+
   const updateQuestion = (index: number, value: string) => {
     const newQuestions = [...questions];
     newQuestions[index] = value;
     setQuestions(newQuestions);
   };
 
+  const updateSymptom = (index: number, value: string) => {
+    const newSymptoms = [...symptoms];
+    newSymptoms[index] = value;
+    setSymptoms(newSymptoms);
+  };
+
+  const addAttachmentItem = (type: keyof typeof attachments) => {
+    setAttachments(prev => ({
+      ...prev,
+      [type]: [...prev[type], { id: crypto.randomUUID(), label: '', url: '' }]
+    }));
+  };
+
+  const updateAttachmentItem = (type: keyof typeof attachments, index: number, key: 'label' | 'url', value: string) => {
+    setAttachments(prev => ({
+      ...prev,
+      [type]: prev[type].map((item, idx) => idx === index ? { ...item, [key]: value } : item)
+    }));
+  };
+
+  const removeAttachmentItem = (type: keyof typeof attachments, index: number) => {
+    setAttachments(prev => ({
+      ...prev,
+      [type]: prev[type].filter((_, idx) => idx !== index)
+    }));
+  };
+
   const handlePrint = () => {
     window.print();
   };
+
+  const savePrepUpdate = (updatedPrep: VetVisitPrep) => {
+    updateVetVisitPrep(updatedPrep);
+  };
+
+  const completePrep = () => {
+    if (!activePrep) return;
+    savePrepUpdate({
+      ...activePrep,
+      completed: true,
+      completedAt: activePrep.completedAt || new Date().toISOString(),
+      diagnosis: activeSummary.diagnosis.trim() || undefined,
+      recommendations: activeSummary.recommendations.trim() || undefined,
+    });
+    setSummaryEditState(prev => ({ ...prev, completed: true, prepId: activePrep.id }));
+  };
+
+  const handleSaveVisitSummary = () => {
+    if (!activePrep) return;
+    savePrepUpdate({
+      ...activePrep,
+      completed: activeSummary.completed,
+      completedAt: activeSummary.completed ? (activePrep.completedAt || new Date().toISOString()) : undefined,
+      diagnosis: activeSummary.diagnosis.trim() || undefined,
+      recommendations: activeSummary.recommendations.trim() || undefined,
+    });
+    setSummaryEditState(prev => ({ ...prev, prepId: activePrep.id }));
+  };
+
+  const hasAttachments = activePrep ? ((activePrep.photos?.length ?? 0) + (activePrep.videos?.length ?? 0) + (activePrep.documents?.length ?? 0)) > 0 : false;
 
   return (
     <div className="space-y-8 pb-20">
@@ -62,6 +162,14 @@ const VetDiscussionHub: React.FC = () => {
             Vet Discussion Hub
           </h2>
           <p className="text-sm opacity-60">Prepare questions and summaries for your next vet visit.</p>
+          {providerContext && (
+            <div className="mt-3 rounded-3xl border border-info/20 bg-info/5 p-4 text-sm text-info-content">
+              <strong>Provider selected:</strong> {providerContext.name} — {providerContext.category}
+              {providerContext.phone && (
+                <span className="block mt-1">Contact: <a href={`tel:${providerContext.phone}`} className="underline">{providerContext.phone}</a></span>
+              )}
+            </div>
+          )}
         </div>
         {!isCreating && (
           <button 
@@ -109,22 +217,94 @@ const VetDiscussionHub: React.FC = () => {
             />
           </div>
 
-          <div className="space-y-3">
-            <label className="label"><span className="label-text font-bold">Questions for the Vet</span></label>
-            {questions.map((q, idx) => (
-              <div key={idx} className="flex gap-2">
-                <input 
-                  type="text" 
-                  placeholder={`Question ${idx + 1}`} 
-                  className="input input-bordered rounded-xl flex-1"
-                  value={q}
-                  onChange={(e) => updateQuestion(idx, e.target.value)}
-                />
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="space-y-3">
+              <label className="label"><span className="label-text font-bold">Symptoms & Observations</span></label>
+              {symptoms.map((s, idx) => (
+                <div key={idx} className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder={`Symptom ${idx + 1}`}
+                    className="input input-bordered rounded-xl flex-1"
+                    value={s}
+                    onChange={(e) => updateSymptom(idx, e.target.value)}
+                  />
+                </div>
+              ))}
+              <button onClick={addSymptomField} className="btn btn-ghost btn-sm text-primary gap-2">
+                <Plus size={16} /> Add Another Symptom
+              </button>
+            </div>
+            <div className="space-y-3">
+              <label className="label"><span className="label-text font-bold">Questions for the Vet</span></label>
+              {questions.map((q, idx) => (
+                <div key={idx} className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder={`Question ${idx + 1}`}
+                    className="input input-bordered rounded-xl flex-1"
+                    value={q}
+                    onChange={(e) => updateQuestion(idx, e.target.value)}
+                  />
+                </div>
+              ))}
+              <button onClick={addQuestionField} className="btn btn-ghost btn-sm text-primary gap-2">
+                <Plus size={16} /> Add Another Question
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="bg-base-200 p-4 rounded-2xl">
+              <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.3em] mb-3">
+                <Camera size={16} /> Photos
               </div>
-            ))}
-            <button onClick={addQuestionField} className="btn btn-ghost btn-sm text-primary gap-2">
-              <Plus size={16} /> Add Another Question
-            </button>
+              {(attachments.photos || []).map((attachment, idx) => (
+                <div key={attachment.id} className="grid gap-3 sm:grid-cols-[1fr_auto] items-end mb-3">
+                  <input type="text" className="input input-bordered rounded-2xl bg-white" placeholder="Label" value={attachment.label} onChange={e => updateAttachmentItem('photos', idx, 'label', e.target.value)} />
+                  <input type="url" className="input input-bordered rounded-2xl bg-white" placeholder="Image URL" value={attachment.url} onChange={e => updateAttachmentItem('photos', idx, 'url', e.target.value)} />
+                  <button type="button" className="btn btn-ghost btn-sm rounded-full" onClick={() => removeAttachmentItem('photos', idx)}>Remove</button>
+                </div>
+              ))}
+              <button type="button" className="btn btn-outline btn-sm rounded-full w-full" onClick={() => addAttachmentItem('photos')}>
+                <Plus size={14} /> Add Photo
+              </button>
+            </div>
+            <div className="bg-base-200 p-4 rounded-2xl">
+              <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.3em] mb-3">
+                <Video size={16} /> Videos
+              </div>
+              {(attachments.videos || []).map((attachment, idx) => (
+                <div key={attachment.id} className="grid gap-3 sm:grid-cols-[1fr_auto] items-end mb-3">
+                  <input type="text" className="input input-bordered rounded-2xl bg-white" placeholder="Label" value={attachment.label} onChange={e => updateAttachmentItem('videos', idx, 'label', e.target.value)} />
+                  <input type="url" className="input input-bordered rounded-2xl bg-white" placeholder="Video URL" value={attachment.url} onChange={e => updateAttachmentItem('videos', idx, 'url', e.target.value)} />
+                  <button type="button" className="btn btn-ghost btn-sm rounded-full" onClick={() => removeAttachmentItem('videos', idx)}>Remove</button>
+                </div>
+              ))}
+              <button type="button" className="btn btn-outline btn-sm rounded-full w-full" onClick={() => addAttachmentItem('videos')}>
+                <Plus size={14} /> Add Video
+              </button>
+            </div>
+            <div className="bg-base-200 p-4 rounded-2xl">
+              <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.3em] mb-3">
+                <FileText size={16} /> Documents
+              </div>
+              {(attachments.documents || []).map((attachment, idx) => (
+                <div key={attachment.id} className="grid gap-3 sm:grid-cols-[1fr_auto] items-end mb-3">
+                  <input type="text" className="input input-bordered rounded-2xl bg-white" placeholder="Label" value={attachment.label} onChange={e => updateAttachmentItem('documents', idx, 'label', e.target.value)} />
+                  <input type="url" className="input input-bordered rounded-2xl bg-white" placeholder="Document URL" value={attachment.url} onChange={e => updateAttachmentItem('documents', idx, 'url', e.target.value)} />
+                  <button type="button" className="btn btn-ghost btn-sm rounded-full" onClick={() => removeAttachmentItem('documents', idx)}>Remove</button>
+                </div>
+              ))}
+              <button type="button" className="btn btn-outline btn-sm rounded-full w-full" onClick={() => addAttachmentItem('documents')}>
+                <Plus size={14} /> Add Document
+              </button>
+            </div>
+          </div>
+
+          <div className="form-control">
+            <label className="label"><span className="label-text font-bold">Visit Notes</span></label>
+            <textarea className="textarea textarea-bordered rounded-2xl h-32" placeholder="Add context or details ahead of the visit" value={notes} onChange={e => setNotes(e.target.value)} />
           </div>
 
           <div className="bg-base-200 p-4 rounded-2xl space-y-3">
@@ -186,6 +366,99 @@ const VetDiscussionHub: React.FC = () => {
                   </ul>
                 </section>
 
+                {activePrep.symptoms.length > 0 && (
+                  <section>
+                    <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">Symptoms & Observations</h4>
+                    <div className="grid gap-3">
+                      {activePrep.symptoms.map((symptom, idx) => (
+                        <div key={idx} className="p-4 bg-base-200 rounded-2xl text-sm">
+                          <span className="font-semibold">{idx + 1}.</span> {symptom}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {activePrep.notes && (
+                  <section>
+                    <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">Pre-Visit Notes</h4>
+                    <div className="p-4 bg-base-200 rounded-2xl text-sm leading-relaxed">
+                      {activePrep.notes}
+                    </div>
+                  </section>
+                )}
+
+                {hasAttachments && (
+                  <section>
+                    <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">Attachments</h4>
+                    <div className="space-y-4">
+                      {activePrep.photos?.length ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.3em] text-primary"><Camera size={16} /> Photos</div>
+                          <div className="grid gap-2">
+                            {activePrep.photos.map(photo => (
+                              <a key={photo.id} href={photo.url} target="_blank" rel="noreferrer" className="p-4 bg-base-200 rounded-2xl block text-sm hover:bg-base-300">
+                                {photo.label || 'Photo attachment'}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {activePrep.videos?.length ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.3em] text-primary"><Video size={16} /> Videos</div>
+                          <div className="grid gap-2">
+                            {activePrep.videos.map(video => (
+                              <a key={video.id} href={video.url} target="_blank" rel="noreferrer" className="p-4 bg-base-200 rounded-2xl block text-sm hover:bg-base-300">
+                                {video.label || 'Video attachment'}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {activePrep.documents?.length ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.3em] text-primary"><FileText size={16} /> Documents</div>
+                          <div className="grid gap-2">
+                            {activePrep.documents.map(doc => (
+                              <a key={doc.id} href={doc.url} target="_blank" rel="noreferrer" className="p-4 bg-base-200 rounded-2xl block text-sm hover:bg-base-300">
+                                {doc.label || 'Document attachment'}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </section>
+                )}
+
+                {(activePrep.diagnosis || activePrep.recommendations || activePrep.completedAt) && (
+                  <section>
+                    <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">Visit Summary</h4>
+                    <div className="space-y-4">
+                      {activePrep.completedAt && (
+                        <div className="p-4 bg-base-200 rounded-2xl text-sm">
+                          <span className="font-semibold">Completed:</span> {new Date(activePrep.completedAt).toLocaleDateString()}
+                        </div>
+                      )}
+                      {activePrep.diagnosis && (
+                        <div className="p-4 bg-base-200 rounded-2xl">
+                          <h5 className="text-sm font-bold mb-2">Diagnosis / Findings</h5>
+                          <p className="text-sm leading-relaxed">{activePrep.diagnosis}</p>
+                        </div>
+                      )}
+                      {activePrep.recommendations && (
+                        <div className="p-4 bg-base-200 rounded-2xl">
+                          <h5 className="text-sm font-bold mb-2">Recommendations</h5>
+                          <p className="text-sm leading-relaxed">{activePrep.recommendations}</p>
+                        </div>
+                      )}
+                    </div>
+                  </section>
+                )}
+
                 {activePrep.includeWeightHistory && (
                   <section>
                     <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">Recent Weight Log</h4>
@@ -236,6 +509,41 @@ const VetDiscussionHub: React.FC = () => {
           </div>
 
           <div className="space-y-4 print:hidden">
+            <div className="bg-base-100 p-6 rounded-3xl border border-base-300 space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-2">Visit Summary</h4>
+                  <p className="text-xs opacity-60">Record diagnosis and recommendations after the visit.</p>
+                </div>
+                <span className={`badge ${activePrep.completed ? 'badge-success' : 'badge-outline'}`}>
+                  {activePrep.completed ? 'Completed' : 'Pending'}
+                </span>
+              </div>
+
+              <label className="label justify-start gap-3 cursor-pointer">
+                <input type="checkbox" className="checkbox checkbox-primary" checked={activeSummary.completed} onChange={e => setSummaryEditState(prev => ({ ...prev, completed: e.target.checked, prepId: activePrep?.id || prev.prepId }))} />
+                <span className="label-text">Mark visit summary complete</span>
+              </label>
+
+              <div className="form-control">
+                <label className="label"><span className="label-text font-bold">Diagnosis / Findings</span></label>
+                <textarea className="textarea textarea-bordered rounded-2xl h-28" placeholder="Enter diagnosis or vet observations" value={activeSummary.diagnosis} onChange={e => setSummaryEditState(prev => ({ ...prev, diagnosis: e.target.value, prepId: activePrep?.id || prev.prepId }))} />
+              </div>
+
+              <div className="form-control">
+                <label className="label"><span className="label-text font-bold">Recommendations</span></label>
+                <textarea className="textarea textarea-bordered rounded-2xl h-28" placeholder="Enter follow-up recommendations or care instructions" value={activeSummary.recommendations} onChange={e => setSummaryEditState(prev => ({ ...prev, recommendations: e.target.value, prepId: activePrep?.id || prev.prepId }))} />
+              </div>
+
+              <button onClick={handleSaveVisitSummary} className="btn btn-primary w-full rounded-2xl">Save Visit Summary</button>
+              {!activePrep.completed && (
+                <button onClick={completePrep} className="btn btn-outline btn-success w-full rounded-2xl">Mark Completed</button>
+              )}
+              {activePrep.completedAt && (
+                <p className="text-xs opacity-60 mt-2">Completed on {new Date(activePrep.completedAt).toLocaleDateString()}</p>
+              )}
+            </div>
+
             <div className="bg-primary text-primary-content p-6 rounded-3xl">
               <h4 className="font-bold mb-2">Vet Visit Tip</h4>
               <p className="text-sm opacity-90 leading-relaxed">

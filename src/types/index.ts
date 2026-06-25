@@ -2,6 +2,7 @@ export interface WeightEntry {
   id: string;
   date: string;
   weight: number;
+  notes?: string;
 }
 
 export interface DogProfile {
@@ -19,6 +20,12 @@ export interface DogProfile {
   photoUrl?: string;
 }
 
+export interface Attachment {
+  id: string;
+  label: string;
+  url: string;
+}
+
 export interface VaccineRecord {
   id: string;
   dogId: string;
@@ -26,6 +33,7 @@ export interface VaccineRecord {
   dateAdministered: string;
   nextDueDate: string;
   notes?: string;
+  attachments?: Attachment[];
 }
 
 export interface Medication {
@@ -36,8 +44,10 @@ export interface Medication {
   frequency: string;
   startDate: string;
   endDate?: string;
+  dueDate?: string;
   active: boolean;
   notes?: string;
+  attachments?: Attachment[];
 }
 
 export interface Allergy {
@@ -46,7 +56,9 @@ export interface Allergy {
   allergen: string;
   severity: 'low' | 'medium' | 'high';
   date: string;
+  nextReviewDate?: string;
   notes?: string;
+  attachments?: Attachment[];
 }
 
 export interface Surgery {
@@ -54,7 +66,9 @@ export interface Surgery {
   dogId: string;
   procedure: string;
   date: string;
+  followUpDate?: string;
   notes?: string;
+  attachments?: Attachment[];
 }
 
 export interface VetVisit {
@@ -64,6 +78,8 @@ export interface VetVisit {
   reason: string;
   notes: string;
   veterinarian?: string;
+  followUpDate?: string;
+  attachments?: Attachment[];
 }
 
 export type HealthEvent = 
@@ -73,16 +89,29 @@ export type HealthEvent =
   | ({ type: 'vetVisit' } & VetVisit)
   | ({ type: 'allergy' } & Allergy);
 
+export interface RecurrenceRule {
+  frequency: 'None' | 'Daily' | 'Weekly' | 'Monthly' | 'Yearly';
+  interval: number;
+  daysOfWeek?: Array<'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat'>;
+  endsOn?: string;
+}
+
 export interface Appointment {
   id: string;
   dogId: string;
-  type: 'Vet' | 'Groomer' | 'Trainer' | 'Other';
+  type: 'Vet' | 'Groomer' | 'Trainer' | 'Medication' | 'Vaccination' | 'Birthday' | 'Other';
+  title?: string;
   date: string;
-  time: string;
-  providerName: string;
+  time?: string;
+  providerName?: string;
   providerAddress?: string;
+  location?: string;
   notes?: string;
+  priority?: 'Low' | 'Medium' | 'High';
   completed: boolean;
+  recurrence?: RecurrenceRule;
+  externalSource?: 'google' | 'apple';
+  externalId?: string;
 }
 
 export interface EmergencyContact {
@@ -92,6 +121,8 @@ export interface EmergencyContact {
   phone: string;
   email?: string;
   isPrimary: boolean;
+  priority?: 'Primary' | 'Secondary' | 'Backup';
+  order?: number;
 }
 
 export interface PetSitterInstructions {
@@ -102,6 +133,10 @@ export interface PetSitterInstructions {
   favoriteToys?: string;
   routines?: string;
   emergencyNotes?: string;
+  houseRules?: string;
+  accessInstructions?: string;
+  walkRoutine?: string;
+  keyLocations?: string;
 }
 
 export interface LostPetFlyer {
@@ -111,6 +146,9 @@ export interface LostPetFlyer {
   reward?: string;
   contactPhone: string;
   notes?: string;
+  photoUrls?: string[];
+  qrData?: string;
+  socialCaption?: string;
 }
 
 // Milestone 4 Types
@@ -118,11 +156,17 @@ export interface LostPetFlyer {
 export interface DirectoryEntry {
   id: string;
   name: string;
-  category: 'Vet' | 'Groomer' | 'Trainer' | 'Walker' | 'Other';
+  category: 'Vet' | 'Veterinarian' | 'Emergency Vet' | 'Groomer' | 'Trainer' | 'Boarding' | 'Pet Sitter' | 'Walker' | 'Other';
   phone: string;
   email?: string;
   address?: string;
   website?: string;
+  directions?: string;
+  lastVisit?: string;
+  nextAppointment?: string;
+  favorite?: boolean;
+  documents?: Attachment[];
+  linkedSystems?: Array<'Vet Prep' | 'Reminders' | 'Emergency Packet'>;
   rating?: number;
   notes?: string;
 }
@@ -200,9 +244,17 @@ export interface VetVisitPrep {
   dogId: string;
   title: string;
   date: string;
+  symptoms: string[];
   questions: string[];
   notes?: string;
   includeWeightHistory: boolean;
   includeMedications: boolean;
   includeVaccines: boolean;
+  photos?: Attachment[];
+  videos?: Attachment[];
+  documents?: Attachment[];
+  diagnosis?: string;
+  recommendations?: string;
+  completed?: boolean;
+  completedAt?: string;
 }

@@ -7,25 +7,25 @@
   --font-sans: "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif";
   --font-serif: "Georgia", "Cambria", "Times New Roman", "Times", "serif";
   
-  --color-primary: #C85A32; /* Warm Terracotta */
+  --color-primary: #b65e3c; /* Terracotta */
   --color-primary-content: #ffffff;
-  --color-secondary: #7D9B76; /* Sage Green */
+  --color-secondary: #7a7b5a; /* Sage */
   --color-secondary-content: #ffffff;
-  --color-accent: #B3A398; /* Soft Taupe */
-  --color-accent-content: #333333;
-  --color-neutral: #333333; /* Charcoal */
-  --color-neutral-content: #FAF9F6;
-  --color-base-100: #FAF9F6; /* Cream/Ivory background */
-  --color-base-200: #FDFBF7; /* Slightly warmer Ivory */
-  --color-base-300: #8D8276; /* Soft Taupe for borders/secondary */
+  --color-accent: #bfa98f; /* Soft neutral accent */
+  --color-accent-content: #2e2b28;
+  --color-neutral: #2e2b28; /* Charcoal */
+  --color-neutral-content: #f5f1ea;
+  --color-base-100: #f5f1ea; /* Cream background */
+  --color-base-200: #f1ebe2; /* Soft cream overlay */
+  --color-base-300: #7a7b5a; /* Sage border accent */
   
   /* Additional Brand Shades */
-  --color-terracotta-light: #F9EBE6;
-  --color-terracotta: #C85A32;
-  --color-sage-light: #EDF1EC;
-  --color-sage: #7D9B76;
-  --color-taupe-light: #F2F0EE;
-  --color-taupe: #8D8276;
+  --color-terracotta-light: #f7e5de;
+  --color-terracotta: #b65e3c;
+  --color-sage-light: #e7ebdd;
+  --color-sage: #7a7b5a;
+  --color-taupe-light: #ede6dc;
+  --color-taupe: #bfa98f;
   
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;

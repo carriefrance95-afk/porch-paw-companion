@@ -1,13 +1,13 @@
 import React from 'react';
 import { usePets } from '../context/PetContext';
-import { ShieldCheck, Calendar, Activity, Syringe, Pill } from 'lucide-react';
+import { ShieldCheck, Activity, Syringe, Pill } from 'lucide-react';
 
 interface WellnessReportProps {
   dogId: string;
 }
 
 const WellnessReport: React.FC<WellnessReportProps> = ({ dogId }) => {
-  const { profiles, vaccines, medications, allergies, surgeries } = usePets();
+  const { profiles, vaccines, medications, surgeries } = usePets();
   const dog = profiles.find(p => p.id === dogId);
 
   if (!dog) return null;
@@ -43,12 +43,20 @@ const WellnessReport: React.FC<WellnessReportProps> = ({ dogId }) => {
             </h4>
             {upcomingVaccines.length > 0 ? (
               <div className="space-y-2">
-                {upcomingVaccines.map(v => (
-                  <div key={v.id} className="flex justify-between items-center p-3 bg-base-100 border border-base-200 rounded-xl">
-                    <span className="text-sm font-bold">{v.vaccineName}</span>
-                    <span className="text-xs font-black px-2 py-1 bg-primary/10 text-primary rounded-lg">{v.nextDueDate}</span>
-                  </div>
-                ))}
+                {upcomingVaccines.map(v => {
+                  const overdue = v.nextDueDate ? new Date(v.nextDueDate).getTime() < new Date().getTime() : false;
+                  return (
+                    <div key={v.id} className="flex flex-col sm:flex-row sm:justify-between gap-2 p-3 bg-base-100 border border-base-200 rounded-xl">
+                      <div>
+                        <span className="text-sm font-bold">{v.vaccineName}</span>
+                        {v.attachments?.length ? <p className="text-[10px] opacity-60">{v.attachments.length} attachment{v.attachments.length > 1 ? 's' : ''}</p> : null}
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-xs font-black px-2 py-1 rounded-lg ${overdue ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary'}`}>{v.nextDueDate}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             ) : <p className="text-xs opacity-50 italic">No upcoming vaccinations.</p>}
           </section>
@@ -59,12 +67,21 @@ const WellnessReport: React.FC<WellnessReportProps> = ({ dogId }) => {
             </h4>
             {activeMedications.length > 0 ? (
               <div className="space-y-2">
-                {activeMedications.map(m => (
-                  <div key={m.id} className="p-3 bg-base-100 border border-base-200 rounded-xl">
-                    <p className="text-sm font-bold">{m.name}</p>
-                    <p className="text-xs opacity-60">{m.dosage} — {m.frequency}</p>
-                  </div>
-                ))}
+                {activeMedications.map(m => {
+                  const overdue = m.dueDate ? new Date(m.dueDate).getTime() < new Date().getTime() : false;
+                  return (
+                    <div key={m.id} className="p-3 bg-base-100 border border-base-200 rounded-xl">
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-sm font-bold">{m.name}</p>
+                        {m.dueDate ? (
+                          <span className={`text-[10px] font-black px-2 py-1 rounded-lg ${overdue ? 'bg-error/10 text-error' : 'bg-secondary/10 text-secondary'}`}>{m.dueDate}</span>
+                        ) : null}
+                      </div>
+                      <p className="text-xs opacity-60 mt-1">{m.dosage} — {m.frequency}</p>
+                      {m.attachments?.length ? <p className="text-[10px] opacity-60 mt-1">{m.attachments.length} attachment{m.attachments.length > 1 ? 's' : ''}</p> : null}
+                    </div>
+                  );
+                })}
               </div>
             ) : <p className="text-xs opacity-50 italic">No active medications.</p>}
           </section>

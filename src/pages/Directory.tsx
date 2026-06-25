@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePets } from '../context/PetContext';
 import { type DirectoryEntry } from '../types';
 import { Search, Plus, Phone, Mail, MapPin, Globe, Star, Trash2, Edit, X } from 'lucide-react';
 
 const Directory: React.FC = () => {
+  const navigate = useNavigate();
   const { directory, addDirectoryEntry, updateDirectoryEntry, deleteDirectoryEntry } = usePets();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<DirectoryEntry | null>(null);
+  const [documentText, setDocumentText] = useState('');
 
   const [formData, setFormData] = useState<Partial<DirectoryEntry>>({
-    category: 'Vet',
-    rating: 5
+    category: 'Veterinarian',
+    rating: 5,
+    favorite: false,
+    linkedSystems: []
   });
 
-  const categories = ['All', 'Vet', 'Groomer', 'Trainer', 'Walker', 'Other'];
+  const categories = ['All', 'Veterinarian', 'Emergency Vet', 'Groomer', 'Trainer', 'Boarding', 'Pet Sitter', 'Walker', 'Other'];
+  const linkedSystemOptions = ['Vet Prep', 'Reminders', 'Emergency Packet'] as const;
+  type LinkedSystem = typeof linkedSystemOptions[number];
 
   const filteredDirectory = directory.filter(entry => {
     const matchesSearch = entry.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         entry.notes?.toLowerCase().includes(searchTerm.toLowerCase());
+                         entry.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         entry.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         entry.website?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'All' || entry.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
@@ -28,22 +37,40 @@ const Directory: React.FC = () => {
     if (entry) {
       setEditingEntry(entry);
       setFormData(entry);
+      setDocumentText((entry.documents || []).map(doc => `${doc.label} | ${doc.url}`).join('\n'));
     } else {
       setEditingEntry(null);
-      setFormData({ category: 'Vet', rating: 5, name: '', phone: '', email: '', address: '', website: '', notes: '' });
+      setFormData({ category: 'Veterinarian', rating: 5, favorite: false, linkedSystems: [], name: '', phone: '', email: '', address: '', website: '', directions: '', lastVisit: '', nextAppointment: '', notes: '' });
+      setDocumentText('');
     }
     setIsModalOpen(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const documents = documentText.split('\n').map(line => line.trim()).filter(Boolean).map((line, idx) => {
+      const [labelPart, urlPart] = line.split('|').map(part => part.trim());
+      return {
+        id: `${Date.now()}-${idx}`,
+        label: labelPart || `Document ${idx + 1}`,
+        url: urlPart || labelPart
+      };
+    });
+
+    const entry = {
+      ...editingEntry,
+      ...formData,
+      documents: documents.length ? documents : undefined,
+      linkedSystems: formData.linkedSystems || []
+    } as DirectoryEntry;
+
     if (editingEntry) {
-      updateDirectoryEntry({ ...editingEntry, ...formData } as DirectoryEntry);
+      updateDirectoryEntry(entry);
     } else {
       addDirectoryEntry({
-        ...formData,
+        ...entry,
         id: Math.random().toString(36).substr(2, 9),
-      } as DirectoryEntry);
+      });
     }
     setIsModalOpen(false);
   };
@@ -53,10 +80,10 @@ const Directory: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-base-content mb-2">Care Directory</h1>
-          <p className="text-base-content/70">Your trusted network of pet care professionals.</p>
+          <p className="text-base-content/70">Your trusted network of pet care professionals, ready for appointments, emergency outreach, and follow-up reminders.</p>
         </div>
         <button 
-          className="btn btn-primary rounded-2xl shadow-lg"
+          className="btn bg-terracotta text-white rounded-2xl shadow-lg border-none hover:bg-[#a3492c]"
           onClick={() => handleOpenModal()}
         >
           <Plus size={20} />
@@ -81,7 +108,7 @@ const Directory: React.FC = () => {
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`btn btn-sm rounded-xl px-6 ${categoryFilter === cat ? 'btn-primary' : 'btn-ghost bg-base-200'}`}
+              className={`btn btn-sm rounded-full px-5 ${categoryFilter === cat ? 'bg-terracotta text-white' : 'btn-ghost bg-base-200 text-neutral'}`}
             >
               {cat}
             </button>
@@ -100,57 +127,126 @@ const Directory: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDirectory.map(entry => (
             <div key={entry.id} className="bg-base-100 rounded-[2rem] p-6 shadow-sm border border-base-200 hover:shadow-md transition-shadow group">
-              <div className="flex justify-between items-start mb-4">
-                <div className={`badge ${
-                  entry.category === 'Vet' ? 'badge-info' : 
-                  entry.category === 'Groomer' ? 'badge-secondary' : 
-                  entry.category === 'Trainer' ? 'badge-accent' : 'badge-ghost'
-                } rounded-lg px-3 py-3 font-bold text-[10px] uppercase tracking-wider`}>
-                  {entry.category}
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between items-start gap-4 mb-4">
+                <div>
+                  <div className={`inline-flex items-center rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] ${
+                    entry.category === 'Veterinarian' ? 'bg-terracotta/10 text-terracotta border-terracotta/30' :
+                    entry.category === 'Emergency Vet' ? 'bg-[#8c4f34]/10 text-[#8c4f34] border-[#8c4f34]/30' :
+                    entry.category === 'Groomer' ? 'bg-sage/10 text-sage border-sage/30' :
+                    entry.category === 'Trainer' ? 'bg-[#5a6c58]/10 text-[#5a6c58] border-[#5a6c58]/30' :
+                    entry.category === 'Boarding' ? 'bg-[#c5b29b]/10 text-[#7b5b41] border-[#c5b29b]/30' :
+                    entry.category === 'Pet Sitter' ? 'bg-sage/10 text-sage border-sage/30' :
+                    'bg-base-200 text-neutral border-base-300'
+                  }`}>{entry.category}</div>
+                  <div className="mt-3 flex items-center gap-2 text-xs text-neutral/80">
+                    <span className="font-semibold">Last visit:</span>
+                    <span>{entry.lastVisit || 'TBD'}</span>
+                  </div>
                 </div>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => handleOpenModal(entry)} className="btn btn-ghost btn-xs btn-circle text-info"><Edit size={14} /></button>
-                  <button onClick={() => deleteDirectoryEntry(entry.id)} className="btn btn-ghost btn-xs btn-circle text-error"><Trash2 size={14} /></button>
-                </div>
+                <button onClick={() => setFormData({ ...entry, favorite: !entry.favorite })} className={`btn btn-sm rounded-full border ${entry.favorite ? 'bg-terracotta text-white border-terracotta' : 'btn-ghost bg-base-200 text-neutral'}`}>
+                  {entry.favorite ? '★ Favorite' : '☆ Favorite'}
+                </button>
               </div>
 
-              <h3 className="text-xl font-bold mb-1">{entry.name}</h3>
-              <div className="flex items-center gap-1 mb-4">
+              <h3 className="text-2xl font-bold mb-1 text-charcoal">{entry.name}</h3>
+              <div className="flex items-center flex-wrap gap-2 mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={14} className={i < (entry.rating || 0) ? 'text-warning fill-warning' : 'text-base-300'} />
+                  <Star key={i} size={16} className={i < (entry.rating || 0) ? 'text-terracotta fill-terracotta' : 'text-base-300'} />
                 ))}
               </div>
 
-              <div className="space-y-2 text-sm opacity-80 mb-6">
-                <div className="flex items-center gap-2">
-                  <Phone size={14} className="text-primary" />
-                  <a href={`tel:${entry.phone}`} className="hover:underline">{entry.phone}</a>
+              <div className="space-y-3 text-sm opacity-90 mb-6">
+                <div className="grid grid-cols-1 gap-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone size={16} className="text-terracotta" />
+                    <a href={`tel:${entry.phone}`} className="hover:underline truncate">{entry.phone}</a>
+                  </div>
+                  {entry.email && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Mail size={16} className="text-sage" />
+                      <a href={`mailto:${entry.email}`} className="hover:underline truncate">{entry.email}</a>
+                    </div>
+                  )}
+                  {entry.website && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Globe size={16} className="text-charcoal" />
+                      <a href={entry.website} target="_blank" rel="noopener noreferrer" className="hover:underline truncate">{entry.website}</a>
+                    </div>
+                  )}
+                  {entry.address && (
+                    <div className="flex items-start gap-2 text-sm">
+                      <MapPin size={16} className="text-sage" />
+                      <span>{entry.address}</span>
+                    </div>
+                  )}
+                  {entry.directions && (
+                    <div className="bg-base-200 p-3 rounded-2xl text-xs text-charcoal">
+                      <span className="font-bold">Directions:</span> {entry.directions}
+                    </div>
+                  )}
+                  {entry.nextAppointment && (
+                    <div className="bg-terracotta/10 text-terracotta p-3 rounded-2xl text-sm">
+                      <span className="font-semibold">Next Appointment:</span> {entry.nextAppointment}
+                    </div>
+                  )}
                 </div>
-                {entry.email && (
-                  <div className="flex items-center gap-2">
-                    <Mail size={14} className="text-primary" />
-                    <a href={`mailto:${entry.email}`} className="hover:underline truncate">{entry.email}</a>
-                  </div>
-                )}
-                {entry.address && (
-                  <div className="flex items-start gap-2">
-                    <MapPin size={14} className="text-primary mt-1 flex-shrink-0" />
-                    <span>{entry.address}</span>
-                  </div>
-                )}
-                {entry.website && (
-                  <div className="flex items-center gap-2">
-                    <Globe size={14} className="text-primary" />
-                    <a href={entry.website} target="_blank" rel="noopener noreferrer" className="hover:underline truncate">{entry.website}</a>
-                  </div>
-                )}
               </div>
 
               {entry.notes && (
-                <div className="p-3 bg-base-200 rounded-xl text-xs italic">
+                <div className="p-4 bg-[#f5efe7] rounded-3xl text-sm leading-6 text-[#4b3f36] border border-[#e5d6c8]">
                   "{entry.notes}"
                 </div>
               )}
+              {entry.documents?.length ? (
+                <div className="mt-4 border-t border-base-300 pt-4">
+                  <p className="text-xs uppercase tracking-[0.3em] text-[#7a7b5a] mb-2">Documents</p>
+                  <ul className="space-y-2 text-sm">
+                    {entry.documents.map(doc => (
+                      <li key={doc.id} className="flex justify-between gap-4">
+                        <span>{doc.label}</span>
+                        <a href={doc.url} target="_blank" rel="noopener noreferrer" className="text-terracotta hover:underline">Open</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              {entry.linkedSystems?.length ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {entry.linkedSystems.map(link => (
+                    <span key={link} className="inline-flex items-center rounded-full border border-[#d1c0b2] bg-[#f7efe6] px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-[#7a5d47]">{link}</span>
+                  ))}
+                </div>
+              ) : null}
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {entry.linkedSystems?.includes('Reminders') && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/reminders?providerId=${entry.id}`)}
+                    className="btn btn-xs btn-outline rounded-full"
+                  >
+                    Schedule Reminder
+                  </button>
+                )}
+                {entry.linkedSystems?.includes('Vet Prep') && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/vet-visit-prep?providerId=${entry.id}`)}
+                    className="btn btn-xs btn-outline rounded-full"
+                  >
+                    Vet Prep
+                  </button>
+                )}
+                {entry.linkedSystems?.includes('Emergency Packet') && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/emergency?providerId=${entry.id}&tab=packet`)}
+                    className="btn btn-xs btn-outline rounded-full"
+                  >
+                    Emergency Packet
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -176,61 +272,110 @@ const Directory: React.FC = () => {
                 />
               </div>
 
-              <div className="form-control">
-                <label className="label"><span className="label-text font-semibold">Category</span></label>
-                <select 
-                  className="select select-bordered rounded-2xl w-full"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
-                  required
-                >
-                  <option value="Vet">Vet</option>
-                  <option value="Groomer">Groomer</option>
-                  <option value="Trainer">Trainer</option>
-                  <option value="Walker">Walker</option>
-                  <option value="Other">Other</option>
-                </select>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="form-control">
+                  <label className="label"><span className="label-text font-semibold">Category</span></label>
+                  <select 
+                    className="select select-bordered rounded-2xl w-full"
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
+                    required
+                  >
+                    <option value="Veterinarian">Veterinarian</option>
+                    <option value="Emergency Vet">Emergency Vet</option>
+                    <option value="Groomer">Groomer</option>
+                    <option value="Trainer">Trainer</option>
+                    <option value="Boarding">Boarding</option>
+                    <option value="Pet Sitter">Pet Sitter</option>
+                    <option value="Walker">Walker</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div className="form-control">
+                  <label className="label cursor-pointer justify-start gap-4">
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-secondary rounded-lg"
+                      checked={formData.favorite}
+                      onChange={(e) => setFormData({ ...formData, favorite: e.target.checked })}
+                    />
+                    <span className="label-text font-semibold">Favorite Provider</span>
+                  </label>
+                </div>
               </div>
 
-              <div className="form-control">
-                <label className="label"><span className="label-text font-semibold">Phone</span></label>
-                <input 
-                  type="tel" 
-                  className="input input-bordered rounded-2xl w-full"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  required
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="form-control">
+                  <label className="label"><span className="label-text font-semibold">Phone</span></label>
+                  <input 
+                    type="tel" 
+                    className="input input-bordered rounded-2xl w-full"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="form-control">
+                  <label className="label"><span className="label-text font-semibold">Email</span></label>
+                  <input 
+                    type="email" 
+                    className="input input-bordered rounded-2xl w-full"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
               </div>
 
-              <div className="form-control">
-                <label className="label"><span className="label-text font-semibold">Email</span></label>
-                <input 
-                  type="email" 
-                  className="input input-bordered rounded-2xl w-full"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="form-control">
+                  <label className="label"><span className="label-text font-semibold">Address</span></label>
+                  <input 
+                    type="text" 
+                    className="input input-bordered rounded-2xl w-full"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  />
+                </div>
+                <div className="form-control">
+                  <label className="label"><span className="label-text font-semibold">Website</span></label>
+                  <input 
+                    type="url" 
+                    className="input input-bordered rounded-2xl w-full"
+                    value={formData.website}
+                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                  />
+                </div>
               </div>
 
-              <div className="form-control">
-                <label className="label"><span className="label-text font-semibold">Address</span></label>
-                <input 
-                  type="text" 
-                  className="input input-bordered rounded-2xl w-full"
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                />
-              </div>
-
-              <div className="form-control">
-                <label className="label"><span className="label-text font-semibold">Website</span></label>
-                <input 
-                  type="url" 
-                  className="input input-bordered rounded-2xl w-full"
-                  value={formData.website}
-                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="form-control">
+                  <label className="label"><span className="label-text font-semibold">Directions</span></label>
+                  <textarea 
+                    className="textarea textarea-bordered rounded-2xl h-24"
+                    value={formData.directions}
+                    onChange={(e) => setFormData({ ...formData, directions: e.target.value })}
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="form-control">
+                    <label className="label"><span className="label-text font-semibold">Last Visit</span></label>
+                    <input 
+                      type="date" 
+                      className="input input-bordered rounded-2xl w-full"
+                      value={formData.lastVisit}
+                      onChange={(e) => setFormData({ ...formData, lastVisit: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label"><span className="label-text font-semibold">Next Appointment</span></label>
+                    <input 
+                      type="date" 
+                      className="input input-bordered rounded-2xl w-full"
+                      value={formData.nextAppointment}
+                      onChange={(e) => setFormData({ ...formData, nextAppointment: e.target.value })}
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="form-control">
@@ -245,6 +390,40 @@ const Directory: React.FC = () => {
                 <div className="w-full flex justify-between text-xs px-2 mt-2">
                   <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
                 </div>
+              </div>
+
+              <div className="form-control">
+                <label className="label"><span className="label-text font-semibold">Linked Systems</span></label>
+                <div className="grid grid-cols-1 gap-2">
+                  {linkedSystemOptions.map(system => (
+                    <label key={system} className="label cursor-pointer justify-start gap-3">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-secondary rounded-lg"
+                        checked={formData.linkedSystems?.includes(system) ?? false}
+                        onChange={(e) => {
+                          const existing = (formData.linkedSystems || []) as LinkedSystem[];
+                          const next = e.target.checked
+                            ? [...existing, system]
+                            : existing.filter(item => item !== system);
+                          setFormData({ ...formData, linkedSystems: next });
+                        }}
+                      />
+                      <span className="label-text text-sm">{system}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-control">
+                <label className="label"><span className="label-text font-semibold">Documents</span></label>
+                <textarea
+                  className="textarea textarea-bordered rounded-2xl h-24"
+                  value={documentText}
+                  onChange={(e) => setDocumentText(e.target.value)}
+                  placeholder="Label | URL, one per line"
+                />
+                <p className="text-xs opacity-60 mt-2">Add documents as label and URL pairs, separated by a pipe.</p>
               </div>
 
               <div className="form-control">

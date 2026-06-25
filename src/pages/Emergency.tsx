@@ -1,27 +1,83 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { usePets } from '../context/PetContext';
-import { type EmergencyContact, type PetSitterInstructions, type LostPetFlyer } from '../types';
+import { type DirectoryEntry, type EmergencyContact, type PetSitterInstructions, type LostPetFlyer } from '../types';
 import { 
   Phone, Users, ClipboardList, Map, Printer, Plus, Trash2, Edit, Save, 
-  AlertCircle, ShieldAlert, Heart, Info, Camera, Share2, Download
+  AlertCircle, ShieldAlert, Heart, Info, Camera, Share2, Download, ArrowUp, ArrowDown, Smartphone
 } from 'lucide-react';
 import EmergencyPacket from '../components/EmergencyPacket';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 const Emergency: React.FC = () => {
-  const { 
+  const {
     profiles, vaccines, medications, allergies, emergencyContacts, addEmergencyContact, updateEmergencyContact, deleteEmergencyContact,
     sitterInstructions, updateSitterInstructions,
-    lostPetFlyers, updateLostPetFlyer
+    lostPetFlyers, updateLostPetFlyer,
+    directory
   } = usePets();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [providerContext, setProviderContext] = useState<DirectoryEntry | null>(null);
+  const [providerPrefillApplied, setProviderPrefillApplied] = useState(false);
 
   const [activeTab, setActiveTab] = useState<'contacts' | 'sitter' | 'flyer' | 'packet' | 'resources'>('contacts');
   const [selectedDogId, setSelectedDogId] = useState<string>(profiles[0]?.id || '');
+  const [isExporting, setIsExporting] = useState(false);
   
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [editingContact, setEditingContact] = useState<EmergencyContact | null>(null);
   const [contactFormData, setContactFormData] = useState<Partial<EmergencyContact>>({
-    isPrimary: false
+    isPrimary: false,
+    priority: 'Secondary'
   });
+  const packetRef = useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (!selectedDogId && profiles[0]?.id) {
+      setSelectedDogId(profiles[0].id);
+    }
+  }, [profiles, selectedDogId]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const providerId = params.get('providerId');
+    const tab = params.get('tab');
+    if (!providerId || providerPrefillApplied) return;
+
+    const provider = directory.find(item => item.id === providerId);
+    if (!provider) return;
+
+    setProviderContext(provider);
+    if (tab === 'packet') setActiveTab('packet');
+    setProviderPrefillApplied(true);
+    navigate('/emergency', { replace: true });
+  }, [location.search, directory, providerPrefillApplied, navigate]);
+
+  const sortedContacts = [...emergencyContacts].sort((a, b) => {
+    const rank = (contact: EmergencyContact) => {
+      const priorityRank = contact.priority === 'Primary' ? 0 : contact.priority === 'Secondary' ? 1 : 2;
+      return (contact.order ?? (priorityRank + 1) * 10) + priorityRank;
+    };
+    return rank(a) - rank(b);
+  });
+
+  const adjustContactOrder = (id: string, direction: 'up' | 'down') => {
+    const sorted = [...sortedContacts];
+    const index = sorted.findIndex(contact => contact.id === id);
+    if (index === -1) return;
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= sorted.length) return;
+
+    const current = sorted[index];
+    const target = sorted[targetIndex];
+    const currentOrder = current.order ?? index + 1;
+    const targetOrder = target.order ?? targetIndex + 1;
+
+    updateEmergencyContact({ ...current, order: targetOrder });
+    updateEmergencyContact({ ...target, order: currentOrder });
+  };
 
   const handleOpenContactModal = (contact?: EmergencyContact) => {
     if (contact) {
@@ -54,7 +110,11 @@ const Emergency: React.FC = () => {
     behavioralNotes: '',
     favoriteToys: '',
     routines: '',
-    emergencyNotes: ''
+    emergencyNotes: '',
+    houseRules: '',
+    accessInstructions: '',
+    walkRoutine: '',
+    keyLocations: ''
   };
 
   const currentFlyer = lostPetFlyers.find(f => f.dogId === selectedDogId) || {
@@ -63,7 +123,10 @@ const Emergency: React.FC = () => {
     lastSeenLocation: '',
     reward: '',
     contactPhone: '',
-    notes: ''
+    notes: '',
+    photoUrls: [],
+    qrData: '',
+    socialCaption: ''
   };
 
   const handleSitterSubmit = (e: React.FormEvent) => {
@@ -79,6 +142,10 @@ const Emergency: React.FC = () => {
       favoriteToys: formData.get('favoriteToys') as string,
       routines: formData.get('routines') as string,
       emergencyNotes: formData.get('emergencyNotes') as string,
+      houseRules: formData.get('houseRules') as string,
+      accessInstructions: formData.get('accessInstructions') as string,
+      walkRoutine: formData.get('walkRoutine') as string,
+      keyLocations: formData.get('keyLocations') as string,
     });
     alert('Sitter instructions saved!');
   };
@@ -88,6 +155,8 @@ const Emergency: React.FC = () => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     
+    const photoUrlsRaw = (formData.get('photoUrls') as string || '').split(',').map(url => url.trim()).filter(Boolean);
+
     updateLostPetFlyer({
       dogId: selectedDogId,
       lastSeenDate: formData.get('lastSeenDate') as string,
@@ -95,8 +164,59 @@ const Emergency: React.FC = () => {
       reward: formData.get('reward') as string,
       contactPhone: formData.get('contactPhone') as string,
       notes: formData.get('notes') as string,
+      photoUrls: photoUrlsRaw,
+      qrData: formData.get('qrData') as string,
+      socialCaption: formData.get('socialCaption') as string,
     });
     alert('Flyer information updated!');
+  };
+
+  const handleShareFlyer = async () => {
+    const flyerText = `LOST DOG: ${selectedDog?.name}\nLast Seen: ${currentFlyer.lastSeenLocation} on ${currentFlyer.lastSeenDate}\nReward: ${currentFlyer.reward}\nContact: ${currentFlyer.contactPhone}\n${currentFlyer.notes}`;
+
+    if (navigator.share) {
+      await navigator.share({
+        title: `Lost Dog: ${selectedDog?.name}`,
+        text: flyerText,
+      }).catch(() => {});
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(flyerText);
+      alert('Flyer details copied to clipboard. Share it in your preferred app.');
+    } else {
+      alert('Use your browser share menu or copy the text manually.');
+    }
+  };
+
+  const handleExportPacketPdf = async () => {
+    if (!packetRef.current) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(packetRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+      const imageData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgProps = pdf.getImageProperties(imageData);
+      const imgWidth = pageWidth - 40;
+      const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+      let y = 20;
+
+      pdf.addImage(imageData, 'PNG', 20, y, imgWidth, imgHeight);
+      if (imgHeight > pageHeight - 40) {
+        // If content is taller than one page, add a second page and continue
+        const remainingHeight = imgHeight - (pageHeight - 40);
+        if (remainingHeight > 0) {
+          pdf.addPage();
+          pdf.addImage(imageData, 'PNG', 20, 20 - (pageHeight - 40), imgWidth, imgHeight);
+        }
+      }
+      pdf.save(`${selectedDog?.name || 'emergency-packet'}-packet.pdf`);
+    } catch (error) {
+      console.error(error);
+      alert('Unable to export packet PDF. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const selectedDog = profiles.find(p => p.id === selectedDogId);
@@ -110,6 +230,14 @@ const Emergency: React.FC = () => {
             Emergency Planning Center
           </h1>
           <p className="text-base-content/70">Be prepared for the unexpected and ensure your dog's safety.</p>
+          {providerContext && (
+            <div className="mt-4 rounded-3xl border border-info/20 bg-info/5 p-4 text-sm text-info-content">
+              <strong>Provider context:</strong> {providerContext.name} — {providerContext.category}
+              {providerContext.phone && (
+                <span className="block mt-2">Call: <a href={`tel:${providerContext.phone}`} className="underline">{providerContext.phone}</a></span>
+              )}
+            </div>
+          )}
         </div>
         <div className="flex gap-2">
           <button className="btn btn-outline rounded-2xl" onClick={() => { setActiveTab('packet'); setTimeout(() => window.print(), 100); }}>
@@ -189,12 +317,18 @@ const Emergency: React.FC = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {emergencyContacts.map(contact => (
+              {sortedContacts.map((contact, index) => (
                 <div key={contact.id} className={`bg-base-100 rounded-[2rem] p-6 shadow-sm border ${contact.isPrimary ? 'border-primary' : 'border-base-200'}`}>
-                  {contact.isPrimary && (
-                    <span className="badge badge-primary badge-sm mb-3">Primary Contact</span>
-                  )}
-                  <h3 className="text-lg font-bold mb-1">{contact.name}</h3>
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.2em] text-base-content/60">{contact.priority || 'Secondary'}</p>
+                      <h3 className="text-lg font-bold">{contact.name}</h3>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <button className="btn btn-ghost btn-xs btn-circle" type="button" onClick={() => adjustContactOrder(contact.id, 'up')}><ArrowUp size={16} /></button>
+                      <button className="btn btn-ghost btn-xs btn-circle" type="button" onClick={() => adjustContactOrder(contact.id, 'down')}><ArrowDown size={16} /></button>
+                    </div>
+                  </div>
                   <p className="text-sm opacity-60 mb-4">{contact.relationship}</p>
                   
                   <div className="space-y-2 mb-6">
@@ -287,6 +421,42 @@ const Emergency: React.FC = () => {
                       defaultValue={currentSitterInstructions.favoriteToys}
                     />
                   </div>
+                  <div className="form-control">
+                    <label className="label"><span className="label-text font-bold">Walk Routine & Outdoor Safety</span></label>
+                    <textarea 
+                      name="walkRoutine"
+                      className="textarea textarea-bordered rounded-2xl h-32" 
+                      placeholder="e.g. Wakes up at 7am, walks on leash only, avoids busy crosswalks."
+                      defaultValue={currentSitterInstructions.walkRoutine}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label"><span className="label-text font-bold">Home & Access Instructions</span></label>
+                    <textarea 
+                      name="accessInstructions"
+                      className="textarea textarea-bordered rounded-2xl h-32" 
+                      placeholder="e.g. Front door code, where keys are kept, cleaning routines, and off-limit rooms."
+                      defaultValue={currentSitterInstructions.accessInstructions}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label"><span className="label-text font-bold">House Rules & Key Locations</span></label>
+                    <textarea 
+                      name="keyLocations"
+                      className="textarea textarea-bordered rounded-2xl h-32" 
+                      placeholder="e.g. Bed is off limits, treats in pantry, first aid kit behind the dog door."
+                      defaultValue={currentSitterInstructions.keyLocations}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label"><span className="label-text font-bold">House Rules Summary</span></label>
+                    <textarea 
+                      name="houseRules"
+                      className="textarea textarea-bordered rounded-2xl h-24" 
+                      placeholder="e.g. Do not leave the dog unattended outside; keep gates latched."
+                      defaultValue={currentSitterInstructions.houseRules}
+                    />
+                  </div>
                   <div className="bg-info/10 p-6 rounded-[2rem] border border-info/20 mt-4">
                     <h4 className="font-bold flex items-center gap-2 mb-2 text-info-content">
                       <Info size={18} />
@@ -329,6 +499,34 @@ const Emergency: React.FC = () => {
                     <input name="contactPhone" type="tel" className="input input-bordered rounded-2xl" defaultValue={currentFlyer.contactPhone} />
                   </div>
                   <div className="form-control">
+                    <label className="label"><span className="label-text font-bold">Photo URLs</span></label>
+                    <textarea 
+                      name="photoUrls"
+                      className="textarea textarea-bordered rounded-2xl h-24" 
+                      placeholder="Add image URLs separated by commas for flyer and social sharing."
+                      defaultValue={currentFlyer.photoUrls?.join(', ')}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label"><span className="label-text font-bold">Shareable QR Code Link</span></label>
+                    <input 
+                      name="qrData"
+                      type="text"
+                      className="input input-bordered rounded-2xl"
+                      placeholder="e.g. https://porchpaw.com/lost/dog123"
+                      defaultValue={currentFlyer.qrData}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label"><span className="label-text font-bold">Social Caption</span></label>
+                    <textarea 
+                      name="socialCaption"
+                      className="textarea textarea-bordered rounded-2xl h-24" 
+                      placeholder="A quick caption for social posts and neighborhood groups."
+                      defaultValue={currentFlyer.socialCaption}
+                    />
+                  </div>
+                  <div className="form-control">
                     <label className="label"><span className="label-text font-bold">Description & Notes</span></label>
                     <textarea 
                       name="notes"
@@ -344,12 +542,26 @@ const Emergency: React.FC = () => {
               {/* Preview Side */}
               <div id="flyer-preview" className="bg-white text-black p-8 shadow-2xl rounded-sm border-8 border-error flex flex-col items-center text-center">
                 <h1 className="text-6xl font-black text-error mb-2 uppercase tracking-tighter">LOST DOG</h1>
-                <div className="w-full h-80 bg-gray-200 rounded-lg overflow-hidden my-6 border-2 border-black flex items-center justify-center">
-                  {selectedDog.photoUrl ? (
-                    <img src={selectedDog.photoUrl} alt={selectedDog.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <Camera size={64} className="text-gray-400" />
-                  )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                  <div className="w-full h-80 bg-gray-200 rounded-lg overflow-hidden border-2 border-black flex items-center justify-center">
+                    {selectedDog.photoUrl ? (
+                      <img src={selectedDog.photoUrl} alt={selectedDog.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <Camera size={64} className="text-gray-400" />
+                    )}
+                  </div>
+                  <div className="space-y-4">
+                    {currentFlyer.photoUrls?.slice(0, 3).map((url, index) => (
+                      <div key={index} className="h-24 bg-gray-100 rounded-lg overflow-hidden border border-black">
+                        <img src={url} alt={`Flyer photo ${index + 1}`} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                    {currentFlyer.photoUrls?.length === 0 && (
+                      <div className="h-24 bg-gray-100 rounded-lg border border-dashed border-black flex items-center justify-center text-sm text-gray-500">
+                        Add photo URLs to enhance your flyer.
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <h2 className="text-5xl font-bold mb-2 uppercase">{selectedDog.name}</h2>
                 <p className="text-xl font-semibold mb-6">{selectedDog.breed} • {selectedDog.birthDate} • Microchipped</p>
@@ -371,12 +583,37 @@ const Emergency: React.FC = () => {
                   <p className="text-3xl font-black uppercase mb-2">PLEASE CONTACT:</p>
                   <p className="text-5xl font-black">{currentFlyer.contactPhone || '555-0199'}</p>
                 </div>
-                
-                <div className="mt-4 flex gap-4 no-print">
+
+                {currentFlyer.qrData && (
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 items-center bg-black text-white p-4 rounded-2xl">
+                    <div className="bg-white p-3 rounded-lg">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(currentFlyer.qrData)}`}
+                        alt="QR code"
+                        className="w-32 h-32"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-sm uppercase tracking-[0.25em] opacity-70 flex items-center gap-2">
+                        <Smartphone size={16} /> Scan for more details
+                      </p>
+                      <p className="text-lg font-bold break-words">{currentFlyer.qrData}</p>
+                    </div>
+                  </div>
+                )}
+
+                {currentFlyer.socialCaption && (
+                  <div className="mt-6 bg-primary/10 text-primary p-4 rounded-2xl border border-primary/20">
+                    <p className="text-sm uppercase tracking-[0.2em] font-bold mb-2">Social Caption</p>
+                    <p className="text-sm">{currentFlyer.socialCaption}</p>
+                  </div>
+                )}
+
+                <div className="mt-4 flex flex-col md:flex-row gap-4 no-print">
                   <button className="btn btn-error btn-outline rounded-xl" onClick={() => window.print()}>
                     <Download size={18} /> Download PDF
                   </button>
-                  <button className="btn btn-ghost rounded-xl">
+                  <button className="btn btn-ghost rounded-xl" onClick={handleShareFlyer}>
                     <Share2 size={18} /> Share Digital
                   </button>
                 </div>
@@ -391,12 +628,38 @@ const Emergency: React.FC = () => {
             <div className="bg-base-200 p-8 rounded-[2.5rem] mb-6 no-print text-center">
               <h2 className="text-xl font-bold mb-2">Emergency Care Packet Preview</h2>
               <p className="opacity-70 mb-6">This packet includes all vital health records, contacts, and instructions in one place.</p>
-              <button className="btn btn-primary rounded-2xl px-12" onClick={() => window.print()}>
-                <Printer size={18} />
-                Print Packet Now
-              </button>
+              <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+                <button className="btn btn-primary rounded-2xl px-12" onClick={() => window.print()}>
+                  <Printer size={18} />
+                  Print Packet Now
+                </button>
+                <button className="btn btn-outline rounded-2xl px-12" onClick={handleExportPacketPdf} disabled={isExporting}>
+                  <Download size={18} />
+                  {isExporting ? 'Exporting PDF...' : 'Download PDF'}
+                </button>
+              </div>
             </div>
             <div className="print-only-container">
+              <EmergencyPacket 
+                dog={selectedDog}
+                vaccines={vaccines.filter(v => v.dogId === selectedDog.id)}
+                medications={medications.filter(m => m.dogId === selectedDog.id)}
+                allergies={allergies.filter(a => a.dogId === selectedDog.id)}
+                contacts={emergencyContacts}
+                instructions={sitterInstructions.find(s => s.dogId === selectedDog.id)}
+              />
+            </div>
+            <div
+              ref={packetRef}
+              style={{
+                position: 'absolute',
+                left: -9999,
+                top: 0,
+                width: 794, // ~A4 width in px at 72dpi
+                background: '#ffffff',
+              }}
+              aria-hidden
+            >
               <EmergencyPacket 
                 dog={selectedDog}
                 vaccines={vaccines.filter(v => v.dogId === selectedDog.id)}
@@ -511,6 +774,18 @@ const Emergency: React.FC = () => {
                   value={contactFormData.email}
                   onChange={e => setContactFormData({...contactFormData, email: e.target.value})}
                 />
+              </div>
+              <div className="form-control">
+                <label className="label"><span className="label-text font-semibold">Contact Priority</span></label>
+                <select
+                  className="select select-bordered rounded-2xl"
+                  value={contactFormData.priority}
+                  onChange={e => setContactFormData({...contactFormData, priority: e.target.value as EmergencyContact['priority']})}
+                >
+                  <option value="Primary">Primary</option>
+                  <option value="Secondary">Secondary</option>
+                  <option value="Backup">Backup</option>
+                </select>
               </div>
               <div className="form-control">
                 <label className="label cursor-pointer justify-start gap-4">
