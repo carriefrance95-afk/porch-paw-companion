@@ -5,6 +5,7 @@ import {
   Clock, MapPin, Book, Users, ChefHat, ShoppingBag 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import BetaSignup from '../components/BetaSignup';
 
 const Dashboard: React.FC = () => {
   const { profiles, vaccines, medications, appointments, journal } = usePets();

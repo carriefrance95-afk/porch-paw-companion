@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { usePets } from '../context/PetContext';
-import { 
-  PawPrint, Camera, Heart, Activity, 
-  ChevronRight, ChevronLeft, Check, 
+import {
+  PawPrint, Camera, Heart, Activity,
+  ChevronRight, ChevronLeft, Check,
   User, Sparkles, Stethoscope, Mail
 } from 'lucide-react';
+import AuthModal from './AuthModal';
 
 const OnboardingWizard: React.FC = () => {
   const { addProfile, addWeightEntry, addDirectoryEntry } = usePets();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -107,14 +109,26 @@ const OnboardingWizard: React.FC = () => {
                   We're so glad you're here. Let's start building a beautiful life story for your furry best friend.
                 </p>
               </div>
-              <button 
+              <button
                 onClick={nextStep}
                 className={`${branding.terracotta} hover:opacity-90 text-white btn btn-lg rounded-2xl px-12 border-none shadow-xl transition-all hover:scale-105 active:scale-95`}
               >
                 Let's Begin <ChevronRight size={20} />
               </button>
-            </div>
-          )}
+
+              <div className="pt-6 border-t border-gray-100 w-full mt-4">
+                <p className={`text-sm ${branding.taupe}`}>
+                  Already have an account?{' '}
+                  <button
+                    onClick={() => setIsAuthModalOpen(true)}
+                    className="font-bold text-primary hover:underline transition-all"
+                  >
+                    Sign In
+                  </button>
+                </p>
+              </div>
+              </div>
+              )}
 
           {/* Step 2: Basic Info */}
           {step === 2 && (
@@ -353,6 +367,7 @@ const OnboardingWizard: React.FC = () => {
           )}
         </div>
       </div>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 };
