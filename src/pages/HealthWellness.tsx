@@ -118,7 +118,7 @@ const HealthWellness: React.FC = () => {
           <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
             <PawPrint size={40} className="text-primary" />
           </div>
-          <h2 className="text-3xl font-bold mb-4">No Dog Profiles Found</h2>
+          <h2 className="text-3xl font-bold mb-4">Welcome to the family! Add your first pup to get started on your joint adventure.</h2>
           <p className="opacity-70 mb-8">Please create a dog profile first to start tracking their medical records and wellness history.</p>
           <a href="/profiles" className="btn btn-primary rounded-full px-8">Create First Profile</a>
         </div>

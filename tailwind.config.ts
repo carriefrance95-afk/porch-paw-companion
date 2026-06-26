@@ -5,6 +5,9 @@ export default {
   theme: {
     extend: {
       colors: {
+        purple: '#B55D3B',
+        indigo: '#2D2A27',
+        blue: '#7A7A59',
         brandCream: '#F4F0EA',
         brandTerracotta: '#B55D3B',
         brandSage: '#7A7A59',

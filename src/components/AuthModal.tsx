@@ -47,13 +47,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         >✕</button>
         
         <div className="text-center mb-8">
-          <div className="mb-4">
-            <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-12 mx-auto" />
-            <p className="mt-3 text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
-          </div>
+          <img src="/logo.png" alt="Porch & Paw" className="h-24 w-24 mx-auto mb-4 rounded-full" />
           <h3 className="text-2xl font-serif font-bold text-brandCharcoal">
             Porchside Pet Life
           </h3>
+          <p className="mt-2 text-xs tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
           <p className="text-brandCharcoal mt-3 text-sm leading-relaxed max-w-sm mx-auto">
             The all-in-one guide for devoted dog parents. Cookbooks, health, travel, and journals.
           </p>
