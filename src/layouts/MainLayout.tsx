@@ -59,8 +59,12 @@ const MainLayout: React.FC = () => {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </label>
           </div>
-          <div className="flex-1">
-            <a className="btn btn-ghost text-xl font-bold text-brandTerracotta">Porch & Paw</a>
+          <div className="flex-1 flex items-center gap-3">
+            <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-8 w-8 object-contain" />
+            <div className="leading-tight">
+              <a className="block text-sm font-bold text-brandTerracotta uppercase tracking-[0.18em]">PORCHSIDE PET LIFE</a>
+              <span className="block text-[10px] uppercase tracking-[0.3em] text-brandSage">by Porch & Paw</span>
+            </div>
           </div>
         </div>
         
@@ -74,10 +78,13 @@ const MainLayout: React.FC = () => {
         <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label> 
         <div className="menu p-4 w-80 min-h-full bg-brandCream text-brandCharcoal border-r border-brandTaupe/40">
           <div className="mb-10 px-4 py-2">
-            <h1 className="text-2xl font-bold text-brandTerracotta flex items-center gap-2">
-              <span>🐾</span> Porch & Paw
-            </h1>
-            <p className="text-xs opacity-60">Companion App</p>
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-10 w-10 object-contain" />
+              <div>
+                <h1 className="text-lg font-bold text-brandTerracotta uppercase tracking-[0.16em] leading-tight">PORCHSIDE PET LIFE</h1>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-brandSage">by Porch & Paw</p>
+              </div>
+            </div>
           </div>
           
           <ul className="space-y-1">

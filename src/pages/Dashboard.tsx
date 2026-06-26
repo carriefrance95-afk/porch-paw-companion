@@ -31,10 +31,11 @@ const Dashboard: React.FC = () => {
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
           <div className="brand-logo-shell" aria-hidden="true">
-            <img src="/logo.svg" alt="Porch & Paw logo" className="w-12 h-12 object-contain" />
+            <img src="/logo.png" alt="Porchside Pet Life Logo" className="w-12 h-12 object-contain" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold text-brandCharcoal mb-1">Hello, Pet Parent! 🐾</h1>
+            <h1 className="text-4xl font-bold text-brandCharcoal mb-1 uppercase tracking-[0.12em]">PORCHSIDE PET LIFE</h1>
+            <p className="text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
             <p className="opacity-70 font-medium">Here's what's happening with your furry family today.</p>
           </div>
         </div>

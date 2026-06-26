@@ -48,7 +48,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         
         <div className="text-center mb-8">
           <div className="mb-4">
-            <img src="/logo.svg" alt="Porchside Pet Life Logo" className="h-12 mx-auto" />
+            <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-12 mx-auto" />
             <p className="mt-3 text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
           </div>
           <h3 className="text-2xl font-serif font-bold text-brandCharcoal uppercase tracking-[0.12em]">
