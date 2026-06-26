@@ -76,7 +76,7 @@ const MainLayout: React.FC = () => {
         </main>
       </div> 
       
-      <div className="drawer-side">
+      <div className="drawer-side sidebar">
         <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label> 
         <div className="menu p-4 w-80 min-h-full bg-[#2D2A27] text-[#F4F0EA] border-r border-[#B6A799]/40">
           <div className="mb-10 px-4 py-2">

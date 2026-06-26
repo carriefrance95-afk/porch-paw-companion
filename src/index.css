@@ -181,3 +181,52 @@ label,
   height: 3rem;
   object-fit: contain;
 }
+
+/* ========================================================
+   PORCH & PAW DASHBOARD OVERRIDES - COPY EVERYTHING BELOW
+   ======================================================== */
+
+/* 1. FIX THE MENU BAR: Force rich chocolate instead of near-black */
+aside,
+.sidebar,
+[class*="sidebar"] {
+  background-color: #3D2A1C !important;
+}
+
+/* Ensure the text links inside are clean, high-contrast ivory */
+.sidebar a,
+[class*="sidebar"] a,
+[class*="sidebar"] span {
+  color: #FDFBF7 !important;
+}
+
+/* 2. FIX THE EMERGENCY HUB: Turn it from disabled grey to alert terracotta */
+[href*="id=0"],
+.emergency-hub-btn,
+[class*="emergency"] {
+  background-color: #D95D39 !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(217, 93, 57, 0.3) !important;
+  opacity: 1 !important;
+}
+
+/* 3. FIX THE QUICK ACTIONS: Turn plain white pills into branded buttons */
+[class*="QuickActions"] a,
+.quick-action-card,
+[href*="id="] {
+  background-color: #E6E1DA !important; /* Soft Taupe base */
+  color: #3D2A1C !important;            /* Chocolate text */
+  border: 1px solid #D2C9BF !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  font-weight: 600 !important;
+}
+
+/* Give the very first action item a Sage Green accent color */
+[class*="QuickActions"] a:first-child {
+  background-color: #8FA89B !important; /* Sage Green */
+  color: #FDFBF7 !important;
+  border-color: #7A9386 !important;
+}

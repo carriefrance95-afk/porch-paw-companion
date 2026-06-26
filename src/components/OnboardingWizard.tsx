@@ -12,6 +12,7 @@ const OnboardingWizard: React.FC = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [selectedPhotoFile, setSelectedPhotoFile] = useState<File | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -27,6 +28,15 @@ const OnboardingWizard: React.FC = () => {
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => prev - 1);
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setSelectedPhotoFile(file);
+    const localPreviewUrl = URL.createObjectURL(file);
+    setFormData({ ...formData, photoUrl: localPreviewUrl });
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     // Simulate slight delay for "cozy" feeling
@@ -40,7 +50,7 @@ const OnboardingWizard: React.FC = () => {
       breed: formData.breed,
       birthDate: formData.birthDate,
       currentWeight: parseFloat(formData.weight) || 0,
-      photoUrl: formData.photoUrl || 'https://images.unsplash.com/photo-1543466835-00a732f3804c',
+      photoUrl: formData.photoUrl || '',
       weightHistory: []
     });
 
@@ -216,34 +226,14 @@ const OnboardingWizard: React.FC = () => {
                 </div>
 
                 <div className="form-control w-full">
-                  <label className="label"><span className={`label-text font-bold ${branding.taupe}`}>Photo URL</span></label>
-                  <input 
-                    type="url" 
-                    placeholder="https://images.unsplash.com/..." 
-                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
-                    value={formData.photoUrl}
-                    onChange={e => setFormData({...formData, photoUrl: e.target.value})}
-                  />
-                  <label className="label">
-                    <span className="label-text-alt opacity-50">Hint: Try an Unsplash dog photo URL!</span>
+                  <label className="label"><span className={`label-text font-bold ${branding.taupe}`}>Profile Photo</span></label>
+                  <input type="file" accept="image/*" className="hidden" id="dog-photo-upload-onboarding" onChange={handlePhotoUpload} />
+                  <label htmlFor="dog-photo-upload-onboarding" className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#B55D3B] bg-[#F4F0EA] px-5 py-4 font-bold text-[#2D2A27] hover:bg-[#EFE8DE] transition-colors">
+                    📸 Upload Profile Photo
                   </label>
-                </div>
-
-                <div className="grid grid-cols-4 gap-3 w-full">
-                  {[
-                    'https://images.unsplash.com/photo-1517849845537-4d257902454a',
-                    'https://images.unsplash.com/photo-1543466835-00a732f3804c',
-                    'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e',
-                    'https://images.unsplash.com/photo-1518717758536-85ae29035b6d'
-                  ].map((url, i) => (
-                    <button 
-                      key={i} 
-                      onClick={() => setFormData({...formData, photoUrl: url})}
-                      className="aspect-square rounded-xl overflow-hidden border-2 border-white shadow-sm hover:scale-105 transition-transform"
-                    >
-                      <img src={url} alt="" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
+                  {selectedPhotoFile && (
+                    <p className="mt-2 text-center text-xs text-brandTaupe">Selected: {selectedPhotoFile.name}</p>
+                  )}
                 </div>
               </div>
 

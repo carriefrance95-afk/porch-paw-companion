@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePets } from '../context/PetContext';
 import DogCard from '../components/DogCard';
 import { Plus, X, Camera } from 'lucide-react';
@@ -8,6 +8,8 @@ const Profiles: React.FC = () => {
   const { profiles, addProfile, updateProfile, deleteProfile } = usePets();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProfile, setEditingProfile] = useState<DogProfile | null>(null);
+  const [selectedPhotoFile, setSelectedPhotoFile] = useState<File | null>(null);
+  const [photoPreviewUrl, setPhotoPreviewUrl] = useState('');
   
   const initialFormState: Partial<DogProfile> = {
     name: '',
@@ -23,16 +25,48 @@ const Profiles: React.FC = () => {
 
   const [formData, setFormData] = useState<Partial<DogProfile>>(initialFormState);
 
+  useEffect(() => {
+    return () => {
+      if (photoPreviewUrl) {
+        URL.revokeObjectURL(photoPreviewUrl);
+      }
+    };
+  }, [photoPreviewUrl]);
+
   const handleOpenAddModal = () => {
     setEditingProfile(null);
     setFormData(initialFormState);
+    setSelectedPhotoFile(null);
+    if (photoPreviewUrl) {
+      URL.revokeObjectURL(photoPreviewUrl);
+      setPhotoPreviewUrl('');
+    }
     setIsModalOpen(true);
   };
 
   const handleOpenEditModal = (profile: DogProfile) => {
     setEditingProfile(profile);
     setFormData(profile);
+    setSelectedPhotoFile(null);
+    if (photoPreviewUrl) {
+      URL.revokeObjectURL(photoPreviewUrl);
+      setPhotoPreviewUrl('');
+    }
     setIsModalOpen(true);
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setSelectedPhotoFile(file);
+    if (photoPreviewUrl) {
+      URL.revokeObjectURL(photoPreviewUrl);
+    }
+
+    const localPreviewUrl = URL.createObjectURL(file);
+    setPhotoPreviewUrl(localPreviewUrl);
+    setFormData({ ...formData, photoUrl: localPreviewUrl });
   };
 
   const handleDelete = (id: string) => {
@@ -43,16 +77,20 @@ const Profiles: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const profilePhotoUrl = photoPreviewUrl || formData.photoUrl || '';
+
     if (editingProfile) {
-      updateProfile({ ...editingProfile, ...formData } as DogProfile);
+      updateProfile({ ...editingProfile, ...formData, photoUrl: profilePhotoUrl } as DogProfile);
     } else {
       const profile: DogProfile = {
         ...formData as DogProfile,
+        photoUrl: profilePhotoUrl,
         id: crypto.randomUUID(),
         weightHistory: formData.currentWeight ? [{ id: crypto.randomUUID(), date: new Date().toISOString().split('T')[0], weight: formData.currentWeight }] : []
       };
       addProfile(profile);
     }
+    setSelectedPhotoFile(null);
     setIsModalOpen(false);
   };
 
@@ -119,7 +157,7 @@ const Profiles: React.FC = () => {
                    <div className="avatar">
                       <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 bg-base-200 flex items-center justify-center cursor-pointer relative group">
                         {formData.photoUrl ? (
-                          <img src={formData.photoUrl} alt="Preview" />
+                          <img src={photoPreviewUrl || formData.photoUrl} alt="Preview" />
                         ) : (
                           <Camera size={32} className="text-primary/40" />
                         )}
@@ -128,13 +166,13 @@ const Profiles: React.FC = () => {
                         </div>
                       </div>
                    </div>
-                   <input 
-                    type="text" 
-                    placeholder="Photo URL (optional)" 
-                    className="input input-xs input-bordered w-48 mt-3 rounded-full text-center"
-                    value={formData.photoUrl}
-                    onChange={(e) => setFormData({...formData, photoUrl: e.target.value})}
-                  />
+                   <input type="file" accept="image/*" className="hidden" id="dog-photo-upload" onChange={handlePhotoUpload} />
+                   <label htmlFor="dog-photo-upload" className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7A7A59] px-5 py-3 font-bold text-white shadow-md hover:bg-[#6A6A4D] transition-colors">
+                    📸 Upload Profile Photo
+                   </label>
+                   {selectedPhotoFile && (
+                    <p className="mt-2 text-xs text-neutral/70">Selected: {selectedPhotoFile.name}</p>
+                   )}
                 </div>
 
                 <div className="form-control">
