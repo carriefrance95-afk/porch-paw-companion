@@ -102,7 +102,7 @@ const Profiles: React.FC = () => {
           <p className="text-neutral-content opacity-70">Manage your furry family members and their information</p>
         </div>
         <button 
-          className="btn btn-primary gap-2 shadow-lg rounded-full px-6"
+          className="btn gap-2 shadow-lg rounded-full px-6 bg-[#B55D3B] border-[#B55D3B] text-white hover:bg-[#9E5033] hover:border-[#9E5033]"
           onClick={handleOpenAddModal}
         >
           <Plus size={20} />

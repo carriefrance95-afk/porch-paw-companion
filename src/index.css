@@ -200,6 +200,24 @@ aside,
   color: #FDFBF7 !important;
 }
 
+.sidebar h1,
+.sidebar p,
+[class*="sidebar"] h1,
+[class*="sidebar"] p {
+  color: #FDFBF7 !important;
+}
+
+a[href^="/health?dogId="] {
+  background-color: #B55D3B !important;
+  border-color: #B55D3B !important;
+  color: #FFFFFF !important;
+}
+
+a[href^="/health?dogId="]:hover {
+  background-color: #9E5033 !important;
+  border-color: #9E5033 !important;
+}
+
 /* 2. FIX THE EMERGENCY HUB: Turn it from disabled grey to alert terracotta */
 [href*="id=0"],
 .emergency-hub-btn,

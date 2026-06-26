@@ -85,8 +85,8 @@ const MainLayout: React.FC = () => {
                 <img src="/logo.png" alt="Porchside Pet Life Logo" className="block h-full w-full object-cover" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-[#F4F0EA] leading-tight">Porchside Pet Life</h1>
-                <p className="text-[10px] tracking-[0.16em] text-[#7A7A59]">by Porch & Paw</p>
+                <h1 className="text-lg font-bold text-[#FDFBF7] leading-tight">Porchside Pet Life</h1>
+                <p className="text-[10px] tracking-[0.16em] text-[#FDFBF7]">by Porch & Paw</p>
               </div>
             </div>
           </div>
@@ -98,7 +98,7 @@ const MainLayout: React.FC = () => {
                   to={item.path} 
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     location.pathname === item.path 
-                      ? 'bg-[#B55D3B] text-[#F4F0EA] font-bold shadow-md scale-[1.02]' 
+                      ? 'bg-[#7A7A59] text-[#F4F0EA] font-bold shadow-md scale-[1.02]' 
                       : 'hover:bg-[#7A7A59]/25 text-[#B6A799] opacity-90 hover:opacity-100 hover:text-[#F4F0EA]'
                   }`}
                 >
