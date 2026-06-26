@@ -83,7 +83,7 @@ const Directory: React.FC = () => {
           <p className="text-base-content/70">Your trusted network of pet care professionals, ready for appointments, emergency outreach, and follow-up reminders.</p>
         </div>
         <button 
-          className="btn bg-terracotta text-white rounded-2xl shadow-lg border-none hover:bg-[#a3492c]"
+          className="btn bg-terracotta text-white rounded-2xl shadow-lg border-none hover:bg-terracotta/90"
           onClick={() => handleOpenModal()}
         >
           <Plus size={20} />
@@ -131,10 +131,10 @@ const Directory: React.FC = () => {
                 <div>
                   <div className={`inline-flex items-center rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] ${
                     entry.category === 'Veterinarian' ? 'bg-terracotta/10 text-terracotta border-terracotta/30' :
-                    entry.category === 'Emergency Vet' ? 'bg-[#8c4f34]/10 text-[#8c4f34] border-[#8c4f34]/30' :
+                    entry.category === 'Emergency Vet' ? 'bg-brand-dark/10 text-brand-dark border-brand-dark/30' :
                     entry.category === 'Groomer' ? 'bg-sage/10 text-sage border-sage/30' :
-                    entry.category === 'Trainer' ? 'bg-[#5a6c58]/10 text-[#5a6c58] border-[#5a6c58]/30' :
-                    entry.category === 'Boarding' ? 'bg-[#c5b29b]/10 text-[#7b5b41] border-[#c5b29b]/30' :
+                    entry.category === 'Trainer' ? 'bg-sage/10 text-sage border-sage/30' :
+                    entry.category === 'Boarding' ? 'bg-taupe-light text-taupe border-taupe/30' :
                     entry.category === 'Pet Sitter' ? 'bg-sage/10 text-sage border-sage/30' :
                     'bg-base-200 text-neutral border-base-300'
                   }`}>{entry.category}</div>
@@ -148,7 +148,7 @@ const Directory: React.FC = () => {
                 </button>
               </div>
 
-              <h3 className="text-2xl font-bold mb-1 text-charcoal">{entry.name}</h3>
+              <h3 className="text-2xl font-bold mb-1 text-neutral">{entry.name}</h3>
               <div className="flex items-center flex-wrap gap-2 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} size={16} className={i < (entry.rating || 0) ? 'text-terracotta fill-terracotta' : 'text-base-300'} />
@@ -180,7 +180,7 @@ const Directory: React.FC = () => {
                     </div>
                   )}
                   {entry.directions && (
-                    <div className="bg-base-200 p-3 rounded-2xl text-xs text-charcoal">
+                    <div className="bg-base-200 p-3 rounded-2xl text-xs text-neutral">
                       <span className="font-bold">Directions:</span> {entry.directions}
                     </div>
                   )}
@@ -193,13 +193,13 @@ const Directory: React.FC = () => {
               </div>
 
               {entry.notes && (
-                <div className="p-4 bg-[#f5efe7] rounded-3xl text-sm leading-6 text-[#4b3f36] border border-[#e5d6c8]">
+                <div className="p-4 bg-base-200 rounded-3xl text-sm leading-6 text-neutral border border-base-300">
                   "{entry.notes}"
                 </div>
               )}
               {entry.documents?.length ? (
                 <div className="mt-4 border-t border-base-300 pt-4">
-                  <p className="text-xs uppercase tracking-[0.3em] text-[#7a7b5a] mb-2">Documents</p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-secondary/80 mb-2">Documents</p>
                   <ul className="space-y-2 text-sm">
                     {entry.documents.map(doc => (
                       <li key={doc.id} className="flex justify-between gap-4">
@@ -213,7 +213,7 @@ const Directory: React.FC = () => {
               {entry.linkedSystems?.length ? (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {entry.linkedSystems.map(link => (
-                    <span key={link} className="inline-flex items-center rounded-full border border-[#d1c0b2] bg-[#f7efe6] px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-[#7a5d47]">{link}</span>
+                    <span key={link} className="inline-flex items-center rounded-full border border-taupe/30 bg-taupe-light px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-taupe">{link}</span>
                   ))}
                 </div>
               ) : null}

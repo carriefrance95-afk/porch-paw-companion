@@ -575,7 +575,7 @@ const Emergency: React.FC = () => {
                 <div className="flex-1 space-y-4">
                   <p className="text-xl italic">"{currentFlyer.notes || 'Please help us find our beloved family member.'}"</p>
                   {currentFlyer.reward && (
-                    <p className="text-4xl font-black text-error bg-yellow-300 inline-block px-6 py-2 rounded-lg transform -rotate-1">REWARD: {currentFlyer.reward}</p>
+                    <p className="text-4xl font-black text-error bg-taupe-light inline-block px-6 py-2 rounded-lg transform -rotate-1">REWARD: {currentFlyer.reward}</p>
                   )}
                 </div>
 
