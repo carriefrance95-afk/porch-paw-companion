@@ -67,24 +67,24 @@ const OnboardingWizard: React.FC = () => {
   };
 
   const branding = {
-    ivory: 'bg-base-100',
-    terracotta: 'bg-primary',
-    terracottaText: 'text-primary',
-    terracottaBorder: 'border-primary',
-    sage: 'bg-secondary',
-    sageText: 'text-secondary',
-    charcoal: 'text-neutral',
-    taupe: 'text-accent',
-    taupeLight: 'text-accent/70'
+    ivory: 'bg-brandCream',
+    terracotta: 'bg-brandTerracotta',
+    terracottaText: 'text-brandTerracotta',
+    terracottaBorder: 'border-brandTerracotta',
+    sage: 'bg-brandSage',
+    sageText: 'text-brandSage',
+    charcoal: 'text-brandCharcoal',
+    taupe: 'text-brandTaupe',
+    taupeLight: 'text-brandTaupe/80'
   };
 
   return (
     <div className={`min-h-screen ${branding.ivory} flex items-center justify-center p-4 font-sans`}>
-      <div className="max-w-2xl w-full bg-white rounded-[3rem] shadow-2xl overflow-hidden relative border border-[#8D7A6D]/10">
+      <div className="max-w-2xl w-full bg-white rounded-[3rem] shadow-2xl overflow-hidden relative border border-brandTaupe/20">
         
         {/* Progress Bar */}
         {step < 5 && (
-          <div className="absolute top-0 left-0 w-full h-2 bg-gray-100 flex">
+          <div className="absolute top-0 left-0 w-full h-2 bg-brandTaupe/20 flex">
             {[1, 2, 3, 4].map((i) => (
               <div 
                 key={i} 
@@ -99,29 +99,30 @@ const OnboardingWizard: React.FC = () => {
           {step === 1 && (
             <div className="text-center space-y-8 py-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="flex justify-center">
-                <div className={`w-24 h-24 ${branding.terracotta} rounded-full flex items-center justify-center text-white shadow-lg`}>
-                  <PawPrint size={48} />
+                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg border border-brandTaupe/20 overflow-hidden mx-auto">
+                  <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-16 w-16 mx-auto object-contain" />
                 </div>
               </div>
               <div className="space-y-4">
-                <h1 className={`text-4xl md:text-5xl font-black ${branding.charcoal}`}>Welcome to Porch & Paw</h1>
+                <p className="text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
+                <h1 className={`text-4xl md:text-5xl font-black ${branding.charcoal} uppercase tracking-[0.12em]`}>PORCHSIDE PET LIFE</h1>
                 <p className={`text-xl ${branding.taupe} max-w-md mx-auto leading-relaxed`}>
-                  We're so glad you're here. Let's start building a beautiful life story for your furry best friend.
+                  The all-in-one guide for devoted dog parents. Cookbooks, health, travel, and journals.
                 </p>
               </div>
               <button
                 onClick={nextStep}
-                className={`${branding.terracotta} hover:opacity-90 text-white btn btn-lg rounded-2xl px-12 border-none shadow-xl transition-all hover:scale-105 active:scale-95`}
+                className="bg-brandTerracotta hover:opacity-90 text-white btn btn-lg rounded-2xl px-12 border-none shadow-xl transition-all hover:scale-105 active:scale-95"
               >
                 Let's Begin <ChevronRight size={20} />
               </button>
 
-              <div className="pt-6 border-t border-gray-100 w-full mt-4">
+              <div className="pt-6 border-t border-brandTaupe/20 w-full mt-4">
                 <p className={`text-sm ${branding.taupe}`}>
                   Already have an account?{' '}
                   <button
                     onClick={() => setIsAuthModalOpen(true)}
-                    className="font-bold text-primary hover:underline transition-all"
+                    className="font-bold text-brandTerracotta hover:underline transition-all"
                   >
                     Sign In
                   </button>
@@ -149,7 +150,7 @@ const OnboardingWizard: React.FC = () => {
                   <input 
                     type="text" 
                     placeholder="Buddy, Bella, Max..." 
-                    className="input input-bordered w-full rounded-2xl h-14 bg-[#faf7f2] border-none focus:ring-2 ring-[#E2725B]/20"
+                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
@@ -160,7 +161,7 @@ const OnboardingWizard: React.FC = () => {
                     <input 
                       type="text" 
                       placeholder="Golden Retriever..." 
-                      className="input input-bordered w-full rounded-2xl h-14 bg-[#faf7f2] border-none focus:ring-2 ring-[#E2725B]/20"
+                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
                       value={formData.breed}
                       onChange={e => setFormData({...formData, breed: e.target.value})}
                     />
@@ -169,7 +170,7 @@ const OnboardingWizard: React.FC = () => {
                     <label className="label"><span className={`label-text font-bold ${branding.taupe}`}>Their Birthday?</span></label>
                     <input 
                       type="date" 
-                      className="input input-bordered w-full rounded-2xl h-14 bg-[#faf7f2] border-none focus:ring-2 ring-[#E2725B]/20"
+                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
                       value={formData.birthDate}
                       onChange={e => setFormData({...formData, birthDate: e.target.value})}
                     />
@@ -184,7 +185,7 @@ const OnboardingWizard: React.FC = () => {
                 <button 
                   onClick={nextStep} 
                   disabled={!formData.name}
-                  className={`${branding.terracotta} text-white btn rounded-2xl px-10 border-none shadow-lg disabled:opacity-30`}
+                  className="bg-brandTerracotta text-white btn rounded-2xl px-10 border-none shadow-lg disabled:opacity-30"
                 >
                   Continue <ChevronRight size={20} />
                 </button>
@@ -206,11 +207,11 @@ const OnboardingWizard: React.FC = () => {
               </div>
 
               <div className="flex flex-col items-center gap-8 py-4">
-                <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-[#faf7f2] shadow-xl bg-gray-100 flex items-center justify-center relative group">
+                <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-brandCream shadow-xl bg-brandTaupe/10 flex items-center justify-center relative group">
                   {formData.photoUrl ? (
                     <img src={formData.photoUrl} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="text-gray-300"><PawPrint size={80} /></div>
+                    <div className="text-brandTaupe"><PawPrint size={80} /></div>
                   )}
                 </div>
 
@@ -219,7 +220,7 @@ const OnboardingWizard: React.FC = () => {
                   <input 
                     type="url" 
                     placeholder="https://images.unsplash.com/..." 
-                    className="input input-bordered w-full rounded-2xl h-14 bg-[#faf7f2] border-none focus:ring-2 ring-[#E2725B]/20"
+                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
                     value={formData.photoUrl}
                     onChange={e => setFormData({...formData, photoUrl: e.target.value})}
                   />
@@ -281,14 +282,14 @@ const OnboardingWizard: React.FC = () => {
                     <input 
                       type="number" 
                       placeholder="0.0" 
-                      className="input input-bordered w-full rounded-2xl h-14 bg-[#faf7f2] border-none pl-12 focus:ring-2 ring-[#E2725B]/20"
+                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none pl-12 focus:ring-2 ring-brandTerracotta/20"
                       value={formData.weight}
                       onChange={e => setFormData({...formData, weight: e.target.value})}
                     />
                   </div>
                 </div>
 
-                <div className="space-y-4 pt-4 border-t border-gray-100">
+                <div className="space-y-4 pt-4 border-t border-brandTaupe/20">
                   <div className="flex items-center gap-2">
                     <Stethoscope size={20} className={branding.terracottaText} />
                     <h3 className={`font-bold ${branding.charcoal}`}>Veterinarian Details</h3>
@@ -299,7 +300,7 @@ const OnboardingWizard: React.FC = () => {
                       <input 
                         type="text" 
                         placeholder="Dr. Paws..." 
-                        className="input input-bordered w-full rounded-xl h-12 bg-[#faf7f2] border-none"
+                        className="input input-bordered w-full rounded-xl h-12 bg-brandCream border-none"
                         value={formData.vetName}
                         onChange={e => setFormData({...formData, vetName: e.target.value})}
                       />
@@ -311,7 +312,7 @@ const OnboardingWizard: React.FC = () => {
                         <input 
                           type="text" 
                           placeholder="Phone or Email" 
-                          className="input input-bordered w-full rounded-xl h-12 bg-[#faf7f2] border-none pl-10"
+                          className="input input-bordered w-full rounded-xl h-12 bg-brandCream border-none pl-10"
                           value={formData.vetContact}
                           onChange={e => setFormData({...formData, vetContact: e.target.value})}
                         />
@@ -327,7 +328,7 @@ const OnboardingWizard: React.FC = () => {
                 </button>
                 <button 
                   onClick={handleSubmit} 
-                  className={`${branding.terracotta} text-white btn rounded-2xl px-10 border-none shadow-lg h-auto py-4`}
+                  className="bg-brandTerracotta text-white btn rounded-2xl px-10 border-none shadow-lg h-auto py-4"
                   disabled={loading}
                 >
                   {loading ? (
@@ -344,11 +345,11 @@ const OnboardingWizard: React.FC = () => {
           {step === 5 && (
             <div className="text-center space-y-8 py-10 animate-in zoom-in duration-700">
               <div className="flex justify-center relative">
-                <div className={`w-32 h-32 ${branding.sage} rounded-full flex items-center justify-center text-white shadow-2xl relative z-10`}>
+                <div className="w-32 h-32 bg-brandSage rounded-full flex items-center justify-center text-white shadow-2xl relative z-10">
                   <Check size={64} />
                 </div>
                 <div className="absolute inset-0 scale-150 opacity-20 animate-ping">
-                   <div className={`w-32 h-32 ${branding.sage} rounded-full mx-auto`} />
+                   <div className="w-32 h-32 bg-brandSage rounded-full mx-auto" />
                 </div>
               </div>
               <div className="space-y-4">
