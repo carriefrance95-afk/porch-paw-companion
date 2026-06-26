@@ -7,25 +7,25 @@
   --font-sans: "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif";
   --font-serif: "Cormorant Garamond", "Georgia", "Cambria", "Times New Roman", "Times", "serif";
 
-  --color-primary: #b65e3c;
+  --color-primary: #B55D3B;
   --color-primary-content: #ffffff;
-  --color-secondary: #7a7b5a;
+  --color-secondary: #7A7A59;
   --color-secondary-content: #ffffff;
-  --color-accent: #b7a89a;
+  --color-accent: #B6A799;
   --color-accent-content: #ffffff;
-  --color-info: #7a7b5a;
+  --color-info: #7A7A59;
   --color-info-content: #ffffff;
-  --color-error: #b65e3c;
+  --color-error: #B55D3B;
   --color-error-content: #ffffff;
-  --color-warning: #b7a89a;
+  --color-warning: #B6A799;
   --color-warning-content: #ffffff;
-  --color-success: #7a7b5a;
+  --color-success: #7A7A59;
   --color-success-content: #ffffff;
-  --color-neutral: #2e2b28;
+  --color-neutral: #2D2A27;
   --color-neutral-content: #ffffff;
-  --color-base-100: #f5f1ea;
-  --color-base-200: #b7a89a;
-  --color-base-300: #b7a89a;
+  --color-base-100: #F4F0EA;
+  --color-base-200: #B6A799;
+  --color-base-300: #B6A799;
 
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
@@ -66,9 +66,9 @@ img {
 
 .card {
   border-radius: var(--radius-3xl) !important;
-  box-shadow: 0 10px 15px -3px rgb(46 43 40 / 0.05), 0 4px 6px -4px rgb(46 43 40 / 0.05) !important;
+  box-shadow: 0 10px 15px -3px rgb(45 42 39 / 0.05), 0 4px 6px -4px rgb(45 42 39 / 0.05) !important;
   background-color: #ffffff;
-  border: 1px solid rgb(46 43 40 / 0.12) !important;
+  border: 1px solid rgb(45 42 39 / 0.12) !important;
 }
 
 .btn {
@@ -100,19 +100,19 @@ img {
 .btn-outline {
   background-color: #ffffff !important;
   color: var(--color-neutral) !important;
-  border-color: rgb(46 43 40 / 0.12) !important;
+  border-color: rgb(45 42 39 / 0.12) !important;
 }
 
 .input, .select, .textarea {
   border-radius: var(--radius-2xl) !important;
   background-color: #ffffff !important;
-  border: 1px solid rgb(46 43 40 / 0.16) !important;
+  border: 1px solid rgb(45 42 39 / 0.16) !important;
   transition: all 0.2s ease;
 }
 
 .input:focus, .select:focus, .textarea:focus {
   border-color: var(--color-primary) !important;
-  box-shadow: 0 0 0 4px rgb(182 94 60 / 0.12) !important;
+  box-shadow: 0 0 0 4px rgb(181 93 59 / 0.12) !important;
 }
 
 .badge {
@@ -129,14 +129,14 @@ img {
 
 .modal-box {
   border-radius: var(--radius-3xl) !important;
-  border: 1px solid rgb(46 43 40 / 0.1) !important;
+  border: 1px solid rgb(45 42 39 / 0.1) !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
 }
 
 .stats {
   border-radius: var(--radius-3xl) !important;
   background-color: #ffffff !important;
-  border: 1px solid rgb(46 43 40 / 0.1) !important;
+  border: 1px solid rgb(45 42 39 / 0.1) !important;
 }
 
 .tab-active {
@@ -160,7 +160,7 @@ label,
 }
 
 .shadow-premium {
-  box-shadow: 0 20px 25px -5px rgb(46 43 40 / 0.1), 0 10px 10px -5px rgb(46 43 40 / 0.04) !important;
+  box-shadow: 0 20px 25px -5px rgb(45 42 39 / 0.1), 0 10px 10px -5px rgb(45 42 39 / 0.04) !important;
 }
 
 .brand-logo-shell {
@@ -168,7 +168,7 @@ label,
   height: 4rem;
   border-radius: 9999px;
   background-color: #ffffff;
-  border: 1px solid rgb(46 43 40 / 0.12);
+  border: 1px solid rgb(45 42 39 / 0.12);
   display: flex;
   align-items: center;
   justify-content: center;

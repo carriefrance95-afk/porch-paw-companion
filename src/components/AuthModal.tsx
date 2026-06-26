@@ -51,8 +51,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-12 mx-auto" />
             <p className="mt-3 text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
           </div>
-          <h3 className="text-2xl font-serif font-bold text-brandCharcoal uppercase tracking-[0.12em]">
-            PORCHSIDE PET LIFE
+          <h3 className="text-2xl font-serif font-bold text-brandCharcoal">
+            Porchside Pet Life
           </h3>
           <p className="text-brandCharcoal mt-3 text-sm leading-relaxed max-w-sm mx-auto">
             The all-in-one guide for devoted dog parents. Cookbooks, health, travel, and journals.

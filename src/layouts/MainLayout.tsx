@@ -60,9 +60,11 @@ const MainLayout: React.FC = () => {
             </label>
           </div>
           <div className="flex-1 flex items-center gap-3">
-            <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-8 w-8 object-contain" />
+            <div className="h-10 w-10 rounded-full overflow-hidden border border-brandTaupe/30 bg-white shadow-sm flex items-center justify-center">
+              <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-full w-full object-cover" />
+            </div>
             <div className="leading-tight">
-              <a className="block text-sm font-bold text-brandTerracotta uppercase tracking-[0.18em]">PORCHSIDE PET LIFE</a>
+              <a className="block text-sm font-bold text-brandTerracotta">Porchside Pet Life</a>
               <span className="block text-[10px] uppercase tracking-[0.3em] text-brandSage">by Porch & Paw</span>
             </div>
           </div>
@@ -79,9 +81,11 @@ const MainLayout: React.FC = () => {
         <div className="menu p-4 w-80 min-h-full bg-brandCream text-brandCharcoal border-r border-brandTaupe/40">
           <div className="mb-10 px-4 py-2">
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-10 w-10 object-contain" />
+              <div className="h-12 w-12 rounded-full overflow-hidden border border-brandTaupe/30 bg-white shadow-sm flex items-center justify-center">
+                <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-full w-full object-cover" />
+              </div>
               <div>
-                <h1 className="text-lg font-bold text-brandTerracotta uppercase tracking-[0.16em] leading-tight">PORCHSIDE PET LIFE</h1>
+                <h1 className="text-lg font-bold text-brandTerracotta leading-tight">Porchside Pet Life</h1>
                 <p className="text-[10px] uppercase tracking-[0.3em] text-brandSage">by Porch & Paw</p>
               </div>
             </div>

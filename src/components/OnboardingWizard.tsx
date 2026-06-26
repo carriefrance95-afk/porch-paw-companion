@@ -105,7 +105,7 @@ const OnboardingWizard: React.FC = () => {
               </div>
               <div className="space-y-4">
                 <p className="text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
-                <h1 className={`text-4xl md:text-5xl font-black ${branding.charcoal} uppercase tracking-[0.12em]`}>PORCHSIDE PET LIFE</h1>
+                <h1 className={`text-4xl md:text-5xl font-black ${branding.charcoal}`}>Porchside Pet Life</h1>
                 <p className={`text-xl ${branding.taupe} max-w-md mx-auto leading-relaxed`}>
                   The all-in-one guide for devoted dog parents. Cookbooks, health, travel, and journals.
                 </p>

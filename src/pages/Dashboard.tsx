@@ -34,7 +34,7 @@ const Dashboard: React.FC = () => {
             <img src="/logo.png" alt="Porchside Pet Life Logo" className="w-12 h-12 object-contain" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold text-brandCharcoal mb-1 uppercase tracking-[0.12em]">PORCHSIDE PET LIFE</h1>
+            <h1 className="text-4xl font-bold text-brandCharcoal mb-1">Porchside Pet Life</h1>
             <p className="text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
             <p className="opacity-70 font-medium">Here's what's happening with your furry family today.</p>
           </div>

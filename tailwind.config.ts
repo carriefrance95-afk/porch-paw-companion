@@ -5,11 +5,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        brandCream: '#f5f1ea',
-        brandTaupe: '#b7a89a',
-        brandTerracotta: '#b65e3c',
-        brandSage: '#7a7b5a',
-        brandCharcoal: '#2e2b28',
+        brandCream: '#F4F0EA',
+        brandTerracotta: '#B55D3B',
+        brandSage: '#7A7A59',
+        brandCharcoal: '#2D2A27',
+        brandTaupe: '#B6A799',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
