@@ -6,56 +6,36 @@
 @theme {
   --font-sans: "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif";
   --font-serif: "Cormorant Garamond", "Georgia", "Cambria", "Times New Roman", "Times", "serif";
-  
-  --color-primary: #b65e3c; /* Burnt Terracotta */
+
+  --color-primary: #b65e3c;
   --color-primary-content: #ffffff;
-  --color-secondary: #7a7b5a; /* Sage Green */
+  --color-secondary: #7a7b5a;
   --color-secondary-content: #ffffff;
-  --color-accent: #c9785c;
+  --color-accent: #b7a89a;
   --color-accent-content: #ffffff;
-  --color-neutral: #2e2b28; /* Charcoal for text */
+  --color-info: #7a7b5a;
+  --color-info-content: #ffffff;
+  --color-error: #b65e3c;
+  --color-error-content: #ffffff;
+  --color-warning: #b7a89a;
+  --color-warning-content: #ffffff;
+  --color-success: #7a7b5a;
+  --color-success-content: #ffffff;
+  --color-neutral: #2e2b28;
   --color-neutral-content: #ffffff;
-  --color-base-100: #f5f1ea; /* Primary Warm Cream background */
-  --color-base-200: #b7a89a; /* Secondary Warm Taupe/Beige */
-  --color-base-300: #dccfc2; /* subtle border accent */
-  
-  /* Additional Brand Shades */
-  --color-terracotta-light: #f7e5de;
-  --color-terracotta: #b65e3c;
-  --color-sage-light: #e7ebdd;
-  --color-sage: #7a7b5a;
-  --color-taupe-light: #dccfc2;
-  --color-taupe: #b7a89a;
-  --color-brand-dark: #8a6a52;
-  --color-brand-mid: #c9785c;
-  
+  --color-base-100: #f5f1ea;
+  --color-base-200: #b7a89a;
+  --color-base-300: #b7a89a;
+
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
   --radius-3xl: 2.5rem;
 }
 
-/* DaisyUI Overrides */
-.tab-active {
-  background-color: var(--color-secondary) !important;
-  color: var(--color-secondary-content) !important;
-  font-weight: 700 !important;
-}
-
-.btn-primary {
-  color: var(--color-primary-content) !important;
-  background-color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
-}
-
-.btn-secondary {
-  color: var(--color-secondary-content) !important;
-  background-color: var(--color-secondary) !important;
-  border-color: var(--color-secondary) !important;
-}
-
 :root {
   background-color: var(--color-base-100);
   color: var(--color-neutral);
+  color-scheme: light;
 }
 
 body {
@@ -75,31 +55,20 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.01em;
 }
 
-/* Ensure general text color uses charcoal */
 p, span, a, li, input, label, textarea {
   color: var(--color-neutral);
 }
 
-/* Global Component Styling */
-.card,
-.modal-box,
-.stats,
-.bg-base-100,
-.btn,
-.input,
-.select,
-.textarea,
-.tab,
-label,
-.badge {
-  color: var(--color-neutral);
+img {
+  display: block;
+  max-width: 100%;
 }
 
 .card {
   border-radius: var(--radius-3xl) !important;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05) !important;
+  box-shadow: 0 10px 15px -3px rgb(46 43 40 / 0.05), 0 4px 6px -4px rgb(46 43 40 / 0.05) !important;
   background-color: #ffffff;
-  border: 1px solid rgba(46, 43, 40, 0.12) !important;
+  border: 1px solid rgb(46 43 40 / 0.12) !important;
 }
 
 .btn {
@@ -115,13 +84,6 @@ label,
   transform: translateY(-1px);
 }
 
-.btn-ghost,
-.btn-outline {
-  background-color: #ffffff !important;
-  color: var(--color-neutral) !important;
-  border-color: rgba(46, 43, 40, 0.12) !important;
-}
-
 .btn-primary {
   background-color: var(--color-primary) !important;
   color: var(--color-primary-content) !important;
@@ -134,16 +96,23 @@ label,
   border-color: var(--color-secondary) !important;
 }
 
+.btn-ghost,
+.btn-outline {
+  background-color: #ffffff !important;
+  color: var(--color-neutral) !important;
+  border-color: rgb(46 43 40 / 0.12) !important;
+}
+
 .input, .select, .textarea {
   border-radius: var(--radius-2xl) !important;
   background-color: #ffffff !important;
-  border: 1px solid rgba(46, 43, 40, 0.16) !important;
+  border: 1px solid rgb(46 43 40 / 0.16) !important;
   transition: all 0.2s ease;
 }
 
 .input:focus, .select:focus, .textarea:focus {
   border-color: var(--color-primary) !important;
-  box-shadow: 0 0 0 4px rgba(182, 94, 60, 0.12) !important;
+  box-shadow: 0 0 0 4px rgb(182 94 60 / 0.12) !important;
 }
 
 .badge {
@@ -158,52 +127,57 @@ label,
   color: var(--color-neutral) !important;
 }
 
-.btn {
-  border-radius: var(--radius-2xl) !important;
-  text-transform: none !important;
-  font-weight: 700 !important;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-}
-
-.input, .select, .textarea {
-  border-radius: var(--radius-2xl) !important;
-  background-color: #ffffff !important;
-  border: 1px solid rgba(141, 130, 118, 0.2) !important;
-  transition: all 0.2s ease;
-}
-
-.input:focus, .select:focus, .textarea:focus {
-  border-color: var(--color-primary) !important;
-  box-shadow: 0 0 0 4px rgba(200, 90, 50, 0.1) !important;
-}
-
-.badge {
-  border-radius: 0.75rem !important;
-  font-weight: 800 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  font-size: 0.65rem !important;
-  padding: 0.75rem 0.75rem !important;
-  border: none !important;
-}
-
 .modal-box {
   border-radius: var(--radius-3xl) !important;
-  border: 1px solid rgba(141, 130, 118, 0.1) !important;
+  border: 1px solid rgb(46 43 40 / 0.1) !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
 }
 
 .stats {
   border-radius: var(--radius-3xl) !important;
   background-color: #ffffff !important;
-  border: 1px solid rgba(141, 130, 118, 0.1) !important;
+  border: 1px solid rgb(46 43 40 / 0.1) !important;
 }
 
-/* Custom shadow for extra premium feel */
+.tab-active {
+  background-color: var(--color-secondary) !important;
+  color: var(--color-secondary-content) !important;
+  font-weight: 700 !important;
+}
+
+.bg-base-100,
+.modal-box,
+.stats,
+.card,
+.btn,
+.input,
+.select,
+.textarea,
+.tab,
+label,
+.badge {
+  color: var(--color-neutral);
+}
+
 .shadow-premium {
-  box-shadow: 0 20px 25px -5px rgba(141, 130, 118, 0.1), 0 10px 10px -5px rgba(141, 130, 118, 0.04) !important;
+  box-shadow: 0 20px 25px -5px rgb(46 43 40 / 0.1), 0 10px 10px -5px rgb(46 43 40 / 0.04) !important;
+}
+
+.brand-logo-shell {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  border: 1px solid rgb(46 43 40 / 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex: none;
+}
+
+.brand-logo-shell img {
+  width: 3rem;
+  height: 3rem;
+  object-fit: contain;
 }

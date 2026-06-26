@@ -30,8 +30,8 @@ const Dashboard: React.FC = () => {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-base-200 border border-base-300 flex items-center justify-center">
-            <img src="/assets/logo.png" alt="Porch & Paw logo" className="w-12 h-12 object-contain" />
+          <div className="brand-logo-shell" aria-hidden="true">
+            <img src="/logo.svg" alt="Porch & Paw logo" className="w-12 h-12 object-contain" />
           </div>
           <div>
             <h1 className="text-4xl font-bold text-neutral mb-1">Hello, Pet Parent! 🐾</h1>
