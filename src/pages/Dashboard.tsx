@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
     .slice(0, 5);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto bg-[#FDFBF7]">
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
           <div className="brand-logo-shell" aria-hidden="true">
@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <Link to="/emergency" className="btn border-brandTerracotta text-brandTerracotta bg-brandCream rounded-2xl hover:bg-brandTerracotta hover:text-white">
+          <Link to="/emergency" className="btn rounded-2xl bg-brandTerracotta text-white border-brandTerracotta hover:bg-brandCharcoal hover:border-brandCharcoal shadow-md hover:shadow-lg transition-all">
             <ShieldAlert size={20} />
             Emergency Hub
           </Link>
@@ -153,46 +153,46 @@ const Dashboard: React.FC = () => {
           <div className="bg-brandCream rounded-[2.5rem] p-8 shadow-sm border border-brandTaupe/40">
             <h3 className="text-xl font-bold mb-6">Quick Actions</h3>
             <div className="grid grid-cols-1 gap-3">
-              <Link to="/journal" className="btn btn-ghost bg-brandTaupe/20 hover:bg-brandTerracotta hover:text-white rounded-2xl justify-start gap-4 h-auto py-3">
+              <Link to="/journal" className="rounded-2xl px-5 py-4 bg-brandTerracotta text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTerracotta/90 transition-all">
                 <Plus size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">New Journal Entry</div>
-                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Track Today</div>
+                  <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Track Today</div>
                 </div>
               </Link>
-              <Link to="/profiles" className="btn btn-ghost bg-brandTaupe/20 hover:bg-brandTerracotta hover:text-white rounded-2xl justify-start gap-4 h-auto py-3">
+              <Link to="/profiles" className="rounded-2xl px-5 py-4 bg-brandCharcoal text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandCharcoal/90 transition-all">
                 <Plus size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Add Profile</div>
-                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">New Dog</div>
+                  <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">New Dog</div>
                 </div>
               </Link>
-              <Link to="/reminders" className="btn btn-ghost bg-brandTaupe/20 hover:bg-brandTaupe hover:text-brandCharcoal rounded-2xl justify-start gap-4 h-auto py-3">
+              <Link to="/reminders" className="rounded-2xl px-5 py-4 bg-brandSage text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandSage/90 transition-all">
                 <Calendar size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Schedule Appt</div>
-                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Reminders</div>
+                  <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Reminders</div>
                 </div>
               </Link>
-              <Link to="/travel" className="btn btn-ghost bg-brandTaupe/20 hover:bg-brandSage hover:text-white rounded-2xl justify-start gap-4 h-auto py-3">
+              <Link to="/travel" className="rounded-2xl px-5 py-4 bg-brandTaupe text-brandCharcoal flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTaupe/90 transition-all">
                 <ShoppingBag size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Packing List</div>
-                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Travel Ready</div>
+                  <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Travel Ready</div>
                 </div>
               </Link>
-              <Link to="/store" className="btn btn-ghost bg-brandTaupe/20 hover:bg-brandSage hover:text-white rounded-2xl justify-start gap-4 h-auto py-3">
+              <Link to="/store" className="rounded-2xl px-5 py-4 bg-brandCharcoal text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandCharcoal/90 transition-all">
                 <ShoppingBag size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Shop Boutique</div>
-                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Premium Gear</div>
+                  <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Premium Gear</div>
                 </div>
               </Link>
-              <Link to="/emergency" className="btn btn-ghost bg-brandTaupe/20 hover:bg-brandTerracotta hover:text-white rounded-2xl justify-start gap-4 h-auto py-3">
+              <Link to="/emergency" className="rounded-2xl px-5 py-4 bg-brandTerracotta text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTerracotta/90 transition-all">
                 <ShieldAlert size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Emergency Kit</div>
-                  <div className="text-[10px] opacity-60 uppercase font-bold tracking-widest">Safety First</div>
+                  <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Safety First</div>
                 </div>
               </Link>
             </div>

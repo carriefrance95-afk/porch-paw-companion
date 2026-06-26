@@ -71,7 +71,7 @@ const MainLayout: React.FC = () => {
         </div>
         
         {/* Page Content */}
-        <main className="flex-grow">
+        <main className="flex-grow bg-[#FDFBF7]">
           <Outlet />
         </main>
       </div> 
