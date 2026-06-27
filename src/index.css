@@ -139,51 +139,8 @@ img {
   border: 1px solid rgb(45 42 39 / 0.1) !important;
 }
 
-.tab-active {
-  background-color: var(--color-secondary) !important;
-  color: var(--color-secondary-content) !important;
-  font-weight: 700 !important;
-}
-
-.bg-base-100,
-.modal-box,
-.stats,
-.card,
-.btn,
-.input,
-.select,
-.textarea,
-.tab,
-label,
-.badge {
-  color: var(--color-neutral);
-}
-
-.shadow-premium {
-  box-shadow: 0 20px 25px -5px rgb(45 42 39 / 0.1), 0 10px 10px -5px rgb(45 42 39 / 0.04) !important;
-}
-
-.brand-logo-shell {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 9999px;
-  background-color: #ffffff;
-  border: 1px solid rgb(45 42 39 / 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  flex: none;
-}
-
-.brand-logo-shell img {
-  width: 3rem;
-  height: 3rem;
-  object-fit: contain;
-}
-
 /* ========================================================
-   PORCH & PAW DASHBOARD OVERRIDES - COPY EVERYTHING BELOW
+   PORCH & PAW DASHBOARD OVERRIDES
    ======================================================== */
 
 /* 1. FIX THE MENU BAR: Force rich chocolate instead of near-black */
@@ -230,21 +187,12 @@ a[href^="/health?dogId="]:hover {
   opacity: 1 !important;
 }
 
-/* 3. FIX THE QUICK ACTIONS: Turn plain white pills into branded buttons */
-[class*="QuickActions"] a,
-.quick-action-card,
-[href*="id="] {
-  background-color: #E6E1DA !important; /* Soft Taupe base */
-  color: #3D2A1C !important;            /* Chocolate text */
-  border: 1px solid #D2C9BF !important;
-  border-radius: 12px !important;
+/* 3. FIX THE QUICK ACTIONS: Layout rules only, NO forced background colors */
+.QuickActionsGrid a,
+.quick-action-card {
+  border: 1px solid rgba(45, 42, 39, 0.12);
+  border-radius: 16px !important;
   padding: 12px !important;
   font-weight: 600 !important;
-}
-
-/* Give the very first action item a Sage Green accent color */
-[class*="QuickActions"] a:first-child {
-  background-color: #8FA89B !important; /* Sage Green */
-  color: #FDFBF7 !important;
-  border-color: #7A9386 !important;
+  transition: all 0.2s ease;
 }
