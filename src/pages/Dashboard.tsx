@@ -2,10 +2,9 @@ import React from 'react';
 import { usePets } from '../context/PetContext';
 import { 
   PawPrint, Heart, Bell, Calendar, Syringe, Plus, ShieldAlert, 
-  Clock, MapPin, Book, Users, ChefHat, ShoppingBag 
+  Clock, MapPin, Book, Users, ChefHat, ShoppingBag, Briefcase
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import BetaSignup from '../components/BetaSignup';
 
 const Dashboard: React.FC = () => {
   const { profiles, vaccines, medications, appointments, journal } = usePets();
@@ -36,7 +35,7 @@ const Dashboard: React.FC = () => {
           <div>
             <h1 className="text-4xl font-bold text-brandCharcoal mb-1">Porchside Pet Life</h1>
             <p className="text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
-            <p className="opacity-70 font-medium">Here's what's happening with your furry family today.</p>
+            <p className="opacity-70 font-medium mt-1">Here's what's happening with your furry family today.</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -47,6 +46,7 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* Metric Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <div className="stats shadow bg-brandCream border border-brandTaupe/40 rounded-3xl">
           <div className="stat">
@@ -86,6 +86,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Columns - Reminders & Shortcuts */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-brandCream rounded-[2.5rem] p-8 shadow-sm border border-brandTaupe/40">
             <div className="flex justify-between items-center mb-6">
@@ -138,6 +139,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* Right Column - Tip & Custom Balanced Quick Actions */}
         <div className="space-y-6">
           <div className="bg-brandTerracotta text-white rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden group">
             <div className="relative z-10">
@@ -153,48 +155,61 @@ const Dashboard: React.FC = () => {
           <div className="bg-brandCream rounded-[2.5rem] p-8 shadow-sm border border-brandTaupe/40">
             <h3 className="text-xl font-bold mb-6">Quick Actions</h3>
             <div className="grid grid-cols-1 gap-3 QuickActionsGrid">
-              <Link to="/journal" className="quick-action-card rounded-2xl px-5 py-4 bg-brandTerracotta text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTerracotta/90 transition-all">
+              
+              {/* Journal - Sage Green */}
+              <Link to="/journal" className="quick-action-card rounded-2xl px-5 py-4 bg-brandSage text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandSage/90 transition-all">
                 <Plus size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">New Journal Entry</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Track Today</div>
                 </div>
               </Link>
-              <Link to="/profiles" className="quick-action-card rounded-2xl px-5 py-4 bg-brandCharcoal text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandCharcoal/90 transition-all">
+
+              {/* Add Profile - Terracotta */}
+              <Link to="/profiles" className="quick-action-card rounded-2xl px-5 py-4 bg-brandTerracotta text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTerracotta/90 transition-all">
                 <Plus size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Add Profile</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">New Dog</div>
                 </div>
               </Link>
-              <Link to="/reminders" className="quick-action-card rounded-2xl px-5 py-4 bg-brandSage text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandSage/90 transition-all">
+
+              {/* Schedule Appt - Charcoal */}
+              <Link to="/reminders" className="quick-action-card rounded-2xl px-5 py-4 bg-brandCharcoal text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandCharcoal/90 transition-all">
                 <Calendar size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Schedule Appt</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Reminders</div>
                 </div>
               </Link>
-              <Link to="/travel" className="quick-action-card rounded-2xl px-5 py-4 bg-brandTaupe text-brandCharcoal flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTaupe/90 transition-all">
-                <ShoppingBag size={20} /> 
+
+              {/* Packing List - Taupe */}
+              <Link to="/travel" className="quick-action-card rounded-2xl px-5 py-4 bg-brandTaupe text-brandCharcoal flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTaupe/95 transition-all">
+                <Briefcase size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Packing List</div>
-                  <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Travel Ready</div>
+                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-widest">Travel Ready</div>
                 </div>
               </Link>
-              <Link to="/store" className="quick-action-card rounded-2xl px-5 py-4 bg-brandCharcoal text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandCharcoal/90 transition-all">
+
+              {/* Shop Boutique - Warm Chocolate Dark Neutral */}
+              <Link to="/store" className="quick-action-card rounded-2xl px-5 py-4 bg-[#5C4D41] text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-[#4A3E34] transition-all">
                 <ShoppingBag size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Shop Boutique</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Premium Gear</div>
                 </div>
               </Link>
-              <Link to="/emergency" className="quick-action-card rounded-2xl px-5 py-4 bg-brandTerracotta text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTerracotta/90 transition-all">
+
+              {/* Emergency Kit - Deep Safety Red */}
+              <Link to="/emergency" className="quick-action-card rounded-2xl px-5 py-4 bg-red-700 text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-red-800 transition-all">
                 <ShieldAlert size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Emergency Kit</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Safety First</div>
                 </div>
               </Link>
+
             </div>
           </div>
         </div>
