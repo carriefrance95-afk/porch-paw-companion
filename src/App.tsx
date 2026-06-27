@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { PetProvider } from './context/PetContext';
 import { AuthProvider } from './context/AuthContext';
 import MainLayout from './layouts/MainLayout';
@@ -39,6 +40,7 @@ function App() {
             </Route>
           </Routes>
         </Router>
+        <Analytics />
       </PetProvider>
     </AuthProvider>
   );
