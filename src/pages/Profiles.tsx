@@ -25,22 +25,11 @@ const Profiles: React.FC = () => {
 
   const [formData, setFormData] = useState<Partial<DogProfile>>(initialFormState);
 
-  useEffect(() => {
-    return () => {
-      if (photoPreviewUrl && !editingProfile) {
-        URL.revokeObjectURL(photoPreviewUrl);
-      }
-    };
-  }, [photoPreviewUrl, editingProfile]);
-
   const handleOpenAddModal = () => {
     setEditingProfile(null);
     setFormData(initialFormState);
     setSelectedPhotoFile(null);
-    if (photoPreviewUrl) {
-      URL.revokeObjectURL(photoPreviewUrl);
-      setPhotoPreviewUrl('');
-    }
+    setPhotoPreviewUrl('');
     setIsModalOpen(true);
   };
 
@@ -48,12 +37,7 @@ const Profiles: React.FC = () => {
     setEditingProfile(profile);
     setFormData(profile);
     setSelectedPhotoFile(null);
-    
-    if (profile.photoUrl) {
-      setPhotoPreviewUrl(profile.photoUrl);
-    } else {
-      setPhotoPreviewUrl('');
-    }
+    setPhotoPreviewUrl(profile.photoUrl || '');
     setIsModalOpen(true);
   };
 
@@ -62,14 +46,14 @@ const Profiles: React.FC = () => {
     if (!file) return;
 
     setSelectedPhotoFile(file);
-    
-    if (photoPreviewUrl && photoPreviewUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(photoPreviewUrl);
-    }
 
-    const localPreviewUrl = URL.createObjectURL(file);
-    setPhotoPreviewUrl(localPreviewUrl);
-    setFormData(prev => ({ ...prev, photoUrl: localPreviewUrl }));
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setPhotoPreviewUrl(base64String);
+      setFormData(prev => ({ ...prev, photoUrl: base64String }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleDelete = (id: string) => {
@@ -96,9 +80,6 @@ const Profiles: React.FC = () => {
     setSelectedPhotoFile(null);
     setIsModalOpen(false);
   };
-
-  // Determine the active image source for real-time rendering
-  const currentImageSrc = photoPreviewUrl || formData.photoUrl;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -148,7 +129,7 @@ const Profiles: React.FC = () => {
         <div className="modal modal-open backdrop-blur-sm flex items-center justify-center p-4">
           <div className="modal-box w-full max-w-3xl max-h-[85vh] bg-[#FDFBF7] rounded-[2.5rem] p-0 overflow-y-auto shadow-2xl flex flex-col border border-brandTaupe/30">
             
-            {/* UPDATED HEADER: Beautiful soft mineral sage green (#A2A795) */}
+            {/* Soft Mineral Sage Green Header */}
             <div className="bg-[#A2A795] p-8 flex justify-between items-center sticky top-0 z-50 border-b border-white/10 shadow-sm">
               <div className="text-left">
                 <h3 style={{ color: '#FDFBF7' }} className="font-bold text-3xl font-serif">{editingProfile ? 'Edit Profile' : 'Add New Dog'}</h3>
@@ -173,24 +154,17 @@ const Profiles: React.FC = () => {
                      }} 
                      className="ring-2 ring-[#B55D3B] ring-offset-2 bg-[#E6E1DA] flex items-center justify-center cursor-pointer relative group overflow-hidden"
                    >
-                     {/* FIXED PHOTO RENDERING LOGIC */}
-                     {currentImageSrc ? (
+                     {/* FIXED: Removed the fragile onError toggle that was hiding valid images */}
+                     {photoPreviewUrl ? (
                        <img 
-                         src={currentImageSrc} 
+                         src={photoPreviewUrl} 
                          alt="Preview" 
                          style={{ width: '100%', height: '100%', borderRadius: '9999px' }}
                          className="object-cover block"
-                         onError={(e) => {
-                           e.currentTarget.style.display = 'none';
-                           const fallbackIcon = e.currentTarget.parentElement?.querySelector('.fallback-camera-icon');
-                           if (fallbackIcon) fallbackIcon.classList.remove('hidden');
-                         }}
                        />
-                     ) : null}
-                     
-                     <div className={`fallback-camera-icon ${currentImageSrc ? 'hidden' : ''}`}>
+                     ) : (
                        <Camera size={36} className="text-[#A2A795]" />
-                     </div>
+                     )}
 
                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                        <span style={{ color: '#ffffff' }} className="text-[11px] font-bold">CHANGE</span>
