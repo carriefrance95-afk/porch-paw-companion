@@ -155,38 +155,50 @@ const Profiles: React.FC = () => {
             
             <form onSubmit={handleSubmit} className="p-8 flex-1">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <div className="md:col-span-2 flex flex-col items-center mb-4">
-                   {/* Fixed Image Container with flex-shrink-0 to prevent oval squishing */}
-                   <div style={{ width: '96px', height: '96px' }} className="flex-shrink-0 rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-base-200 flex items-center justify-center cursor-pointer relative group overflow-hidden">
+<div className="md:col-span-2 flex flex-col items-center mb-4">
+                   {/* Hard-locked circle shell that ignores framework layout rules entirely */}
+                   <div 
+                     style={{ 
+                       width: '120px', 
+                       height: '120px', 
+                       minWidth: '120px', 
+                       minHeight: '120px', 
+                       borderRadius: '9999px' 
+                     }} 
+                     className="ring-2 ring-[#B55D3B] ring-offset-2 bg-[#E6E1DA] flex items-center justify-center cursor-pointer relative group overflow-hidden"
+                   >
                      {formData.photoUrl ? (
                        <img 
                          src={photoPreviewUrl || formData.photoUrl} 
                          alt="Preview" 
-                         className="w-full h-full object-cover block"
+                         style={{ width: '100%', height: '100%', borderRadius: '9999px' }}
+                         className="object-cover block"
                          onError={(e) => {
-                           if (photoPreviewUrl && formData.photoUrl) {
-                             e.currentTarget.src = formData.photoUrl;
-                           }
+                           // If it fails to load the local path, gracefully show the camera icon instead of a broken layout link
+                           e.currentTarget.style.display = 'none';
+                           const fallbackIcon = e.currentTarget.parentElement?.querySelector('.fallback-camera-icon');
+                           if (fallbackIcon) fallbackIcon.classList.remove('hidden');
                          }}
                        />
-                     ) : (
-                       <Camera size={32} className="text-[#B6A799]" />
-                     )}
+                     ) : null}
+                     
+                     {/* Hidden fallback camera icon if image breaks or is missing */}
+                     <div className={`fallback-camera-icon ${formData.photoUrl ? 'hidden' : ''}`}>
+                       <Camera size={36} className="text-[#7A7A59]" />
+                     </div>
+
                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                       <span style={{ color: '#ffffff' }} className="text-[10px] font-bold">CHANGE</span>
+                       <span style={{ color: '#ffffff' }} className="text-[11px] font-bold">CHANGE</span>
                      </div>
                    </div>
-                   
                    <input type="file" accept="image/*" className="hidden" id="dog-photo-upload" onChange={handlePhotoUpload} />
-                   <label htmlFor="dog-photo-upload" className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7A7A59] px-5 py-3 font-bold text-white shadow-md hover:bg-[#6A6A4D] transition-colors">
-                     📸 Upload Profile Photo
-                   </label>
-                   {selectedPhotoFile && (
+                  <label htmlFor="dog-photo-upload" className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7A7A59] px-5 py-3 font-bold text-white shadow-md hover:bg-[#6A6A4D] transition-colors">
+                    📸 Upload Profile Photo
+                  </label>
+                  {selectedPhotoFile && (
                     <p className="mt-2 text-xs text-neutral/70">Selected: {selectedPhotoFile.name}</p>
-                   )}
+                  )}
                 </div>
-
                 <div className="form-control text-left">
                   <label className="label"><span className="label-text font-bold text-[#2D2A27]">Dog's Name</span></label>
                   <input 
