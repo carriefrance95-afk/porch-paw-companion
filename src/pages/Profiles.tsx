@@ -69,7 +69,7 @@ const Profiles: React.FC = () => {
 
     const localPreviewUrl = URL.createObjectURL(file);
     setPhotoPreviewUrl(localPreviewUrl);
-    setFormData({ ...formData, photoUrl: localPreviewUrl });
+    setFormData(prev => ({ ...prev, photoUrl: localPreviewUrl }));
   };
 
   const handleDelete = (id: string) => {
@@ -96,6 +96,9 @@ const Profiles: React.FC = () => {
     setSelectedPhotoFile(null);
     setIsModalOpen(false);
   };
+
+  // Determine the active image source for real-time rendering
+  const currentImageSrc = photoPreviewUrl || formData.photoUrl;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -145,8 +148,8 @@ const Profiles: React.FC = () => {
         <div className="modal modal-open backdrop-blur-sm flex items-center justify-center p-4">
           <div className="modal-box w-full max-w-3xl max-h-[85vh] bg-[#FDFBF7] rounded-[2.5rem] p-0 overflow-y-auto shadow-2xl flex flex-col border border-brandTaupe/30">
             
-            {/* Soft Brand Sage Green Header Area */}
-            <div className="bg-[#7A7A59] p-8 flex justify-between items-center sticky top-0 z-50 border-b border-brandTaupe/10">
+            {/* UPDATED HEADER: Beautiful soft mineral sage green (#A2A795) */}
+            <div className="bg-[#A2A795] p-8 flex justify-between items-center sticky top-0 z-50 border-b border-white/10 shadow-sm">
               <div className="text-left">
                 <h3 style={{ color: '#FDFBF7' }} className="font-bold text-3xl font-serif">{editingProfile ? 'Edit Profile' : 'Add New Dog'}</h3>
                 <p style={{ color: '#FDFBF7', opacity: 0.9 }} className="text-sm mt-1">{editingProfile ? `Updating info for ${editingProfile.name}` : 'Tell us about your furry friend'}</p>
@@ -170,9 +173,10 @@ const Profiles: React.FC = () => {
                      }} 
                      className="ring-2 ring-[#B55D3B] ring-offset-2 bg-[#E6E1DA] flex items-center justify-center cursor-pointer relative group overflow-hidden"
                    >
-                     {photoPreviewUrl ? (
+                     {/* FIXED PHOTO RENDERING LOGIC */}
+                     {currentImageSrc ? (
                        <img 
-                         src={photoPreviewUrl} 
+                         src={currentImageSrc} 
                          alt="Preview" 
                          style={{ width: '100%', height: '100%', borderRadius: '9999px' }}
                          className="object-cover block"
@@ -184,8 +188,8 @@ const Profiles: React.FC = () => {
                        />
                      ) : null}
                      
-                     <div className={`fallback-camera-icon ${photoPreviewUrl ? 'hidden' : ''}`}>
-                       <Camera size={36} className="text-[#7A7A59]" />
+                     <div className={`fallback-camera-icon ${currentImageSrc ? 'hidden' : ''}`}>
+                       <Camera size={36} className="text-[#A2A795]" />
                      </div>
 
                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -194,7 +198,7 @@ const Profiles: React.FC = () => {
                    </div>
                    
                    <input type="file" accept="image/*" className="hidden" id="dog-photo-upload" onChange={handlePhotoUpload} />
-                   <label htmlFor="dog-photo-upload" className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7A7A59] px-5 py-3 font-bold text-white shadow-md hover:bg-[#6A6A4D] transition-colors">
+                   <label htmlFor="dog-photo-upload" className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#A2A795] px-5 py-3 font-bold text-white shadow-md hover:bg-[#8F9483] transition-colors">
                      📸 Upload Profile Photo
                    </label>
                    {selectedPhotoFile && (
