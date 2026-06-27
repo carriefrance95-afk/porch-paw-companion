@@ -155,11 +155,21 @@ const Profiles: React.FC = () => {
             
             <form onSubmit={handleSubmit} className="p-8 flex-1">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
                 <div className="md:col-span-2 flex flex-col items-center mb-4">
-                   {/* Profile Image Shell with locked dimensional constraints */}
-                   <div style={{ width: '96px', height: '96px' }} className="rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-base-200 flex items-center justify-center cursor-pointer relative group overflow-hidden">
+                   {/* Fixed Image Container with flex-shrink-0 to prevent oval squishing */}
+                   <div style={{ width: '96px', height: '96px' }} className="flex-shrink-0 rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-base-200 flex items-center justify-center cursor-pointer relative group overflow-hidden">
                      {formData.photoUrl ? (
-                       <img src={photoPreviewUrl || formData.photoUrl} alt="Preview" className="w-full h-full object-cover" />
+                       <img 
+                         src={photoPreviewUrl || formData.photoUrl} 
+                         alt="Preview" 
+                         className="w-full h-full object-cover block"
+                         onError={(e) => {
+                           if (photoPreviewUrl && formData.photoUrl) {
+                             e.currentTarget.src = formData.photoUrl;
+                           }
+                         }}
+                       />
                      ) : (
                        <Camera size={32} className="text-[#B6A799]" />
                      )}
@@ -167,9 +177,10 @@ const Profiles: React.FC = () => {
                        <span style={{ color: '#ffffff' }} className="text-[10px] font-bold">CHANGE</span>
                      </div>
                    </div>
+                   
                    <input type="file" accept="image/*" className="hidden" id="dog-photo-upload" onChange={handlePhotoUpload} />
                    <label htmlFor="dog-photo-upload" className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7A7A59] px-5 py-3 font-bold text-white shadow-md hover:bg-[#6A6A4D] transition-colors">
-                    📸 Upload Profile Photo
+                     📸 Upload Profile Photo
                    </label>
                    {selectedPhotoFile && (
                     <p className="mt-2 text-xs text-neutral/70">Selected: {selectedPhotoFile.name}</p>
