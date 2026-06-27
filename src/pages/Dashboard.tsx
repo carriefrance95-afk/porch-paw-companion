@@ -154,8 +154,7 @@ const Dashboard: React.FC = () => {
           
           <div className="bg-brandCream rounded-[2.5rem] p-8 shadow-sm border border-brandTaupe/40">
             <h3 className="text-xl font-bold mb-6">Quick Actions</h3>
-            <div className="grid grid-cols-1 gap-3 QuickActionsGrid">
-              
+<div className="grid grid-cols-1 gap-3">              
               {/* Journal - Sage Green */}
               <Link to="/journal" style={{ backgroundColor: '#A2B29F', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
                 <Plus size={20} /> 
