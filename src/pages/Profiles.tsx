@@ -140,16 +140,15 @@ const Profiles: React.FC = () => {
       {/* Modal Container */}
       {isModalOpen && (
         <div className="modal modal-open backdrop-blur-sm flex items-center justify-center p-4">
-          {/* Container with explicit max-height and internal scrolling enabled */}
           <div className="modal-box w-full max-w-3xl max-h-[85vh] bg-[#FDFBF7] rounded-[2.5rem] p-0 overflow-y-auto shadow-2xl flex flex-col border border-brandTaupe/30">
             
-            {/* Dark Charcoal Header Area - Explicit text white color mappings */}
+            {/* Header Area with Absolute Text Color Overrides */}
             <div className="bg-[#2D2A27] p-8 flex justify-between items-center sticky top-0 z-50 border-b border-brandTaupe/20">
               <div className="text-left">
-                <h3 className="font-bold text-3xl font-serif text-[#FDFBF7]">{editingProfile ? 'Edit Profile' : 'Add New Dog'}</h3>
-                <p className="text-[#FDFBF7]/80 text-sm mt-1">{editingProfile ? `Updating info for ${editingProfile.name}` : 'Tell us about your furry friend'}</p>
+                <h3 style={{ color: '#FDFBF7' }} className="font-bold text-3xl font-serif">{editingProfile ? 'Edit Profile' : 'Add New Dog'}</h3>
+                <p style={{ color: '#E6E1DA' }} className="text-sm mt-1">{editingProfile ? `Updating info for ${editingProfile.name}` : 'Tell us about your furry friend'}</p>
               </div>
-              <button className="btn btn-sm btn-circle bg-white/10 hover:bg-white/20 border-none text-white flex items-center justify-center" onClick={() => setIsModalOpen(false)}>
+              <button style={{ color: '#FDFBF7' }} className="btn btn-sm btn-circle bg-white/10 hover:bg-white/20 border-none flex items-center justify-center" onClick={() => setIsModalOpen(false)}>
                 <X size={20} />
               </button>
             </div>
@@ -157,17 +156,16 @@ const Profiles: React.FC = () => {
             <form onSubmit={handleSubmit} className="p-8 flex-1">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2 flex flex-col items-center mb-4">
-                   <div className="avatar">
-                      <div className="w-24 h-24 rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-base-200 flex items-center justify-center cursor-pointer relative group overflow-hidden">
-                        {formData.photoUrl ? (
-                          <img src={photoPreviewUrl || formData.photoUrl} alt="Preview" className="w-full h-full object-cover" />
-                        ) : (
-                          <Camera size={32} className="text-[#B6A799]" />
-                        )}
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span className="text-white text-[10px] font-bold">CHANGE</span>
-                        </div>
-                      </div>
+                   {/* Profile Image Shell with locked dimensional constraints */}
+                   <div style={{ width: '96px', height: '96px' }} className="rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-base-200 flex items-center justify-center cursor-pointer relative group overflow-hidden">
+                     {formData.photoUrl ? (
+                       <img src={photoPreviewUrl || formData.photoUrl} alt="Preview" className="w-full h-full object-cover" />
+                     ) : (
+                       <Camera size={32} className="text-[#B6A799]" />
+                     )}
+                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                       <span style={{ color: '#ffffff' }} className="text-[10px] font-bold">CHANGE</span>
+                     </div>
                    </div>
                    <input type="file" accept="image/*" className="hidden" id="dog-photo-upload" onChange={handlePhotoUpload} />
                    <label htmlFor="dog-photo-upload" className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7A7A59] px-5 py-3 font-bold text-white shadow-md hover:bg-[#6A6A4D] transition-colors">
