@@ -62,7 +62,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <div className="text-5xl mb-4">📧</div>
             <h4 className="text-xl font-bold text-brandSage mb-2">Check your email!</h4>
             <p className="text-brandCharcoal mb-6"> We've sent a confirmation link to {email}.</p>
-            <button className="btn btn-block rounded-xl bg-brandTerracotta text-brandCream border-brandTerracotta hover:bg-brandTerracotta/90" onClick={onClose}>
+            <button className="btn btn-block rounded-xl bg-[#B55D3B] text-white border-[#B55D3B] hover:bg-[#B55D3B]/90" onClick={onClose}>
               Got it
             </button>
           </div>
@@ -104,7 +104,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
             <button 
               type="submit" 
-              className={`btn btn-block rounded-xl h-12 text-lg shadow-md hover:shadow-lg transition-all bg-brandTerracotta text-brandCream border-brandTerracotta hover:bg-brandTerracotta/90 ${loading ? 'loading' : ''}`}
+              className={`btn btn-block rounded-xl h-12 text-lg shadow-md hover:shadow-lg transition-all bg-[#B55D3B] text-white border-[#B55D3B] hover:bg-[#B55D3B]/90 ${loading ? 'loading' : ''}`}
               disabled={loading}
             >
               {isSignUp ? 'Create Account' : 'Sign In'}

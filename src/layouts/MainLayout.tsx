@@ -98,8 +98,8 @@ const MainLayout: React.FC = () => {
                   to={item.path} 
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     location.pathname === item.path 
-                      ? 'bg-[#B55D3B] text-[#F4F0EA] font-bold shadow-md scale-[1.02]' 
-                      : 'hover:bg-[#7A7A59]/25 text-[#B6A799] opacity-90 hover:opacity-100 hover:text-[#F4F0EA]'
+                      ? 'bg-[#B55D3B] text-white font-bold shadow-md scale-[1.02]' 
+                      : 'hover:bg-[#7A7A59]/25 text-white opacity-90 hover:opacity-100 hover:text-white'
                   }`}
                 >
                   <span className="text-xl">{item.icon}</span>
@@ -130,7 +130,7 @@ const MainLayout: React.FC = () => {
               
               {user ? (
                 <button 
-                  className="btn btn-xs btn-ghost btn-block text-[#B6A799] hover:text-[#F4F0EA]"
+                  className="btn btn-xs btn-ghost btn-block text-white hover:text-white"
                   onClick={() => signOut()}
                 >
                   Sign Out
