@@ -47,8 +47,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="p-6 max-w-6xl mx-auto bg-[#FDFBF7] text-left">
-      
-      {/* HEADER SECTION: Removed double logo, added custom photo choice container */}
+
+      {/* HEADER SECTION */}
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-brandTaupe/20 pb-6">
         <div className="flex items-center gap-5">
           <div className="relative group w-16 h-16 rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-[#E6E1DA] flex items-center justify-center overflow-hidden cursor-pointer">
@@ -76,7 +76,7 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* METRIC STATS CARDS: Added premium mineral sage background shields for metric card outlines */}
+      {/* METRIC STATS CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <div className="stats shadow-sm bg-white border border-brandTaupe/30 rounded-3xl p-2">
           <div className="stat flex items-center justify-between p-4">
@@ -88,7 +88,7 @@ const Dashboard: React.FC = () => {
             <div className="w-12 h-12 rounded-2xl bg-[#A2A795]/10 flex items-center justify-center text-[#B55D3B]"><PawPrint size={26} /></div>
           </div>
         </div>
-        
+
         <div className="stats shadow-sm bg-white border border-brandTaupe/30 rounded-3xl p-2">
           <div className="stat flex items-center justify-between p-4">
             <div>
@@ -133,8 +133,7 @@ const Dashboard: React.FC = () => {
               </h2>
               <Link to="/reminders" className="btn btn-ghost btn-sm rounded-xl font-bold">View All</Link>
             </div>
-            
-            {/* INSTRUCTIONS ADDED TO REMINDERS EMPTY STATE */}
+
             {allReminders.length === 0 ? (
               <div className="text-center p-8 bg-[#FDFBF7] rounded-3xl border-2 border-dashed border-brandTaupe/40">
                 <p className="font-bold text-brandCharcoal mb-2">No upcoming reminders or appointments.</p>
@@ -180,7 +179,7 @@ const Dashboard: React.FC = () => {
             </Link>
           </div>
 
-          {/* APP INSTRUCTIONS: Filled the giant white space canyon with an intuitive instruction layout */}
+          {/* APP INSTRUCTIONS */}
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-brandTaupe/30 text-left">
             <h3 className="text-xl font-bold font-serif text-brandCharcoal mb-2 flex items-center gap-2">
               <CheckSquare size={22} className="text-[#A2A795]" /> Getting Started with Porchside Pet Life
@@ -207,82 +206,80 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column - Tip & Remodeled Quick Actions */}
+        {/* Right Column - Softened Gold-Cream Tip Block & Quick Actions */}
         <div className="space-y-6">
-          <div className="bg-[#B55D3B] text-white rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden group">
+          <div className="bg-[#F5EEDC] rounded-[2.5rem] p-8 shadow-sm border border-brandTaupe/20 relative overflow-hidden group">
             <div className="relative z-10">
-              <h3 className="text-2xl font-bold font-serif mb-3">Daily Care Tip</h3>
-              <p className="text-sm opacity-90 leading-relaxed mb-6 font-medium">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xs font-bold tracking-wider text-[#A2A795] uppercase bg-white/60 px-3 py-1 rounded-full shadow-sm">
+                  💡 Tip of the Day
+                </span>
+              </div>
+              <h3 className="text-2xl font-bold font-serif mb-3 text-brandCharcoal">Daily Care Tip</h3>
+              <p className="text-brandCharcoal/80 text-sm leading-relaxed mb-6 font-medium">
                 Keep your dog hydrated! Fresh water should be available at all times, especially after playtime or walks in the sun.
               </p>
-              {/* REBRANDED READ MORE ACTION -> Directs straight to the recipe kitchen module */}
-              <Link to="/content" className="btn bg-[#A2A795] text-white rounded-2xl btn-sm px-6 border-[#A2A795] hover:bg-[#8F9483]">
+              <Link to="/content" className="btn btn-sm px-6 rounded-2xl bg-[#A2A795] text-white border-[#A2A795] hover:bg-[#8F9483] font-bold shadow-sm">
                 View Care Archive
               </Link>
             </div>
-            <PawPrint className="absolute -bottom-6 -right-6 w-32 h-32 opacity-10 group-hover:scale-110 transition-transform duration-500" />
+            <PawPrint className="absolute -bottom-6 -right-6 w-32 h-32 text-brandCharcoal/5 group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
           </div>
-          
+
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-brandTaupe/30">
             <h3 className="text-xl font-bold font-serif text-brandCharcoal mb-6">Quick Actions</h3>
-            <div className="grid grid-cols-1 gap-3">              
-              {/* Journal - Sage Green */}
+            <div className="grid grid-cols-1 gap-3">
               <Link to="/journal" style={{ backgroundColor: '#A2A795', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
-                <Plus size={20} /> 
+                <Plus size={20} />
                 <div className="text-left">
                   <div className="font-bold">New Journal Entry</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Track Today</div>
                 </div>
               </Link>
 
-              {/* Add Profile - Terracotta */}
               <Link to="/profiles" style={{ backgroundColor: '#B55D3B', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
-                <Plus size={20} /> 
+                <Plus size={20} />
                 <div className="text-left">
                   <div className="font-bold">Add Profile</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">New Dog</div>
                 </div>
               </Link>
 
-              {/* Schedule Appt - Softened Layout Neutral Accent */}
               <Link to="/reminders" style={{ backgroundColor: '#5C5C50', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
-                <Calendar size={20} /> 
+                <Calendar size={20} />
                 <div className="text-left">
                   <div className="font-bold">Schedule Appt</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Reminders</div>
                 </div>
               </Link>
 
-              {/* Packing List - Taupe */}
               <Link to="/travel" style={{ backgroundColor: '#8C8275', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
-                <Briefcase size={20} /> 
+                <Briefcase size={20} />
                 <div className="text-left">
                   <div className="font-bold">Packing List</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Travel Ready</div>
                 </div>
               </Link>
 
-              {/* Shop Boutique - Warm Chocolate Dark Neutral */}
               <Link to="/store" style={{ backgroundColor: '#5C4D41', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
-                <ShoppingBag size={20} /> 
+                <ShoppingBag size={20} />
                 <div className="text-left">
                   <div className="font-bold">Shop Boutique</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Premium Gear</div>
                 </div>
               </Link>
 
-              {/* Emergency Kit - Deep Safety Red */}
               <Link to="/emergency" style={{ backgroundColor: '#B91C1C', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
-                <ShieldAlert size={20} /> 
+                <ShieldAlert size={20} />
                 <div className="text-left">
                   <div className="font-bold">Emergency Kit</div>
                   <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Safety First</div>
                 </div>
               </Link>
-
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
