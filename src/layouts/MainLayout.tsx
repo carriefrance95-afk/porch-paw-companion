@@ -60,33 +60,33 @@ const MainLayout: React.FC = () => {
             </label>
           </div>
           <div className="flex-1 flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full overflow-hidden border border-[#B6A799]/40 shadow-sm">
-              <img src="/logo.png" alt="Porchside Pet Life Logo" className="block h-full w-full object-cover" />
+            <div className="h-10 w-10 rounded-full overflow-hidden border border-[#B6A799]/40 bg-[#F4F0EA] shadow-sm flex items-center justify-center">
+              <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-full w-full object-cover" />
             </div>
             <div className="leading-tight">
               <a className="block text-sm font-bold text-[#F4F0EA]">Porchside Pet Life</a>
-              <span className="block text-[10px] tracking-[0.16em] text-[#7A7A59]">by Porch & Paw</span>
+              <span className="block text-[10px] uppercase tracking-[0.3em] text-[#7A7A59]">by Porch & Paw</span>
             </div>
           </div>
         </div>
         
         {/* Page Content */}
-        <main className="flex-grow bg-[#FDFBF7]">
+        <main className="flex-grow">
           <Outlet />
         </main>
       </div> 
       
-      <div className="drawer-side sidebar">
+      <div className="drawer-side">
         <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label> 
         <div className="menu p-4 w-80 min-h-full bg-[#2D2A27] text-[#F4F0EA] border-r border-[#B6A799]/40">
           <div className="mb-10 px-4 py-2">
             <div className="flex items-center gap-3">
-              <div className="h-14 w-14 rounded-full overflow-hidden border border-[#B6A799]/40 shadow-sm">
-                <img src="/logo.png" alt="Porchside Pet Life Logo" className="block h-full w-full object-cover" />
+              <div className="h-14 w-14 rounded-full overflow-hidden border border-[#B6A799]/40 bg-[#F4F0EA] shadow-sm flex items-center justify-center p-0">
+                <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-full w-full object-cover" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-[#FDFBF7] leading-tight">Porchside Pet Life</h1>
-                <p className="text-[10px] tracking-[0.16em] text-[#FDFBF7]">by Porch & Paw</p>
+                <h1 className="text-lg font-bold text-[#F4F0EA] leading-tight">Porchside Pet Life</h1>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-[#7A7A59]">by Porch & Paw</p>
               </div>
             </div>
           </div>
@@ -98,7 +98,7 @@ const MainLayout: React.FC = () => {
                   to={item.path} 
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     location.pathname === item.path 
-                      ? 'bg-[#7A7A59] text-[#F4F0EA] font-bold shadow-md scale-[1.02]' 
+                      ? 'bg-[#B55D3B] text-[#F4F0EA] font-bold shadow-md scale-[1.02]' 
                       : 'hover:bg-[#7A7A59]/25 text-[#B6A799] opacity-90 hover:opacity-100 hover:text-[#F4F0EA]'
                   }`}
                 >
