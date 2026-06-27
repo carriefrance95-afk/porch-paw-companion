@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { PetProvider } from './context/PetContext';
 import { AuthProvider } from './context/AuthContext';
 import MainLayout from './layouts/MainLayout';
@@ -39,6 +40,7 @@ function App() {
             </Route>
           </Routes>
         </Router>
+        <SpeedInsights />
       </PetProvider>
     </AuthProvider>
   );
