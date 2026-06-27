@@ -139,7 +139,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column - Tip & Custom Balanced Quick Actions */}
+        {/* Right Column - Tip & Forced Inline Style Quick Actions */}
         <div className="space-y-6">
           <div className="bg-brandTerracotta text-white rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden group">
             <div className="relative z-10">
@@ -157,7 +157,7 @@ const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 gap-3 QuickActionsGrid">
               
               {/* Journal - Sage Green */}
-              <Link to="/journal" className="quick-action-card rounded-2xl px-5 py-4 bg-brandSage text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandSage/90 transition-all">
+              <Link to="/journal" style={{ backgroundColor: '#A2B29F', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
                 <Plus size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">New Journal Entry</div>
@@ -166,7 +166,7 @@ const Dashboard: React.FC = () => {
               </Link>
 
               {/* Add Profile - Terracotta */}
-              <Link to="/profiles" className="quick-action-card rounded-2xl px-5 py-4 bg-brandTerracotta text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTerracotta/90 transition-all">
+              <Link to="/profiles" style={{ backgroundColor: '#C87A53', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
                 <Plus size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Add Profile</div>
@@ -175,7 +175,7 @@ const Dashboard: React.FC = () => {
               </Link>
 
               {/* Schedule Appt - Charcoal */}
-              <Link to="/reminders" className="quick-action-card rounded-2xl px-5 py-4 bg-brandCharcoal text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandCharcoal/90 transition-all">
+              <Link to="/reminders" style={{ backgroundColor: '#2C302E', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
                 <Calendar size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Schedule Appt</div>
@@ -184,16 +184,16 @@ const Dashboard: React.FC = () => {
               </Link>
 
               {/* Packing List - Taupe */}
-              <Link to="/travel" className="quick-action-card rounded-2xl px-5 py-4 bg-brandTaupe text-brandCharcoal flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-brandTaupe/95 transition-all">
+              <Link to="/travel" style={{ backgroundColor: '#8C8275', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
                 <Briefcase size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Packing List</div>
-                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-widest">Travel Ready</div>
+                  <div className="text-[10px] opacity-80 uppercase font-bold tracking-widest">Travel Ready</div>
                 </div>
               </Link>
 
               {/* Shop Boutique - Warm Chocolate Dark Neutral */}
-              <Link to="/store" className="quick-action-card rounded-2xl px-5 py-4 bg-[#5C4D41] text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-[#4A3E34] transition-all">
+              <Link to="/store" style={{ backgroundColor: '#5C4D41', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
                 <ShoppingBag size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Shop Boutique</div>
@@ -202,7 +202,7 @@ const Dashboard: React.FC = () => {
               </Link>
 
               {/* Emergency Kit - Deep Safety Red */}
-              <Link to="/emergency" className="quick-action-card rounded-2xl px-5 py-4 bg-red-700 text-white flex items-center justify-start gap-4 shadow-sm hover:shadow-md hover:bg-red-800 transition-all">
+              <Link to="/emergency" style={{ backgroundColor: '#B91C1C', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
                 <ShieldAlert size={20} /> 
                 <div className="text-left">
                   <div className="font-bold">Emergency Kit</div>
