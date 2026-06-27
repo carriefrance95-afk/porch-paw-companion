@@ -27,11 +27,11 @@ const Profiles: React.FC = () => {
 
   useEffect(() => {
     return () => {
-      if (photoPreviewUrl) {
+      if (photoPreviewUrl && !editingProfile) {
         URL.revokeObjectURL(photoPreviewUrl);
       }
     };
-  }, [photoPreviewUrl]);
+  }, [photoPreviewUrl, editingProfile]);
 
   const handleOpenAddModal = () => {
     setEditingProfile(null);
@@ -48,8 +48,10 @@ const Profiles: React.FC = () => {
     setEditingProfile(profile);
     setFormData(profile);
     setSelectedPhotoFile(null);
-    if (photoPreviewUrl) {
-      URL.revokeObjectURL(photoPreviewUrl);
+    
+    if (profile.photoUrl) {
+      setPhotoPreviewUrl(profile.photoUrl);
+    } else {
       setPhotoPreviewUrl('');
     }
     setIsModalOpen(true);
@@ -60,7 +62,8 @@ const Profiles: React.FC = () => {
     if (!file) return;
 
     setSelectedPhotoFile(file);
-    if (photoPreviewUrl) {
+    
+    if (photoPreviewUrl && photoPreviewUrl.startsWith('blob:')) {
       URL.revokeObjectURL(photoPreviewUrl);
     }
 
@@ -142,11 +145,11 @@ const Profiles: React.FC = () => {
         <div className="modal modal-open backdrop-blur-sm flex items-center justify-center p-4">
           <div className="modal-box w-full max-w-3xl max-h-[85vh] bg-[#FDFBF7] rounded-[2.5rem] p-0 overflow-y-auto shadow-2xl flex flex-col border border-brandTaupe/30">
             
-            {/* Header Area with Absolute Text Color Overrides */}
-            <div className="bg-[#2D2A27] p-8 flex justify-between items-center sticky top-0 z-50 border-b border-brandTaupe/20">
+            {/* Soft Brand Sage Green Header Area */}
+            <div className="bg-[#7A7A59] p-8 flex justify-between items-center sticky top-0 z-50 border-b border-brandTaupe/10">
               <div className="text-left">
                 <h3 style={{ color: '#FDFBF7' }} className="font-bold text-3xl font-serif">{editingProfile ? 'Edit Profile' : 'Add New Dog'}</h3>
-                <p style={{ color: '#E6E1DA' }} className="text-sm mt-1">{editingProfile ? `Updating info for ${editingProfile.name}` : 'Tell us about your furry friend'}</p>
+                <p style={{ color: '#FDFBF7', opacity: 0.9 }} className="text-sm mt-1">{editingProfile ? `Updating info for ${editingProfile.name}` : 'Tell us about your furry friend'}</p>
               </div>
               <button style={{ color: '#FDFBF7' }} className="btn btn-sm btn-circle bg-white/10 hover:bg-white/20 border-none flex items-center justify-center" onClick={() => setIsModalOpen(false)}>
                 <X size={20} />
@@ -155,8 +158,8 @@ const Profiles: React.FC = () => {
             
             <form onSubmit={handleSubmit} className="p-8 flex-1">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div className="md:col-span-2 flex flex-col items-center mb-4">
-                   {/* Hard-locked circle shell that ignores framework layout rules entirely */}
+                
+                <div className="md:col-span-2 flex flex-col items-center mb-4">
                    <div 
                      style={{ 
                        width: '120px', 
@@ -167,14 +170,13 @@ const Profiles: React.FC = () => {
                      }} 
                      className="ring-2 ring-[#B55D3B] ring-offset-2 bg-[#E6E1DA] flex items-center justify-center cursor-pointer relative group overflow-hidden"
                    >
-                     {formData.photoUrl ? (
+                     {photoPreviewUrl ? (
                        <img 
-                         src={photoPreviewUrl || formData.photoUrl} 
+                         src={photoPreviewUrl} 
                          alt="Preview" 
                          style={{ width: '100%', height: '100%', borderRadius: '9999px' }}
                          className="object-cover block"
                          onError={(e) => {
-                           // If it fails to load the local path, gracefully show the camera icon instead of a broken layout link
                            e.currentTarget.style.display = 'none';
                            const fallbackIcon = e.currentTarget.parentElement?.querySelector('.fallback-camera-icon');
                            if (fallbackIcon) fallbackIcon.classList.remove('hidden');
@@ -182,8 +184,7 @@ const Profiles: React.FC = () => {
                        />
                      ) : null}
                      
-                     {/* Hidden fallback camera icon if image breaks or is missing */}
-                     <div className={`fallback-camera-icon ${formData.photoUrl ? 'hidden' : ''}`}>
+                     <div className={`fallback-camera-icon ${photoPreviewUrl ? 'hidden' : ''}`}>
                        <Camera size={36} className="text-[#7A7A59]" />
                      </div>
 
@@ -191,14 +192,16 @@ const Profiles: React.FC = () => {
                        <span style={{ color: '#ffffff' }} className="text-[11px] font-bold">CHANGE</span>
                      </div>
                    </div>
+                   
                    <input type="file" accept="image/*" className="hidden" id="dog-photo-upload" onChange={handlePhotoUpload} />
-                  <label htmlFor="dog-photo-upload" className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7A7A59] px-5 py-3 font-bold text-white shadow-md hover:bg-[#6A6A4D] transition-colors">
-                    📸 Upload Profile Photo
-                  </label>
-                  {selectedPhotoFile && (
+                   <label htmlFor="dog-photo-upload" className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7A7A59] px-5 py-3 font-bold text-white shadow-md hover:bg-[#6A6A4D] transition-colors">
+                     📸 Upload Profile Photo
+                   </label>
+                   {selectedPhotoFile && (
                     <p className="mt-2 text-xs text-neutral/70">Selected: {selectedPhotoFile.name}</p>
-                  )}
+                   )}
                 </div>
+
                 <div className="form-control text-left">
                   <label className="label"><span className="label-text font-bold text-[#2D2A27]">Dog's Name</span></label>
                   <input 
