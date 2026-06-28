@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { 
-  FolderManagement, // Safe substitute
   Search, 
   Plus, 
   MapPin, 
   Phone, 
   Clock, 
-  Star, 
   ExternalLink,
   Heart
 } from 'lucide-react';
@@ -19,7 +17,6 @@ interface CareProvider {
   note: string;
   lastVisit: string;
   isFavorite: boolean;
-  // Google API Integration Data Points
   googlePlaceId?: string;
   googleMapsUrl?: string;
   formattedAddress?: string;
@@ -29,7 +26,6 @@ const Directory: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Clean placeholder showing how data maps out elegantly
   const [providers, setProviders] = useState<CareProvider[]>([
     {
       id: '1',
@@ -38,7 +34,6 @@ const Directory: React.FC = () => {
       phone: '260-273-4745',
       note: 'Primary vet for Stitch. Super friendly with small breeds.',
       lastVisit: 'TBD',
-      isFavorite: true,
       googlePlaceId: 'ChIJN1t_tG1ETooR_v3f14',
       googleMapsUrl: 'https://maps.google.com',
       formattedAddress: '123 Care Lane, Bluffton, IN'
@@ -50,21 +45,20 @@ const Directory: React.FC = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto bg-[#FDFBF7] min-h-screen text-left">
       
-      {/* Top Heading Banner - High Contrast Action Callout */}
+      {/* Top Heading Banner */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold font-serif text-[#2D2A27]">Care Directory</h1>
-          <p className="text-sm text-[#2D2A27]/60 mt-1">Your trusted network of pet care professionals, ready for appointments and emergency outreach.</p>
+          <p className="text-sm text-[#2D2A27]/60 mt-1">Your trusted network of pet care professionals, ready for appointments, emergency outreach, and follow-up reminders.</p>
         </div>
         
-        {/* FIXED: Turn low-visibility button into high-contrast Terracotta action block */}
         <button className="bg-[#B55D3B] hover:bg-[#9E5033] text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md flex items-center gap-2 border-none transition-all cursor-pointer">
           <Plus size={16} />
           Add Provider
         </button>
       </div>
 
-      {/* Filter Row & Search - Fixed visibility contrast layout */}
+      {/* Filter Row & Search */}
       <div className="flex flex-col lg:flex-row gap-4 items-center mb-8 bg-white border border-[#B6A799]/20 p-4 rounded-3xl shadow-sm w-full">
         <div className="relative w-full lg:w-80">
           <input 
@@ -77,8 +71,7 @@ const Directory: React.FC = () => {
           <Search size={15} className="absolute left-3 top-3.5 text-[#2D2A27]/40" />
         </div>
 
-        {/* Scrollable category slider with beautiful Light Sage activations */}
-        <div className="flex gap-2 overflow-x-auto w-full pb-1 no-scrollbar mask-image">
+        <div className="flex gap-2 overflow-x-auto w-full pb-1">
           {categories.map((cat) => {
             const isActive = selectedCategory === cat;
             return (
@@ -98,7 +91,7 @@ const Directory: React.FC = () => {
         </div>
       </div>
 
-      {/* Directory Providers Grid Array */}
+      {/* Directory Providers Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {providers.map((provider) => (
           <div 
@@ -106,7 +99,6 @@ const Directory: React.FC = () => {
             className="bg-white border border-[#B6A799]/30 rounded-[2rem] p-6 shadow-sm hover:border-[#B55D3B]/30 transition-all flex flex-col justify-between"
           >
             <div>
-              {/* Card Meta Badge Strand */}
               <div className="flex justify-between items-center mb-4">
                 <span className="text-[10px] font-black uppercase tracking-wider bg-[#7A7A59]/10 text-[#4F5247] px-3 py-1 rounded-full">
                   {provider.type}
@@ -116,13 +108,11 @@ const Directory: React.FC = () => {
                 </button>
               </div>
 
-              {/* Core Text Data Block */}
               <span className="text-[11px] text-[#2D2A27]/50 font-medium block">Last visit: {provider.lastVisit}</span>
               <h3 className="text-xl font-bold font-serif text-[#2D2A27] mt-0.5 tracking-tight capitalize">
                 {provider.name}
               </h3>
 
-              {/* Live contact matrix items */}
               <div className="mt-4 space-y-2.5 text-xs text-[#2D2A27]/80">
                 <a href={`tel:${provider.phone}`} className="flex items-center gap-2 hover:text-[#B55D3B] transition-colors font-medium">
                   <Phone size={13} className="text-[#7A7A59]" /> {provider.phone}
@@ -136,13 +126,11 @@ const Directory: React.FC = () => {
                 )}
               </div>
 
-              {/* User Note Box */}
               <p className="mt-4 bg-[#FDFBF7] border border-[#B6A799]/20 rounded-2xl p-3.5 text-xs text-[#2D2A27]/70 italic leading-relaxed">
                 "{provider.note}"
               </p>
             </div>
 
-            {/* DYNAMIC GOOGLE MAPS API ENTRYPOINT ROUTE BUTTON */}
             {provider.googleMapsUrl && (
               <div className="mt-6 pt-4 border-t border-[#B6A799]/10">
                 <a 
