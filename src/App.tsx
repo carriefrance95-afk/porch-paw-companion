@@ -14,6 +14,7 @@ import ContentLibrary from './pages/ContentLibrary';
 import Store from './pages/Store';
 import AffiliateHub from './pages/AffiliateHub';
 import VetVisitHub from './pages/VetVisitHub';
+import AccountSettings from './pages/AccountSettings'; // New Import
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
               <Route path="store" element={<Store />} />
               <Route path="partners" element={<AffiliateHub />} />
               <Route path="vet-visit-prep" element={<VetVisitHub />} />
+              <Route path="account" element={<AccountSettings />} /> {/* Registered Path */}
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
