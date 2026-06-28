@@ -11,7 +11,9 @@ import {
   Activity,
   Sparkles,
   X,
-  Save
+  Save,
+  Paperclip,
+  Camera
 } from 'lucide-react';
 
 const Wellness: React.FC = () => {
@@ -20,12 +22,14 @@ const Wellness: React.FC = () => {
   
   // Modal tracking states
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalCategory, setModalCategory] = useState(''); // 'vaccine', 'medication', 'visit', 'allergy', 'surgery'
+  const [modalCategory, setModalCategory] = useState(''); 
   
   // Form input states
   const [formTitle, setFormTitle] = useState('');
   const [formDate, setFormDate] = useState('');
   const [formNotes, setFormNotes] = useState('');
+  const [attachedDoc, setAttachedDoc] = useState<string>(''); // Base64 document cache
+  const [attachedDocName, setAttachedDocName] = useState<string>('');
 
   const activeProfile = profiles[0] || {
     name: "Stitch",
@@ -39,19 +43,29 @@ const Wellness: React.FC = () => {
     setFormTitle('');
     setFormDate('');
     setFormNotes('');
+    setAttachedDoc('');
+    setAttachedDocName('');
     setIsModalOpen(true);
+  };
+
+  const handleDocUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAttachedDocName(file.name);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAttachedDoc(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Concrete connection hook: This is where local state updates or backend dispatches fire
-    alert(`Successfully added new ${modalCategory} entry for ${activeProfile.name}!`);
-    
+    alert(`Successfully added new ${modalCategory} entry with records for ${activeProfile.name}!`);
     setIsModalOpen(false);
   };
 
-  // Helper text mapping to keep the modal header perfectly branded
   const getCategoryHeader = () => {
     switch(modalCategory) {
       case 'vaccine': return 'Add new vaccination record';
@@ -199,9 +213,11 @@ const Wellness: React.FC = () => {
               Snap photos of paper clinical receipts and vaccine booklets directly into your portal profiles. Having immediate digital references ready makes critical emergency vet updates much faster.
             </p>
           </div>
+          
           <button className="btn w-full rounded-2xl bg-[#B55D3B] border-[#B55D3B] text-white hover:bg-[#9E5033] shadow-md font-bold mt-8 relative z-10 py-3.5 h-auto min-h-0 border-none transition-all">
             Generate Report
           </button>
+
           <div className="absolute -right-12 -bottom-12 w-44 h-44 rounded-full bg-white/20 group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
         </div>
       </div>
@@ -211,7 +227,6 @@ const Wellness: React.FC = () => {
         <div className="fixed inset-0 bg-[#2D2A27]/40 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
           <div className="bg-white rounded-[2.5rem] border border-brandTaupe/40 w-full max-w-lg p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
             
-            {/* Close Trigger Button */}
             <button 
               onClick={() => setIsModalOpen(false)}
               className="absolute right-6 top-6 w-8 h-8 rounded-full bg-[#FDFBF7] border border-brandTaupe/30 flex items-center justify-center text-[#2D2A27] hover:bg-brandChocolate/5 transition-all"
@@ -235,15 +250,42 @@ const Wellness: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-brandCharcoal/70 mb-2 uppercase tracking-wide">Log date</label>
-                <input 
-                  type="date"
-                  value={formDate}
-                  onChange={(e) => setFormDate(e.target.value)}
-                  className="input w-full bg-[#FDFBF7] border border-brandTaupe/40 rounded-xl focus:outline-none focus:border-[#B55D3B] text-sm"
-                  required
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-brandCharcoal/70 mb-2 uppercase tracking-wide">Log date</label>
+                  <input 
+                    type="date"
+                    value={formDate}
+                    onChange={(e) => setFormDate(e.target.value)}
+                    className="input w-full bg-[#FDFBF7] border border-brandTaupe/40 rounded-xl focus:outline-none focus:border-[#B55D3B] text-sm"
+                    required
+                  />
+                </div>
+                
+                {/* Dynamic Camera & File Document Slot */}
+                <div>
+                  <label className="block text-xs font-bold text-brandCharcoal/70 mb-2 uppercase tracking-wide">Clinic receipt / Document</label>
+                  <div className="relative flex items-center h-[38px]">
+                    {attachedDoc ? (
+                      <div className="flex items-center justify-between w-full bg-[#A2A795]/10 border border-dashed border-[#A2A795] text-xs px-3 py-1.5 rounded-xl h-full overflow-hidden">
+                        <span className="truncate text-brandCharcoal font-medium max-w-[130px]">📎 {attachedDocName}</span>
+                        <button type="button" onClick={() => { setAttachedDoc(''); setAttachedDocName(''); }} className="text-[#B55D3B] font-bold hover:underline">Clear</button>
+                      </div>
+                    ) : (
+                      <label className="flex items-center justify-center gap-1.5 w-full bg-[#FDFBF7] border border-dashed border-brandTaupe/50 hover:border-[#B55D3B] rounded-xl h-full cursor-pointer transition-colors text-xs font-bold text-[#B55D3B]">
+                        <Camera size={14} />
+                        Snap or upload file
+                        <input 
+                          type="file" 
+                          accept="image/*,application/pdf" 
+                          capture="environment" 
+                          onChange={handleDocUpload} 
+                          className="hidden" 
+                        />
+                      </label>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -251,7 +293,7 @@ const Wellness: React.FC = () => {
                 <textarea 
                   value={formNotes}
                   onChange={(e) => setFormNotes(e.target.value)}
-                  className="textarea w-full bg-[#FDFBF7] border border-brandTaupe/40 rounded-xl focus:outline-none focus:border-[#B55D3B] text-sm min-h-[90px] pt-3"
+                  className="textarea w-full bg-[#FDFBF7] border border-brandTaupe/40 rounded-xl focus:outline-none focus:border-[#B55D3B] text-sm min-h-[80px] pt-3"
                   placeholder="Dosage details, treating veterinarian info, or next renewal intervals..."
                 />
               </div>
