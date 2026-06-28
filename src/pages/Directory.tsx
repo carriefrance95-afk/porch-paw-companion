@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Search, 
   Plus, 
@@ -29,12 +29,17 @@ const Directory: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Google Places Search Mock State
+  // Real-time API input tracking states
+  const autocompleteRef = useRef<HTMLInputElement | null>(null);
   const [placeSearchInput, setPlaceSearchInput] = useState('');
   const [selectedType, setSelectedType] = useState('Veterinarian');
   const [personalNote, setPersonalNote] = useState('');
 
-  // Main list data state
+  // Captured live parameters from Google API response
+  const [capturedPhone, setCapturedPhone] = useState('');
+  const [capturedAddress, setCapturedAddress] = useState('');
+  const [capturedUrl, setCapturedUrl] = useState('');
+
   const [providers, setProviders] = useState<CareProvider[]>([
     {
       id: '1',
@@ -51,6 +56,29 @@ const Directory: React.FC = () => {
 
   const categories = ['All', 'Veterinarian', 'Emergency Vet', 'Groomer', 'Trainer', 'Boarding', 'Pet Sitter', 'Walker', 'Other'];
 
+  // Initialize live Google Autocomplete engine when the modal opens
+  useEffect(() => {
+    if (viewMode === 'create' && window.google) {
+      const autocomplete = new window.google.maps.places.Autocomplete(
+        autocompleteRef.current as HTMLInputElement,
+        {
+          types: ['establishment'],
+          fields: ['name', 'formatted_phone_number', 'formatted_address', 'url']
+        }
+      );
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        
+        // Extract live business details straight from Google's database mapping
+        if (place.name) setPlaceSearchInput(place.name);
+        if (place.formatted_phone_number) setCapturedPhone(place.formatted_phone_number);
+        if (place.formatted_address) setCapturedAddress(place.formatted_address);
+        if (place.url) setCapturedUrl(place.url);
+      });
+    }
+  }, [viewMode]);
+
   const filteredProviders = providers.filter((p) => {
     const matchesCategory = selectedCategory === 'All' || p.type === selectedCategory;
     return matchesCategory && p.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -60,20 +88,18 @@ const Directory: React.FC = () => {
     setProviders(providers.map(p => p.id === id ? { ...p, isFavorite: !p.isFavorite } : p));
   };
 
-  // Simulating the Google Places API Select Event
-  const handleSelectGooglePlace = (e: React.FormEvent) => {
+  const handleLinkSyncSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!placeSearchInput.trim()) return;
 
-    // This mimics the payload returned from a google.maps.places.Autocomplete selection
     const newProvider: CareProvider = {
       id: Date.now().toString(),
       name: placeSearchInput,
       type: selectedType,
-      // Auto-populated fields from Google Maps Data
-      phone: '260-555-0192', 
-      formattedAddress: `${placeSearchInput}, Bluffton, IN 46714`,
-      googleMapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(placeSearchInput)}`,
+      // If the API hasn't resolved live yet, fall back to whatever was written or use clean defaults
+      phone: capturedPhone || 'Phone unlisted', 
+      formattedAddress: capturedAddress || 'Address unlisted',
+      googleMapsUrl: capturedUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(placeSearchInput)}`,
       note: personalNote || 'No custom notes added.',
       lastVisit: 'TBD',
       isFavorite: false
@@ -82,9 +108,12 @@ const Directory: React.FC = () => {
     setProviders([newProvider, ...providers]);
     setViewMode('hub');
     
-    // Reset states
+    // Clear temporary caches
     setPlaceSearchInput('');
     setPersonalNote('');
+    setCapturedPhone('');
+    setCapturedAddress('');
+    setCapturedUrl('');
   };
 
   return (
@@ -140,7 +169,7 @@ const Directory: React.FC = () => {
             </div>
           </div>
 
-          {/* Cards Layout Output */}
+          {/* Cards Output Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProviders.map((provider) => (
               <div key={provider.id} className="bg-white border border-[#B6A799]/30 rounded-[2rem] p-6 shadow-sm flex flex-col justify-between hover:border-[#B6A799] transition-all">
@@ -158,7 +187,7 @@ const Directory: React.FC = () => {
                   <h3 className="text-xl font-bold font-serif mt-0.5 tracking-tight capitalize">{provider.name}</h3>
 
                   <div className="mt-4 space-y-2.5 text-xs opacity-90">
-                    <a href={`tel:${provider.phone}`} className="flex items-center gap-2 hover:text-[#B55D3B] transition-colors font-medium decoration-none text-inherit">
+                    <a href={`tel:${provider.phone}`} className="flex items-center gap-2 hover:text-[#B55D3B] transition-colors font-medium text-inherit decoration-none">
                       <Phone size={13} className="text-[#7A7A59]" /> {provider.phone}
                     </a>
                     {provider.formattedAddress && (
@@ -187,9 +216,9 @@ const Directory: React.FC = () => {
         </>
       )}
 
-      {/* CREATE MODE: GOOGLE PLACES SEARCH LINK FORM */}
+      {/* CREATE MODE: LIVE DATA RESOLUTION FORM */}
       {viewMode === 'create' && (
-        <form onSubmit={handleSelectGooglePlace} className="bg-white border border-[#B6A799]/30 rounded-[2rem] p-8 shadow-sm space-y-6 max-w-xl mx-auto animate-in fade-in duration-200">
+        <form onSubmit={handleLinkSyncSubmit} className="bg-white border border-[#B6A799]/30 rounded-[2rem] p-8 shadow-sm space-y-6 max-w-xl mx-auto animate-in fade-in duration-200">
           <div className="flex justify-between items-center pb-2 border-b border-[#B6A799]/10">
             <div>
               <h2 className="text-2xl font-bold font-serif">Link from Google Maps</h2>
@@ -199,11 +228,11 @@ const Directory: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            {/* Google Places Autocomplete Simulated Input Box */}
             <div>
               <label className="block text-xs font-bold mb-1.5 uppercase tracking-wide">Search Google Maps Business Registry</label>
               <div className="relative">
                 <input 
+                  ref={autocompleteRef}
                   type="text"
                   required
                   placeholder="Type clinic name, grooming shop, or business location..."
@@ -213,9 +242,13 @@ const Directory: React.FC = () => {
                 />
                 <Compass size={16} className="absolute left-3 top-3.5 text-[#7A7A59]" />
               </div>
-              {placeSearchInput && (
-                <div className="mt-1 bg-white border border-[#B6A799]/20 rounded-xl p-2 text-xs shadow-inner text-[#7A7A59] font-medium animate-pulse">
-                  ✨ Google Places Autocomplete API looking up context connection lines...
+              
+              {/* Context Feedback Panel displaying captured API state metrics */}
+              {capturedAddress && (
+                <div className="mt-3 bg-[#D1D5C4]/30 border border-[#7A7A59]/20 rounded-xl p-3 text-xs space-y-1 text-[#2D2A27]/80">
+                  <div className="font-bold text-[#2D2A27]">✓ Verified Google Data Picked Up:</div>
+                  <div><span className="font-semibold">Loc:</span> {capturedAddress}</div>
+                  {capturedPhone && <div><span className="font-semibold">Tel:</span> {capturedPhone}</div>}
                 </div>
               )}
             </div>
@@ -237,7 +270,7 @@ const Directory: React.FC = () => {
               <label className="block text-xs font-bold mb-1.5 uppercase tracking-wide">Personal Care Notes (Internal Only)</label>
               <textarea 
                 rows={3}
-                placeholder="Add special custom directives (e.g., 'Prefers Dr. Judy, park in back slot'). Google handles hours and locations automatically."
+                placeholder="Add unique user details like door codes, preferred clinicians..."
                 value={personalNote}
                 onChange={(e) => setPersonalNote(e.target.value)}
                 className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm p-3 focus:outline-none focus:border-[#B55D3B]"
@@ -255,5 +288,11 @@ const Directory: React.FC = () => {
     </div>
   );
 };
+// Declaring global window context interface types for typescript safety
+declare global {
+  interface Window {
+    google: any;
+  }
+}
 
 export default Directory;
