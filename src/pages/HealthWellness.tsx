@@ -9,14 +9,24 @@ import {
   Stethoscope, 
   AlertTriangle, 
   Activity,
-  Sparkles
+  Sparkles,
+  X,
+  Save
 } from 'lucide-react';
 
 const Wellness: React.FC = () => {
   const { profiles } = usePets();
   const [activeTab, setActiveTab] = useState('overview');
   
-  // Grab the active dog profile (defaulting to the first profile if available)
+  // Modal tracking states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalCategory, setModalCategory] = useState(''); // 'vaccine', 'medication', 'visit', 'allergy', 'surgery'
+  
+  // Form input states
+  const [formTitle, setFormTitle] = useState('');
+  const [formDate, setFormDate] = useState('');
+  const [formNotes, setFormNotes] = useState('');
+
   const activeProfile = profiles[0] || {
     name: "Stitch",
     breed: "Frenchie",
@@ -24,8 +34,37 @@ const Wellness: React.FC = () => {
     photoUrl: ""
   };
 
+  const openAddModal = (category: string) => {
+    setModalCategory(category);
+    setFormTitle('');
+    setFormDate('');
+    setFormNotes('');
+    setIsModalOpen(true);
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Concrete connection hook: This is where local state updates or backend dispatches fire
+    alert(`Successfully added new ${modalCategory} entry for ${activeProfile.name}!`);
+    
+    setIsModalOpen(false);
+  };
+
+  // Helper text mapping to keep the modal header perfectly branded
+  const getCategoryHeader = () => {
+    switch(modalCategory) {
+      case 'vaccine': return 'Add new vaccination record';
+      case 'medication': return 'Log active medication';
+      case 'visit': return 'Record clinical vet visit';
+      case 'allergy': return 'Log profile allergy or sensitivity';
+      case 'surgery': return 'Archive surgical procedure';
+      default: return 'Log wellness update';
+    }
+  };
+
   return (
-    <div className="p-6 max-w-6xl mx-auto text-left bg-[#FDFBF7]">
+    <div className="p-6 max-w-6xl mx-auto text-left bg-[#FDFBF7] relative">
       
       {/* Header Profile Summary Row */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 border-b border-brandTaupe/20 pb-6">
@@ -43,7 +82,6 @@ const Wellness: React.FC = () => {
           </div>
         </div>
         
-        {/* Top Control Actions */}
         <div className="flex gap-3 w-full sm:w-auto">
           <button className="btn btn-sm rounded-full bg-white border-brandTaupe/40 text-[#2D2A27] hover:bg-brandChocolate/5 hover:border-brandTaupe/60 shadow-sm px-5 py-2.5 h-auto min-h-0 gap-2 font-bold transition-all text-xs">
             <FileText size={14} className="text-[#A2A795]" />
@@ -75,8 +113,6 @@ const Wellness: React.FC = () => {
 
       {/* Main Grid Content Panels */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left/Middle Content: Wellness Tracking Categories */}
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Vaccinations Card */}
@@ -88,7 +124,7 @@ const Wellness: React.FC = () => {
                 </div>
                 <h3 className="font-bold text-xl text-[#2D2A27] font-serif">Vaccinations</h3>
               </div>
-              <button className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
+              <button onClick={() => openAddModal('vaccine')} className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
             </div>
             <p className="text-xs font-medium text-neutral/40 my-6 text-center italic">No preventative booster or core immunization records found.</p>
           </div>
@@ -102,7 +138,7 @@ const Wellness: React.FC = () => {
                 </div>
                 <h3 className="font-bold text-xl text-[#2D2A27] font-serif">Medications</h3>
               </div>
-              <button className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
+              <button onClick={() => openAddModal('medication')} className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
             </div>
             <p className="text-xs font-medium text-neutral/40 my-6 text-center italic">No prescription histories, supplements, or active medications logged.</p>
           </div>
@@ -116,7 +152,7 @@ const Wellness: React.FC = () => {
                 </div>
                 <h3 className="font-bold text-xl text-[#2D2A27] font-serif">Vet Visits</h3>
               </div>
-              <button className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
+              <button onClick={() => openAddModal('visit')} className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
             </div>
             <p className="text-xs font-medium text-neutral/40 my-6 text-center italic">No clinical checkups or specialized vet visits registered.</p>
           </div>
@@ -130,7 +166,7 @@ const Wellness: React.FC = () => {
                 </div>
                 <h3 className="font-bold text-xl text-[#2D2A27] font-serif">Allergies</h3>
               </div>
-              <button className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
+              <button onClick={() => openAddModal('allergy')} className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
             </div>
             <p className="text-xs font-medium text-neutral/40 my-6 text-center italic">Clear medical profile. No food, environmental, or medical sensitivities reported.</p>
           </div>
@@ -144,11 +180,10 @@ const Wellness: React.FC = () => {
                 </div>
                 <h3 className="font-bold text-xl text-[#2D2A27] font-serif">Surgeries & Procedures</h3>
               </div>
-              <button className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
+              <button onClick={() => openAddModal('surgery')} className="w-8 h-8 rounded-full border border-brandTaupe/30 flex items-center justify-center text-neutral/50 group-hover:border-[#B55D3B] group-hover:text-[#B55D3B] group-hover:bg-[#B55D3B]/5 transition-all font-bold">+</button>
             </div>
             <p className="text-xs font-medium text-neutral/40 my-6 text-center italic">No historic operational log entries or complex rehabilitation timelines archived.</p>
           </div>
-
         </div>
 
         {/* Right Content Panel: Rebranded Health Tips Block */}
@@ -164,17 +199,85 @@ const Wellness: React.FC = () => {
               Snap photos of paper clinical receipts and vaccine booklets directly into your portal profiles. Having immediate digital references ready makes critical emergency vet updates much faster.
             </p>
           </div>
-          
-          {/* Action Trigger Button */}
           <button className="btn w-full rounded-2xl bg-[#B55D3B] border-[#B55D3B] text-white hover:bg-[#9E5033] shadow-md font-bold mt-8 relative z-10 py-3.5 h-auto min-h-0 border-none transition-all">
             Generate Report
           </button>
-
-          {/* Abstract background accent */}
           <div className="absolute -right-12 -bottom-12 w-44 h-44 rounded-full bg-white/20 group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
         </div>
-
       </div>
+
+      {/* Slide-Up Overlay Pop-up Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-[#2D2A27]/40 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+          <div className="bg-white rounded-[2.5rem] border border-brandTaupe/40 w-full max-w-lg p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            
+            {/* Close Trigger Button */}
+            <button 
+              onClick={() => setIsModalOpen(false)}
+              className="absolute right-6 top-6 w-8 h-8 rounded-full bg-[#FDFBF7] border border-brandTaupe/30 flex items-center justify-center text-[#2D2A27] hover:bg-brandChocolate/5 transition-all"
+            >
+              <X size={16} />
+            </button>
+
+            <h3 className="text-2xl font-bold font-serif text-brandCharcoal mb-1 pr-6">{getCategoryHeader()}</h3>
+            <p className="text-xs text-neutral/50 mb-6">Updating medical metadata logs for {activeProfile.name}.</p>
+
+            <form onSubmit={handleFormSubmit} className="space-y-5">
+              <div>
+                <label className="block text-xs font-bold text-brandCharcoal/70 mb-2 uppercase tracking-wide">Record / Title name</label>
+                <input 
+                  type="text"
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
+                  className="input w-full bg-[#FDFBF7] border border-brandTaupe/40 rounded-xl focus:outline-none focus:border-[#B55D3B] text-sm"
+                  placeholder="e.g., Rabies Booster, Apoquel, Annual Checkup"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-brandCharcoal/70 mb-2 uppercase tracking-wide">Log date</label>
+                <input 
+                  type="date"
+                  value={formDate}
+                  onChange={(e) => setFormDate(e.target.value)}
+                  className="input w-full bg-[#FDFBF7] border border-brandTaupe/40 rounded-xl focus:outline-none focus:border-[#B55D3B] text-sm"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-brandCharcoal/70 mb-2 uppercase tracking-wide">Additional clinical notes</label>
+                <textarea 
+                  value={formNotes}
+                  onChange={(e) => setFormNotes(e.target.value)}
+                  className="textarea w-full bg-[#FDFBF7] border border-brandTaupe/40 rounded-xl focus:outline-none focus:border-[#B55D3B] text-sm min-h-[90px] pt-3"
+                  placeholder="Dosage details, treating veterinarian info, or next renewal intervals..."
+                />
+              </div>
+
+              <div className="pt-4 border-t border-brandTaupe/20 flex justify-end gap-3">
+                <button 
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="btn btn-sm px-5 rounded-xl bg-[#E6E1DA] text-brandCharcoal border-none hover:bg-[#DCD7CE] font-bold"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-sm bg-[#B55D3B] text-white border-none hover:bg-brandCharcoal px-5 rounded-xl font-bold flex items-center gap-1.5 shadow-md"
+                >
+                  <Save size={14} />
+                  Save entry
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
