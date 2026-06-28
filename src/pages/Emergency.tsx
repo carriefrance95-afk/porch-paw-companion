@@ -44,21 +44,21 @@ const Emergency: React.FC = () => {
         </button>
       </div>
 
-      {/* 2. Brand Nav-Tabs Switcher (All Lucide element components now match imports exactly) */}
+      {/* 2. Brand Nav-Tabs Switcher - Using your Light, Bright Sage Green (#D1D5C4) */}
       <div className="bg-white border border-[#B6A799]/30 rounded-2xl p-1.5 flex flex-wrap gap-1 mb-8 shadow-sm">
-        <button onClick={() => setActiveTab('contacts')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'contacts' ? 'bg-[#7A7A59] text-white shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
+        <button onClick={() => setActiveTab('contacts')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'contacts' ? 'bg-[#D1D5C4] text-[#2D2A27] shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
           <Users size={14} /> Contacts
         </button>
-        <button onClick={() => setActiveTab('sitter')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'sitter' ? 'bg-[#7A7A59] text-white shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
+        <button onClick={() => setActiveTab('sitter')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'sitter' ? 'bg-[#D1D5C4] text-[#2D2A27] shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
           <ClipboardList size={14} /> Sitter Info
         </button>
-        <button onClick={() => setActiveTab('lost')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'lost' ? 'bg-[#7A7A59] text-white shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
+        <button onClick={() => setActiveTab('lost')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'lost' ? 'bg-[#D1D5C4] text-[#2D2A27] shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
           <File size={14} /> Lost Flyer
         </button>
-        <button onClick={() => setActiveTab('packet')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'packet' ? 'bg-[#7A7A59] text-white shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
+        <button onClick={() => setActiveTab('packet')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'packet' ? 'bg-[#D1D5C4] text-[#2D2A27] shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
           <FileHeart size={14} /> Full Packet
         </button>
-        <button onClick={() => setActiveTab('resources')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'resources' ? 'bg-[#7A7A59] text-white shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
+        <button onClick={() => setActiveTab('resources')} className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border-none cursor-pointer transition-all ${activeTab === 'resources' ? 'bg-[#D1D5C4] text-[#2D2A27] shadow-sm' : 'text-[#2D2A27]/60 hover:bg-[#FDFBF7]'}`}>
           <HelpCircle size={14} /> Resources
         </button>
       </div>
@@ -83,9 +83,9 @@ const Emergency: React.FC = () => {
       {/* TAB B: SITTER INFORMATION */}
       {activeTab === 'sitter' && (
         <div className="space-y-6 animate-in fade-in duration-150">
-          <div className="bg-[#7A7A59]/10 rounded-2xl p-4 flex items-center justify-between">
+          <div className="bg-[#D1D5C4]/40 rounded-2xl p-4 flex items-center justify-between">
             <div className="text-sm font-bold text-[#2D2A27]/80">
-              Plan for: <span className="ml-2 bg-[#7A7A59] text-white px-3 py-1 rounded-full text-xs font-bold">Stitch</span>
+              Plan for: <span className="ml-2 bg-[#D1D5C4] text-[#2D2A27] px-3 py-1 rounded-full text-xs font-bold">Stitch</span>
             </div>
             <button type="button" className="bg-[#B55D3B] hover:bg-[#9E5033] text-white font-bold text-xs px-5 py-2 rounded-xl border-none shadow-sm flex items-center gap-1.5 cursor-pointer">
               <Save size={14} /> Save Changes
@@ -123,8 +123,8 @@ const Emergency: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-6 bg-[#7A7A59]/10 rounded-2xl p-4 text-left flex gap-3 items-start border-none">
-              <Info size={18} className="text-[#7A7A59] shrink-0 mt-0.5" />
+            <div className="mt-6 bg-[#D1D5C4]/30 rounded-2xl p-4 text-left flex gap-3 items-start border-none">
+              <Info size={18} className="text-[#2D2A27]/70 shrink-0 mt-0.5" />
               <div>
                 <h4 className="text-xs font-bold text-[#2D2A27]">Tip for Pet Parents</h4>
                 <p className="text-xs text-[#2D2A27]/70 leading-relaxed mt-0.5">Keep these instructions updated regularly, especially if your dog's medication or diet changes. You can print this section separately for your sitter!</p>
@@ -167,7 +167,7 @@ const Emergency: React.FC = () => {
             <div>
               <label className="block text-xs font-bold text-[#2D2A27]/70 mb-1.5">Flyer Image Selection</label>
               <button type="button" className="w-full bg-[#FDFBF7] hover:bg-[#F5EEDC] border border-dashed border-[#B6A799]/60 rounded-xl py-4 flex flex-col items-center justify-center gap-1 text-[#2D2A27]/60 transition-colors cursor-pointer">
-                <Upload size={16} className="text-[#7A7A59]" />
+                <Upload size={16} className="text-[#4F5247]" />
                 <span className="text-xs font-bold">Upload Local Photo Asset</span>
                 <span className="text-[10px] opacity-70">Supports PNG, JPG up to 5MB</span>
               </button>
@@ -184,7 +184,7 @@ const Emergency: React.FC = () => {
 
             <div className="space-y-1">
               <h2 className="text-3xl font-black tracking-wide text-[#2D2A27] font-serif uppercase">STITCH</h2>
-              <p className="text-sm font-bold text-[#7A7A59]">Frenchie • Microchipped</p>
+              <p className="text-sm font-bold text-[#4F5247]">Frenchie • Microchipped</p>
             </div>
 
             <div className="bg-[#FDFBF7] border border-[#B6A799]/30 rounded-xl p-4 text-left space-y-2">
@@ -235,7 +235,7 @@ const Emergency: React.FC = () => {
               </div>
               <div className="sm:col-span-2 space-y-4">
                 <div className="bg-[#FDFBF7] border border-[#B6A799]/30 rounded-xl p-4">
-                  <h4 className="text-xs font-bold text-[#2D2A27] uppercase tracking-wider flex items-center gap-1.5"><Phone size={12} className="text-[#7A7A59]" /> Emergency Contacts</h4>
+                  <h4 className="text-xs font-bold text-[#2D2A27] uppercase tracking-wider flex items-center gap-1.5"><Phone size={12} className="text-[#4F5247]" /> Emergency Contacts</h4>
                   <p className="text-xs text-[#2D2A27]/50 mt-2 italic">No contacts listed.</p>
                 </div>
                 <div className="bg-[#FDFBF7] border border-[#B6A799]/30 rounded-xl p-4">
@@ -248,7 +248,7 @@ const Emergency: React.FC = () => {
         </div>
       )}
 
-      {/* TAB E: HEALTH RESOURCES */}
+      {/* TAB E: HEALTH RESOURCES - Using Light, Bright Sage for Community & Help box layout */}
       {activeTab === 'resources' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start animate-in fade-in duration-150">
           
@@ -288,24 +288,24 @@ const Emergency: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-[#7A7A59]/10 border border-[#7A7A59]/20 rounded-[2rem] p-6 text-left space-y-4">
+          <div className="bg-[#D1D5C4]/40 border border-[#D1D5C4] rounded-[2rem] p-6 text-left space-y-4">
             <h3 className="text-lg font-bold font-serif text-[#2D2A27] flex items-center gap-2">
-              <Heart size={18} className="text-[#7A7A59]" /> Community & Help
+              <Heart size={18} className="text-[#4F5247]" /> Community & Help
             </h3>
             <div className="space-y-3">
               <div className="bg-white border border-[#B6A799]/20 rounded-2xl p-4 flex justify-between items-center shadow-sm">
                 <div>
                   <h4 className="text-sm font-bold text-[#2D2A27]">ASPCA Poison Control</h4>
-                  <p className="text-xs font-medium text-[#7A7A59] mt-0.5">(888) 426-4435</p>
+                  <p className="text-xs font-medium text-[#4F5247] mt-0.5">(888) 426-4435</p>
                 </div>
-                <a href="tel:8884264435" className="w-9 h-9 rounded-xl bg-[#7A7A59]/10 text-[#7A7A59] hover:bg-[#7A7A59] hover:text-white transition-all flex items-center justify-center"><Phone size={14} /></a>
+                <a href="tel:8884264435" className="w-9 h-9 rounded-xl bg-[#D1D5C4]/40 text-[#4F5247] hover:bg-[#D1D5C4] transition-all flex items-center justify-center"><Phone size={14} /></a>
               </div>
               <div className="bg-white border border-[#B6A799]/20 rounded-2xl p-4 flex justify-between items-center shadow-sm">
                 <div>
                   <h4 className="text-sm font-bold text-[#2D2A27]">Pet Poison Helpline</h4>
-                  <p className="text-xs font-medium text-[#7A7A59] mt-0.5">(855) 764-7661</p>
+                  <p className="text-xs font-medium text-[#4F5247] mt-0.5">(855) 764-7661</p>
                 </div>
-                <a href="tel:8557647661" className="w-9 h-9 rounded-xl bg-[#7A7A59]/10 text-[#7A7A59] hover:bg-[#7A7A59] hover:text-white transition-all flex items-center justify-center"><Phone size={14} /></a>
+                <a href="tel:8557647661" className="w-9 h-9 rounded-xl bg-[#D1D5C4]/40 text-[#4F5247] hover:bg-[#D1D5C4] transition-all flex items-center justify-center"><Phone size={14} /></a>
               </div>
             </div>
             <p className="text-[11px] text-[#2D2A27]/50 text-center leading-relaxed italic">Keep these numbers saved in your phone contacts as well for instant access during a crisis.</p>
