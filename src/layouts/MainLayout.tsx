@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { usePets } from '../context/PetContext';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +12,23 @@ const MainLayout: React.FC = () => {
   const { user, signOut } = useAuth();
   const { isMigrating } = useMigration();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [ownerAvatar, setOwnerAvatar] = useState('');
+
+  // Dynamically watch for local owner image updates to render in the bottom card wrapper
+  useEffect(() => {
+    const savedPhoto = localStorage.getItem('dashboard_user_photo');
+    if (savedPhoto) setOwnerAvatar(savedPhoto);
+
+    // Set up a brief check interval to sync real-time photo swaps instantly
+    const interval = setInterval(() => {
+      const currentPhoto = localStorage.getItem('dashboard_user_photo');
+      if (currentPhoto !== ownerAvatar) {
+        setOwnerAvatar(currentPhoto || '');
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [ownerAvatar]);
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: '🏠' },
@@ -26,6 +43,7 @@ const MainLayout: React.FC = () => {
     { name: 'From The Porch & Paw Kitchen', path: '/content', icon: '🍳' },
     { name: 'Store', path: '/store', icon: '🛒' },
     { name: 'Partner Perks', path: '/partners', icon: '🎁' },
+    { name: 'Account Settings', path: '/account', icon: '⚙️' }, // Added to rolling navigation array
   ];
 
   // Interception Logic: Show onboarding wizard if no dogs exist
@@ -78,79 +96,81 @@ const MainLayout: React.FC = () => {
       
       <div className="drawer-side">
         <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label> 
-        <div className="menu p-4 w-80 min-h-full bg-brandCream text-brandChocolate border-r border-brandTaupe/30">
-          <div className="mb-10 px-4 py-2">
-            <div className="flex items-center gap-3">
-              <div className="h-14 w-14 rounded-full overflow-hidden border border-brandChocolate/20 bg-white shadow-sm flex items-center justify-center p-0">
-                <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-full w-full object-cover" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-brandChocolate leading-tight">Porchside Pet Life</h1>
-                <p className="text-[10px] uppercase tracking-[0.3em] text-brandSage font-semibold">by Porch & Paw</p>
+        <div className="menu p-4 w-80 min-h-full bg-brandCream text-brandChocolate border-r border-brandTaupe/30 flex flex-col justify-between">
+          <div>
+            <div className="mb-10 px-4 py-2">
+              <div className="flex items-center gap-3">
+                <div className="h-14 w-14 rounded-full overflow-hidden border border-brandChocolate/20 bg-white shadow-sm flex items-center justify-center p-0">
+                  <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-full w-full object-cover" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold text-brandChocolate leading-tight">Porchside Pet Life</h1>
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-brandSage font-semibold">by Porch & Paw</p>
+                </div>
               </div>
             </div>
+            
+            {/* Rendered Menu Items */}
+            <ul className="space-y-1 overflow-y-auto max-h-[50vh]">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <li key={item.path}>
+                    <Link 
+                      to={item.path} 
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                        isActive 
+                          ? 'bg-brandTerracotta text-brandCream font-bold' 
+                          : 'hover:bg-brandChocolate/5 text-brandChocolate'
+                      }`}
+                    >
+                      <span>{item.icon}</span>
+                      <span>{item.name}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
           
-          {/* Rendered Menu Items */}
-          <ul className="space-y-1 flex-grow overflow-y-auto">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <li key={item.path}>
-                  <Link 
-                    to={item.path} 
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                      isActive 
-                        ? 'bg-brandTerracotta text-brandCream font-bold' 
-                        : 'hover:bg-brandChocolate/5 text-brandChocolate'
-                    }`}
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.name}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-          
-          <div className="mt-8 space-y-4">
-            {/* Account Section */}
-            <div className="p-4 bg-brandChocolate/5 rounded-xl border border-brandTaupe/20">
+          <div className="mt-auto pt-4 space-y-4">
+            {/* Account Section: Now interactive and syncs to uploaded owner images */}
+            <Link to="/account" className="block p-4 bg-brandChocolate/5 rounded-xl border border-brandTaupe/20 hover:bg-brandChocolate/10 transition-all no-underline">
               <div className="flex items-center gap-3 mb-3">
-                <div className="avatar placeholder">
-                  <div className="bg-brandTerracotta text-brandCream rounded-full w-8">
-                    <span>{user ? user.email?.charAt(0).toUpperCase() : '?'}</span>
+                <div className="avatar">
+                  <div className="bg-brandTerracotta text-brandCream rounded-full w-8 h-8 flex items-center justify-center overflow-hidden">
+                    {ownerAvatar ? (
+                      <img src={ownerAvatar} alt="Owner Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="font-bold text-sm">{user ? user.email?.charAt(0).toUpperCase() : '?'}</span>
+                    )}
                   </div>
                 </div>
                 <div className="overflow-hidden flex-1">
-                  <p className="text-sm font-bold truncate text-brandChocolate">
+                  <p className="text-sm font-bold truncate text-brandChocolate m-0">
                     {user ? user.email : 'Guest Mode'}
                   </p>
-                  <p className="text-xs text-brandSage font-medium">
+                  <p className="text-[11px] text-brandSage font-medium m-0">
                     {user ? 'Cloud Synced' : 'Local Storage Only'}
                   </p>
                 </div>
               </div>
 
-              {user ? (
+              {user && (
                 <button 
-                  className="btn btn-xs btn-ghost btn-block text-brandChocolate hover:bg-brandChocolate/10"
-                  onClick={() => signOut()}
+                  className="btn btn-xs btn-ghost btn-block text-brandChocolate hover:bg-brandChocolate/20 mt-1 font-bold"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevents clicking sign out from running navigation to /account
+                    signOut();
+                  }}
                 >
                   Sign Out
                 </button>
-              ) : (
-                <button 
-                  className="btn btn-sm btn-block rounded-lg bg-brandTerracotta text-brandCream border-brandTerracotta hover:bg-brandTerracotta/90"
-                  onClick={() => setIsAuthModalOpen(true)}
-                >
-                  Sign In
-                </button>
               )}
-            </div>
+            </Link>
 
             {/* Plan Section */}
-            <div className="p-4 bg-brandTerracotta/10 rounded-xl border border-brandTaupe/20 mt-4">
+            <div className="p-4 bg-brandTerracotta/10 rounded-xl border border-brandTaupe/20">
               <p className="text-sm font-semibold mb-1 text-brandChocolate">Plan: {plan}</p>
               <p className="text-xs mb-3 text-brandSage font-medium">
                 {plan === 'Premium' ? 'Full access unlocked!' : 'Unlock unlimited profiles and memory vault.'}
@@ -169,10 +189,9 @@ const MainLayout: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <AuthModal 
+<AuthModal 
         isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
+        onClose={() => setIsAuthModalOpen(false)} // Corrected from closeOnClose
       />
     </div>
   );
