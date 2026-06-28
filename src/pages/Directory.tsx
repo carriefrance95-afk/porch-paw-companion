@@ -26,7 +26,7 @@ const Directory: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   
-  const [providers, setProviders] = useState<CareProvider[]>([
+  const [providers] = useState<CareProvider[]>([
     {
       id: '1',
       name: 'Smith Veterinary Clinic',
@@ -34,6 +34,7 @@ const Directory: React.FC = () => {
       phone: '260-273-4745',
       note: 'Primary vet for Stitch. Super friendly with small breeds.',
       lastVisit: 'TBD',
+      isFavorite: true,
       googlePlaceId: 'ChIJN1t_tG1ETooR_v3f14',
       googleMapsUrl: 'https://maps.google.com',
       formattedAddress: '123 Care Lane, Bluffton, IN'
@@ -77,6 +78,7 @@ const Directory: React.FC = () => {
             return (
               <button
                 key={cat}
+                type="button"
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
                   isActive 
@@ -103,7 +105,7 @@ const Directory: React.FC = () => {
                 <span className="text-[10px] font-black uppercase tracking-wider bg-[#7A7A59]/10 text-[#4F5247] px-3 py-1 rounded-full">
                   {provider.type}
                 </span>
-                <button className="text-[#2D2A27]/30 hover:text-[#B55D3B] bg-transparent border-none cursor-pointer transition-colors">
+                <button type="button" className="text-[#2D2A27]/30 hover:text-[#B55D3B] bg-transparent border-none cursor-pointer transition-colors">
                   <Heart size={16} fill={provider.isFavorite ? "#B55D3B" : "none"} className={provider.isFavorite ? "text-[#B55D3B]" : ""} />
                 </button>
               </div>
