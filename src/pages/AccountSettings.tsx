@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { User, Phone, MapPin, Camera, Save, CreditCard } from 'lucide-react';
+import { usePets } from '../context/PetContext';
 
 const AccountSettings: React.FC = () => {
+  const { plan } = usePets(); 
   const [ownerName, setOwnerName] = useState('Pet Parent');
   const [ownerPhone, setOwnerPhone] = useState('');
   const [ownerAddress, setOwnerAddress] = useState('');
   const [ownerAvatar, setOwnerAvatar] = useState('');
-  const [planTier, setPlanTier] = useState('Premium'); 
   const [isSaving, setIsSaving] = useState(false);
 
   // Load baseline profile preferences on mount
@@ -78,7 +79,7 @@ const AccountSettings: React.FC = () => {
           <div className="w-full border-t border-brandTaupe/20 my-5 pt-4">
             <div className="flex items-center justify-between px-2 text-xs">
               <span className="font-bold opacity-60 flex items-center gap-1"><CreditCard size={14} /> Tier level:</span>
-              <span className="badge font-bold bg-[#B55D3B]/10 text-[#B55D3B] border-none px-3 py-1 rounded-full">{planTier} plan</span>
+              <span className="badge font-bold bg-[#B55D3B]/10 text-[#B55D3B] border-none px-3 py-1 rounded-full">{plan} plan</span>
             </div>
           </div>
         </div>
