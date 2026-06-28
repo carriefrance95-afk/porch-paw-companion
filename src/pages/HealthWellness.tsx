@@ -201,7 +201,7 @@ const Wellness: React.FC = () => {
         </div>
 
         {/* Right Content Panel: Rebranded Health Tips Block */}
-        <div className="bg-[#F5EEDC] border border-brandTaupe/20 shadow-sm rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden min-h-[320px] group">
+        <div className="bg-[#F5EEDC] border border-brandTaupe/20 shadow-sm rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden min-h-[360px] group">
           <div className="relative z-10">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold tracking-wider text-[#A2A795] uppercase bg-white/60 px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
@@ -214,9 +214,24 @@ const Wellness: React.FC = () => {
             </p>
           </div>
           
-          <button className="btn w-full rounded-2xl bg-[#B55D3B] border-[#B55D3B] text-white hover:bg-[#9E5033] shadow-md font-bold mt-8 relative z-10 py-3.5 h-auto min-h-0 border-none transition-all">
-            Generate Report
-          </button>
+          {/* Dual Action Stack */}
+          <div className="mt-6 space-y-3 relative z-10">
+            <button 
+              onClick={() => alert(`Generating printable PDF document for ${activeProfile.name}...`)}
+              className="btn w-full rounded-2xl bg-[#B55D3B] text-white hover:bg-[#9E5033] shadow-md font-bold py-3 h-auto min-h-0 border-none transition-all flex items-center justify-center gap-2 text-sm"
+            >
+              <FileText size={16} />
+              Download PDF Report
+            </button>
+            
+            <button 
+              onClick={() => alert(`Sending complete wellness summary email to your inbox...`)}
+              className="btn w-full rounded-2xl bg-white border border-brandTaupe/40 text-[#2D2A27] hover:bg-brandChocolate/5 shadow-sm font-bold py-3 h-auto min-h-0 transition-all flex items-center justify-center gap-2 text-sm"
+            >
+              <span className="text-lg leading-none">📩</span>
+              Email Report to Inbox
+            </button>
+          </div>
 
           <div className="absolute -right-12 -bottom-12 w-44 h-44 rounded-full bg-white/20 group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
         </div>
