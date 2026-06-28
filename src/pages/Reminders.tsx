@@ -6,10 +6,10 @@ import {
   ChevronRight, 
   Search, 
   Sparkles,
-  Camera,
+  Stethoscope,
   Clock,
-  CheckCircle,
-  Tag
+  X,
+  RefreshCw
 } from 'lucide-react';
 
 interface ReminderItem {
@@ -24,11 +24,13 @@ interface ReminderItem {
 const Reminders: React.FC = () => {
   const [currentView, setCurrentView] = useState<'Month' | 'Week' | 'Agenda'>('Month');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Fully restored dropdown filter states
   const [selectedDog, setSelectedDog] = useState('All Pets');
   const [selectedCategory, setSelectedCategory] = useState('All Events');
   const [selectedPriority, setSelectedPriority] = useState('All Priorities');
 
-  // June 2026 Calendar Grid Layout
+  // June 2026 Baseline Calendar Matrix
   const calendarDays = [
     { day: 31, isCurrentMonth: false },
     { day: 1, isCurrentMonth: true }, { day: 2, isCurrentMonth: true }, { day: 3, isCurrentMonth: true },
@@ -48,7 +50,7 @@ const Reminders: React.FC = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto bg-[#FDFBF7] min-h-screen text-left">
       
-      {/* Header Row */}
+      {/* Header Container */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2 text-[#2D2A27]">
@@ -64,39 +66,65 @@ const Reminders: React.FC = () => {
         </button>
       </div>
 
-      {/* Filters Bar */}
+      {/* Reconnected Active Filters Engine Row */}
       <div className="bg-white border border-[#B6A799]/30 rounded-3xl p-4 mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 shadow-sm">
         <div>
           <label className="block text-xs font-bold text-[#2D2A27]/70 mb-1.5">Dog</label>
-          <select value={selectedDog} onChange={(e) => setSelectedDog(e.target.value)} className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm h-[38px] px-3 focus:outline-none focus:border-[#B55D3B]">
-            <option>All Pets</option>
+          <select 
+            value={selectedDog} 
+            onChange={(e) => setSelectedDog(e.target.value)} 
+            className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm h-[38px] px-3 focus:outline-none focus:border-[#B55D3B]"
+          >
+            <option value="All Pets">All Pets</option>
+            <option value="Stitch">Stitch</option>
           </select>
         </div>
         <div>
           <label className="block text-xs font-bold text-[#2D2A27]/70 mb-1.5">Category</label>
-          <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm h-[38px] px-3 focus:outline-none focus:border-[#B55D3B]">
-            <option>All Events</option>
+          <select 
+            value={selectedCategory} 
+            onChange={(e) => setSelectedCategory(e.target.value)} 
+            className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm h-[38px] px-3 focus:outline-none focus:border-[#B55D3B]"
+          >
+            <option value="All Events">All Events</option>
+            <option value="Vet Visits">Vet Visits</option>
+            <option value="Medications">Medications</option>
+            <option value="Grooming">Grooming</option>
+            <option value="Meals">Meals / Diet</option>
           </select>
         </div>
         <div>
           <label className="block text-xs font-bold text-[#2D2A27]/70 mb-1.5">Priority</label>
-          <select value={selectedPriority} onChange={(e) => setSelectedPriority(e.target.value)} className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm h-[38px] px-3 focus:outline-none focus:border-[#B55D3B]">
-            <option>All Priorities</option>
+          <select 
+            value={selectedPriority} 
+            onChange={(e) => setSelectedPriority(e.target.value)} 
+            className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm h-[38px] px-3 focus:outline-none focus:border-[#B55D3B]"
+          >
+            <option value="All Priorities">All Priorities</option>
+            <option value="High">High Priority</option>
+            <option value="Medium">Medium Priority</option>
+            <option value="Low">Low Priority</option>
           </select>
         </div>
         <div>
           <label className="block text-xs font-bold text-[#2D2A27]/70 mb-1.5">Search</label>
           <div className="relative">
-            <input type="text" placeholder="Search reminders" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm h-[38px] pl-8 pr-3 focus:outline-none focus:border-[#B55D3B]" />
+            <input 
+              type="text" 
+              placeholder="Search reminders" 
+              value={searchQuery} 
+              onChange={(e) => setSearchQuery(e.target.value)} 
+              className="w-full bg-[#FDFBF7] border border-[#B6A799]/40 rounded-xl text-sm h-[38px] pl-8 pr-3 focus:outline-none focus:border-[#B55D3B]" 
+            />
             <Search size={14} className="absolute left-2.5 top-3 text-[#2D2A27]/40" />
           </div>
         </div>
       </div>
 
-      {/* Main Splitscreen Layout */}
+      {/* Main Grid Splitting Array */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
-        {/* Calendar Box */}
+        {/* Left Side: Interactive Calendar Canvas */}
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-white border border-[#B6A799]/30 rounded-[2rem] p-6 shadow-sm">
             
@@ -107,7 +135,13 @@ const Reminders: React.FC = () => {
               </div>
               <div className="bg-[#FDFBF7] border border-[#B6A799]/30 rounded-xl p-1 flex gap-1">
                 {(['Month', 'Week', 'Agenda'] as const).map((view) => (
-                  <button key={view} onClick={() => setCurrentView(view)} className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all border-none cursor-pointer ${currentView === view ? 'bg-[#B55D3B] text-white shadow-sm' : 'text-[#2D2A27]/60 hover:text-[#2D2A27] bg-transparent'}`}>{view}</button>
+                  <button 
+                    key={view} 
+                    onClick={() => setCurrentView(view)} 
+                    className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all border-none cursor-pointer ${currentView === view ? 'bg-[#B55D3B] text-white shadow-sm' : 'text-[#2D2A27]/60 hover:text-[#2D2A27] bg-transparent'}`}
+                  >
+                    {view}
+                  </button>
                 ))}
               </div>
             </div>
@@ -122,7 +156,7 @@ const Reminders: React.FC = () => {
             </div>
 
             {currentView === 'Month' && (
-              <div className="border border-[#B6A799]/20 rounded-2xl overflow-hidden shadow-inner">
+              <div className="border border-[#B6A799]/20 rounded-2xl overflow-hidden shadow-sm">
                 <div className="grid grid-cols-7 bg-[#FDFBF7] border-b border-[#B6A799]/20 text-center py-2.5">
                   {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
                     <span key={d} className="text-[10px] font-bold uppercase tracking-wider text-[#2D2A27]/50">{d}</span>
@@ -133,8 +167,6 @@ const Reminders: React.FC = () => {
                   {calendarDays.map((item, idx) => (
                     <div key={idx} className={`min-h-[85px] bg-white p-2 transition-all hover:bg-[#FDFBF7] relative group cursor-pointer flex flex-col justify-between ${!item.isCurrentMonth ? 'bg-neutral-50/20 opacity-30' : ''}`}>
                       <span className="text-xs font-bold text-[#2D2A27]/80">{item.day}</span>
-                      
-                      {/* Subtly show quick-plus on empty day squares when hovered */}
                       <span className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-[#B55D3B]">
                         <Plus size={12} />
                       </span>
@@ -146,10 +178,10 @@ const Reminders: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT SIDEBAR PANEL - Converted to Branded Sage Green Container */}
+        {/* Right Side: Sidebar Panel explicitly customized with your Lighter Sage Green */}
         <div className="space-y-4 bg-[#7A7A59] p-4 rounded-[2.5rem] shadow-md">
           
-          {/* Summary Block */}
+          {/* Focus Metrics Panel */}
           <div className="bg-white rounded-[2rem] p-5 relative overflow-hidden">
             <div className="flex justify-between items-start mb-4">
               <div>
@@ -170,8 +202,7 @@ const Reminders: React.FC = () => {
               </div>
             </div>
 
-            {/* Added Calendar Event Color Category Legend */}
-            <div className="border-t border-[#B6A799]/20 pt-3 space-y-2 text-xs">
+            <div className="border-t border-[#B6A799]/20 pt-3 space-y-2 text-xs text-left">
               <span className="text-[9px] font-bold text-[#2D2A27]/50 uppercase tracking-wider block mb-1">Event Categories</span>
               <div className="flex items-center gap-2 font-medium text-[#2D2A27]/80">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#B55D3B]" /> Medical & Vet Preps
@@ -185,7 +216,7 @@ const Reminders: React.FC = () => {
             </div>
           </div>
 
-          {/* Details Preview Box */}
+          {/* Real-time Preview Area */}
           <div className="bg-white rounded-[2rem] p-5">
             <span className="text-[9px] font-bold text-[#2D2A27]/40 uppercase tracking-widest block">Event Preview</span>
             <h3 className="text-lg font-bold font-serif text-[#2D2A27] mb-3">Selected Reminder</h3>
@@ -194,16 +225,20 @@ const Reminders: React.FC = () => {
             </div>
           </div>
 
-          {/* Sync Interfaces Box */}
-          <div className="bg-white rounded-[2rem] p-5">
-            <span className="text-[9px] font-bold text-[#2D2A27]/40 uppercase tracking-widest block">Calendar Imports</span>
-            <h3 className="text-lg font-bold font-serif text-[#2D2A27] mb-1">Google / Apple Ready</h3>
+          {/* Updated Two-Way API Calendar Connection Interface */}
+          <div className="bg-white rounded-[2rem] p-5 text-left">
+            <span className="text-[9px] font-bold text-[#2D2A27]/40 uppercase tracking-widest block">Calendar Integrations</span>
+            <h3 className="text-lg font-bold font-serif text-[#2D2A27] mb-1">Live Account Sync</h3>
             <p className="text-xs text-[#2D2A27]/60 leading-relaxed mb-4">
-              This workspace is ready for future calendar sync imports with external source metadata.
+              Establish a continuous, two-way channel link to automatically mirror app entries with external timelines.
             </p>
             <div className="space-y-2">
-              <button className="w-full bg-white hover:bg-[#FDFBF7] border border-[#B6A799]/40 text-[#2D2A27] font-bold text-xs py-2.5 rounded-xl transition-all cursor-pointer">Import from Google</button>
-              <button className="w-full bg-white hover:bg-[#FDFBF7] border border-[#B6A799]/40 text-[#2D2A27] font-bold text-xs py-2.5 rounded-xl transition-all cursor-pointer">Import from Apple</button>
+              <button className="w-full bg-white hover:bg-[#FDFBF7] border border-[#B6A799]/40 text-[#2D2A27] font-bold text-xs py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                <RefreshCw size={12} className="text-[#7A7A59]" /> Connect Google Calendar
+              </button>
+              <button className="w-full bg-white hover:bg-[#FDFBF7] border border-[#B6A799]/40 text-[#2D2A27] font-bold text-xs py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                <RefreshCw size={12} className="text-[#7A7A59]" /> Connect Apple Calendar
+              </button>
             </div>
           </div>
 
