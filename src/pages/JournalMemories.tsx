@@ -23,9 +23,9 @@ type TimelineEntry =
   | { id: number; type: 'journal'; date: string; mood: string; title: string; notes: string; image: null; diet: string; exercise: string; }
   | { id: number; type: 'memory'; date: string; title: string; notes: string; image: string; diet?: never; exercise?: never; mood?: never; };
 
-export default function JournalMemoryVault() {
+export default function JournalMemories() {
   // Navigation & UI Management
-  const [activeTab, setActiveTab] = useState< 'journal' | 'book' >('journal'); 
+  const [activeTab, setActiveTab] = useState<'journal' | 'book'>('journal'); 
   const [isJournalModalOpen, setIsJournalModalOpen] = useState<boolean>(false);
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState<boolean>(false);
 
