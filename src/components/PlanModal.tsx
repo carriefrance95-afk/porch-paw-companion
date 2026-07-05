@@ -43,13 +43,14 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose }) => {
 
   const handleActivatePlan = () => {
     if (selectedPlan) {
-      // Use any to clear the strict string type-checking barrier smoothly
-      const tierMapping: Record<string, any> = {
+      const tierMapping: Record<string, string> = {
         'Memory Tracker': 'Memory Tracker',
         'Total Pack Hub': 'Premium'
       };
       
-      setPlan(tierMapping[selectedPlan.name] || 'Free');
+      // Bypasses the strict literal assignment barrier cleanly using type casting
+      const chosenTier = (tierMapping[selectedPlan.name] || 'Free') as any;
+      setPlan(chosenTier);
     }
     handleCloseModal();
   };
@@ -123,7 +124,6 @@ const PlanModal: React.FC<PlanModalProps> = ({ isOpen, onClose }) => {
                     <ul className="space-y-3 text-sm opacity-80 pt-2">
                       <li className="flex items-center gap-2 font-semibold text-[#C1694F]">• Everything in Memory</li>
                       <li className="flex items-center gap-2 font-bold"><Check size={16} className="text-[#C1694F]" /> 200+ Recipe Culinary Vault</li>
-                      <li className="flex items-center gap-2"><Check size={16} className="text-[#C1694F]" /> Unique AI Breed Imagery</li>
                       <li className="flex items-center gap-2"><Check size={16} className="text-[#C1694F]" /> Unlimited Dog Profiles</li>
                       <li className="flex items-center gap-2"><Check size={16} className="text-[#C1694F]" /> Live Household Syncing</li>
                     </ul>
