@@ -122,7 +122,7 @@ const OnboardingWizard: React.FC = () => {
               </div>
               <button
                 onClick={nextStep}
-                className="bg-brandTerracotta hover:opacity-90 text-white btn btn-lg rounded-2xl px-12 border-none shadow-xl transition-all hover:scale-105 active:scale-95"
+                className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 font-bold text-lg rounded-2xl h-14 px-12 inline-flex items-center justify-center gap-2 shadow-xl transition-all hover:scale-105 active:scale-95"
               >
                 Let's Begin <ChevronRight size={20} />
               </button>
@@ -138,8 +138,8 @@ const OnboardingWizard: React.FC = () => {
                   </button>
                 </p>
               </div>
-              </div>
-              )}
+            </div>
+          )}
 
           {/* Step 2: Basic Info */}
           {step === 2 && (
@@ -160,7 +160,7 @@ const OnboardingWizard: React.FC = () => {
                   <input 
                     type="text" 
                     placeholder="Buddy, Bella, Max..." 
-                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
+                    className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
@@ -188,14 +188,14 @@ const OnboardingWizard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between pt-6">
-                <button onClick={prevStep} className="btn btn-ghost rounded-2xl gap-2 font-bold opacity-60">
+              <div className="flex justify-between items-center pt-6">
+                <button onClick={prevStep} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity">
                   <ChevronLeft size={20} /> Back
                 </button>
                 <button 
                   onClick={nextStep} 
                   disabled={!formData.name}
-                  className="bg-brandTerracotta text-white btn rounded-2xl px-10 border-none shadow-lg disabled:opacity-30"
+                  className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 disabled:bg-brandTerracotta/40 disabled:text-white/60 font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
                 >
                   Continue <ChevronRight size={20} />
                 </button>
@@ -237,13 +237,13 @@ const OnboardingWizard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between pt-6">
-                <button onClick={prevStep} className="btn btn-ghost rounded-2xl gap-2 font-bold opacity-60">
+              <div className="flex justify-between items-center pt-6">
+                <button onClick={prevStep} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity">
                   <ChevronLeft size={20} /> Back
                 </button>
                 <button 
                   onClick={nextStep}
-                  className={`${branding.terracotta} text-white btn rounded-2xl px-10 border-none shadow-lg`}
+                  className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
                 >
                   Continue <ChevronRight size={20} />
                 </button>
@@ -312,19 +312,19 @@ const OnboardingWizard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between pt-6">
-                <button onClick={prevStep} className="btn btn-ghost rounded-2xl gap-2 font-bold opacity-60">
+              <div className="flex justify-between items-center pt-6">
+                <button onClick={prevStep} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity">
                   <ChevronLeft size={20} /> Back
                 </button>
                 <button 
                   onClick={handleSubmit} 
-                  className="bg-brandTerracotta text-white btn rounded-2xl px-10 border-none shadow-lg h-auto py-4"
                   disabled={loading}
+                  className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 disabled:bg-brandTerracotta/40 font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
                 >
                   {loading ? (
-                    <span className="loading loading-spinner"></span>
+                    <span className="loading loading-spinner h-5 w-5"></span>
                   ) : (
-                    <>Finish & Start Tracking <Sparkles size={20} className="ml-2" /></>
+                    <>Finish & Start Tracking <Sparkles size={20} className="ml-1" /></>
                   )}
                 </button>
               </div>
@@ -349,8 +349,8 @@ const OnboardingWizard: React.FC = () => {
                 </p>
               </div>
               <button 
-                onClick={() => window.location.reload()} // Quickest way to clear interceptor
-                className={`${branding.terracotta} hover:opacity-90 text-white btn btn-lg rounded-2xl px-12 border-none shadow-xl transition-all hover:scale-105 active:scale-95 mt-4`}
+                onClick={() => window.location.reload()} 
+                className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 font-bold text-lg rounded-2xl h-14 px-12 inline-flex items-center justify-center gap-2 shadow-xl transition-all hover:scale-105 active:scale-95 mt-4"
               >
                 Start Tracking
               </button>
