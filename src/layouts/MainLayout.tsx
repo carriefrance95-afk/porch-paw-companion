@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useMigration } from '../hooks/useMigration';
 import OnboardingWizard from '../components/OnboardingWizard';
 import AuthModal from '../components/AuthModal';
+import PlanModal from '../components/PlanModal'; // Added layout import hook
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
@@ -12,6 +13,7 @@ const MainLayout: React.FC = () => {
   const { user, signOut } = useAuth();
   const { isMigrating } = useMigration();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false); // Manages visibility tracking for pricing modal
   const [ownerAvatar, setOwnerAvatar] = useState('');
 
   // Dynamically watch for local owner image updates to render in the bottom card wrapper
@@ -43,7 +45,7 @@ const MainLayout: React.FC = () => {
     { name: 'From The Porch & Paw Kitchen', path: '/content', icon: '🍳' },
     { name: 'Store', path: '/store', icon: '🛒' },
     { name: 'Partner Perks', path: '/partners', icon: '🎁' },
-    { name: 'Account Settings', path: '/account', icon: '⚙️' }, // Added to rolling navigation array
+    { name: 'Account Settings', path: '/account', icon: '⚙️' }, 
   ];
 
   // Interception Logic: Show onboarding wizard if no dogs exist
@@ -134,7 +136,7 @@ const MainLayout: React.FC = () => {
           </div>
           
           <div className="mt-auto pt-4 space-y-4">
-            {/* Account Section: Now interactive and syncs to uploaded owner images */}
+            {/* Account Section */}
             <Link to="/account" className="block p-4 bg-brandChocolate/5 rounded-xl border border-brandTaupe/20 hover:bg-brandChocolate/10 transition-all no-underline">
               <div className="flex items-center gap-3 mb-3">
                 <div className="avatar">
@@ -160,7 +162,7 @@ const MainLayout: React.FC = () => {
                 <button 
                   className="btn btn-xs btn-ghost btn-block text-brandChocolate hover:bg-brandChocolate/20 mt-1 font-bold"
                   onClick={(e) => {
-                    e.preventDefault(); // Prevents clicking sign out from running navigation to /account
+                    e.preventDefault(); 
                     signOut();
                   }}
                 >
@@ -169,29 +171,36 @@ const MainLayout: React.FC = () => {
               )}
             </Link>
 
-            {/* Plan Section */}
+            {/* Plan Section: Now perfectly synced to trigger our PlanModal */}
             <div className="p-4 bg-brandTerracotta/10 rounded-xl border border-brandTaupe/20">
               <p className="text-sm font-semibold mb-1 text-brandChocolate">Plan: {plan}</p>
               <p className="text-xs mb-3 text-brandSage font-medium">
-                {plan === 'Premium' ? 'Full access unlocked!' : 'Unlock unlimited profiles and memory vault.'}
+                {plan === 'Premium' 
+                  ? 'Full access unlocked!' 
+                  : plan === 'Memory' 
+                    ? 'Memory Vault access active.' 
+                    : 'Unlock unlimited profiles and memory vault.'}
               </p>
               <button 
-                className={`btn btn-sm btn-block rounded-lg ${
-                  plan === 'Premium' 
-                    ? 'btn-outline text-brandChocolate border-brandTaupe/40 hover:bg-brandChocolate/5' 
-                    : 'bg-brandTerracotta text-brandCream border-brandTerracotta hover:bg-brandTerracotta/90'
-                }`}
-                onClick={() => setPlan(plan === 'Premium' ? 'Free' : 'Premium')}
+                className="btn btn-sm btn-block rounded-lg bg-brandTerracotta text-brandCream border-brandTerracotta hover:bg-brandTerracotta/90"
+                onClick={() => setIsPlanModalOpen(true)}
               >
-                {plan === 'Premium' ? 'Downgrade' : 'Upgrade to Premium'}
+                Manage Access
               </button>
             </div>
           </div>
         </div>
       </div>
-<AuthModal 
+      
+      {/* Background overlay structures */}
+      <AuthModal 
         isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} // Corrected from closeOnClose
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
+      
+      <PlanModal 
+        isOpen={isPlanModalOpen} 
+        onClose={() => setIsPlanModalOpen(false)} 
       />
     </div>
   );
