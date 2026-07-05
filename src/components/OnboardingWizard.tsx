@@ -76,16 +76,16 @@ const OnboardingWizard: React.FC = () => {
     nextStep(); // Move to success step
   };
 
-  const branding = {
-    ivory: 'bg-brandCream',
-    terracotta: 'bg-brandTerracotta',
-    terracottaText: 'text-brandTerracotta',
-    terracottaBorder: 'border-brandTerracotta',
-    sage: 'bg-brandSage',
-    sageText: 'text-brandSage',
-    charcoal: 'text-brandCharcoal',
-    taupe: 'text-brandTaupe',
-    taupeLight: 'text-brandTaupe/80'
+ const branding = {
+    ivory: 'bg-[#F4F0EA]',
+    terracotta: 'bg-[#B55D3B]',
+    terracottaText: 'text-[#B55D3B]',
+    terracottaBorder: 'border-[#B55D3B]',
+    sage: 'bg-[#7A7A59]',
+    sageText: 'text-[#7A7A59]',
+    charcoal: 'text-[#2D2A27]',
+    taupe: 'text-[#B6A799]',
+    taupeLight: 'text-[#B6A799]/80'
   };
 
   return (
