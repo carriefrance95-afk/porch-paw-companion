@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { usePets } from '../context/PetContext';
 
 // Define strict data shapes for TypeScript compiler
 interface JournalEntry {
@@ -24,6 +25,9 @@ type TimelineEntry =
   | { id: number; type: 'memory'; date: string; title: string; notes: string; image: string; diet?: never; exercise?: never; mood?: never; };
 
 export default function JournalMemories() {
+  // Global Access Control Hook
+  const { plan } = usePets();
+
   // Navigation & UI Management
   const [activeTab, setActiveTab] = useState<'journal' | 'book'>('journal'); 
   const [isJournalModalOpen, setIsJournalModalOpen] = useState<boolean>(false);
@@ -101,6 +105,40 @@ export default function JournalMemories() {
     setIsMemoryModalOpen(false);
     setMemoryForm({ title: '', imagePreview: '', date: '2026-06-29', album: 'None' });
   };
+
+  // FULL PAGE LOCKOUT FOR FREE TIER USERS
+  if (plan === 'Free' || !plan) {
+    return (
+      <div className="min-h-[85vh] bg-[#F4F0EA] flex items-center justify-center p-6 antialiased">
+        <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-xl border border-[#B6A799]/30 p-8 text-center space-y-6 relative overflow-hidden">
+          <div className="w-16 h-16 bg-[#B55D3B]/10 text-[#B55D3B] rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner animate-pulse">
+            📖
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black text-[#2D2A27] tracking-tight">Unlock the Memory Vault</h2>
+            <p className="text-sm text-[#2D2A27]/70 leading-relaxed">
+              Preserve your dog’s milestones with our interactive chronological timeline journal and printable digital layout creator.
+            </p>
+          </div>
+          
+          <div className="bg-[#F4F0EA]/60 rounded-2xl p-4 border border-[#B6A799]/10 text-left text-xs space-y-2.5 text-[#2D2A27]/80">
+            <div className="flex items-center gap-2 font-medium">✨ Full Chronological Timeline Log</div>
+            <div className="flex items-center gap-2 font-medium">📸 Uncapped High-Res Media Uploads</div>
+            <div className="flex items-center gap-2 font-medium">📖 Custom Print-Ready Book Export Layouts</div>
+          </div>
+
+          <div className="pt-2">
+            <p className="text-xs font-semibold text-[#7A7A59] mb-4">
+              Click "Manage Access" on your dashboard sidebar to activate!
+            </p>
+            <div className="w-full py-3.5 bg-[#B55D3B] text-white font-bold rounded-xl text-sm shadow-md opacity-50 cursor-not-allowed">
+              Waiting for Upgrade Verification...
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F4F0EA] text-[#2D2A27] font-sans relative antialiased">
@@ -238,20 +276,28 @@ export default function JournalMemories() {
                 </div>
               </div>
 
-              <div className="mt-8 bg-[#F4F0EA] border border-[#B6A799]/40 rounded-2xl p-5 relative overflow-hidden">
-                <div className="flex gap-4">
-                  <div className="text-xl pt-0.5">🔒</div>
-                  <div>
-                    <h4 className="font-bold text-sm">Unlock Full Exports</h4>
-                    <span className="text-[10px] uppercase tracking-wider text-[#B55D3B] font-bold block">Premium Feature</span>
-                    <p className="text-xs text-[#2D2A27]/70 mt-1.5 leading-relaxed">Memory Book PDF exports are exclusive to Premium members. Capture every milestone in a high-fidelity, printable format.</p>
-                    <button type="button" className="mt-3 bg-[#7A7A59] text-white font-bold text-xs px-4 py-2 rounded-xl">Upgrade to Premium</button>
+              {/* LOCK RECONCILIATION FOR MID-TIER USERS */}
+              {plan !== 'Premium' && (
+                <div className="mt-8 bg-[#F4F0EA] border border-[#B6A799]/40 rounded-2xl p-5 relative overflow-hidden">
+                  <div className="flex gap-4">
+                    <div className="text-xl pt-0.5">🔒</div>
+                    <div>
+                      <h4 className="font-bold text-sm">Unlock Full Exports</h4>
+                      <span className="text-[10px] uppercase tracking-wider text-[#B55D3B] font-bold block">Premium Feature</span>
+                      <p className="text-xs text-[#2D2A27]/70 mt-1.5 leading-relaxed">Memory Book PDF exports are exclusive to Premium members. Capture every milestone in a high-fidelity, printable format.</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              <button type="button" className="w-full mt-4 py-3.5 bg-[#B55D3B] text-white font-bold rounded-xl shadow-sm flex items-center justify-center gap-2">
-                Preview Your Book ➔
+              <button 
+                type="button" 
+                disabled={plan !== 'Premium'}
+                className={`w-full mt-4 py-3.5 font-bold rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all text-white ${
+                  plan === 'Premium' ? 'bg-[#B55D3B] hover:bg-[#B55D3B]/90' : 'bg-[#2D2A27]/30 cursor-not-allowed'
+                }`}
+              >
+                {plan === 'Premium' ? 'Preview Your Book ➔' : 'Premium Plan Required'}
               </button>
             </div>
 
@@ -261,11 +307,15 @@ export default function JournalMemories() {
                   <h2 className="text-2xl font-serif tracking-wide text-[#2D2A27]">Stitch</h2>
                   <div className="w-8 h-0.5 bg-[#B55D3B] mx-auto mt-2" />
                 </div>
-                <div className="absolute inset-0 bg-black/40 backdrop-blur rounded-r flex flex-col items-center justify-center text-white p-4 text-center">
-                  <div className="text-2xl mb-2">🔒</div>
-                  <h5 className="font-bold text-sm">Preview Restricted</h5>
-                  <p className="text-[11px] text-white/80 max-w-[180px] mt-1">Upgrade to Premium to view your full typeset memory book.</p>
-                </div>
+                
+                {/* BLUR GATE CONDITION */}
+                {plan !== 'Premium' && (
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur rounded-r flex flex-col items-center justify-center text-white p-4 text-center">
+                    <div className="text-2xl mb-2">🔒</div>
+                    <h5 className="font-bold text-sm">Preview Restricted</h5>
+                    <p className="text-[11px] text-white/80 max-w-[180px] mt-1">Upgrade to Premium to view your full typeset memory book.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
