@@ -1,9 +1,7 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@import "@daisyui/tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-@theme {
+:root {
   --font-sans: "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif";
   --font-serif: "Cormorant Garamond", "Georgia", "Cambria", "Times New Roman", "Times", "serif";
 
@@ -30,9 +28,6 @@
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
   --radius-3xl: 2.5rem;
-}
-
-:root {
   background-color: var(--color-base-100);
   color: var(--color-neutral);
   color-scheme: light;
@@ -55,7 +50,13 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.01em;
 }
 
-p, span, a, li, input, label, textarea {
+/* Base text elements */
+p, span, li, label {
+  color: var(--color-neutral);
+}
+
+/* Explicitly don't force base colors on buttons or links so theme modifiers work */
+a, input, textarea, select {
   color: var(--color-neutral);
 }
 
@@ -71,19 +72,19 @@ img {
   border: 1px solid rgb(45 42 39 / 0.12) !important;
 }
 
+/* Core DaisyUI Button Overrides */
 .btn {
   border-radius: var(--radius-2xl) !important;
   text-transform: none !important;
   font-weight: 700 !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border-width: 1px;
-  border-style: solid;
 }
 
 .btn:hover {
   transform: translateY(-1px);
 }
 
+/* Connect button styles directly to your v4 theme variables */
 .btn-primary {
   background-color: var(--color-primary) !important;
   color: var(--color-primary-content) !important;
@@ -96,11 +97,16 @@ img {
   border-color: var(--color-secondary) !important;
 }
 
-.btn-ghost,
-.btn-outline {
-  background-color: #ffffff !important;
+.btn-ghost {
+  background-color: transparent !important;
   color: var(--color-neutral) !important;
-  border-color: rgb(45 42 39 / 0.12) !important;
+  border-color: transparent !important;
+}
+
+.btn-outline {
+  background-color: transparent !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
 }
 
 .input, .select, .textarea {
@@ -142,25 +148,15 @@ img {
 /* ========================================================
    PORCH & PAW DASHBOARD OVERRIDES
    ======================================================== */
-
-/* 1. FIX THE MENU BAR: Force rich chocolate instead of near-black */
-aside,
-.sidebar,
-[class*="sidebar"] {
+aside, .sidebar, [class*="sidebar"] {
   background-color: #3D2A1C !important;
 }
 
-/* Ensure the text links inside are clean, high-contrast ivory */
-.sidebar a,
-[class*="sidebar"] a,
-[class*="sidebar"] span {
+.sidebar a, [class*="sidebar"] a, [class*="sidebar"] span {
   color: #FDFBF7 !important;
 }
 
-.sidebar h1,
-.sidebar p,
-[class*="sidebar"] h1,
-[class*="sidebar"] p {
+.sidebar h1, .sidebar p, [class*="sidebar"] h1, [class*="sidebar"] p {
   color: #FDFBF7 !important;
 }
 
@@ -175,10 +171,7 @@ a[href^="/health?dogId="]:hover {
   border-color: #9E5033 !important;
 }
 
-/* 2. FIX THE EMERGENCY HUB: Turn it from disabled grey to alert terracotta */
-[href*="id=0"],
-.emergency-hub-btn,
-[class*="emergency"] {
+[href*="id=0"], .emergency-hub-btn, [class*="emergency"] {
   background-color: #D95D39 !important;
   color: #FFFFFF !important;
   font-weight: 700 !important;
@@ -187,9 +180,7 @@ a[href^="/health?dogId="]:hover {
   opacity: 1 !important;
 }
 
-/* 3. FIX THE QUICK ACTIONS: Layout rules only, NO forced background colors */
-.QuickActionsGrid a,
-.quick-action-card {
+.QuickActionsGrid a, .quick-action-card {
   border: 1px solid rgba(45, 42, 39, 0.12);
   border-radius: 16px !important;
   padding: 12px !important;

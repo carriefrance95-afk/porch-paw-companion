@@ -76,7 +76,7 @@ const OnboardingWizard: React.FC = () => {
     nextStep(); // Move to success step
   };
 
- const branding = {
+  const branding = {
     ivory: 'bg-[#F4F0EA]',
     terracotta: 'bg-[#B55D3B]',
     terracottaText: 'text-[#B55D3B]',
@@ -90,11 +90,11 @@ const OnboardingWizard: React.FC = () => {
 
   return (
     <div className={`min-h-screen ${branding.ivory} flex items-center justify-center p-4 font-sans`}>
-      <div className="max-w-2xl w-full bg-white rounded-[3rem] shadow-2xl overflow-hidden relative border border-brandTaupe/20">
+      <div className="max-w-2xl w-full bg-white rounded-[3rem] shadow-2xl overflow-hidden relative border border-[#B6A799]/20">
         
         {/* Progress Bar */}
         {step < 5 && (
-          <div className="absolute top-0 left-0 w-full h-2 bg-brandTaupe/20 flex">
+          <div className="absolute top-0 left-0 w-full h-2 bg-[#B6A799]/20 flex">
             {[1, 2, 3, 4].map((i) => (
               <div 
                 key={i} 
@@ -109,12 +109,12 @@ const OnboardingWizard: React.FC = () => {
           {step === 1 && (
             <div className="text-center space-y-8 py-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="flex justify-center">
-                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg border border-brandTaupe/20 overflow-hidden mx-auto">
+                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg border border-[#B6A799]/20 overflow-hidden mx-auto">
                   <img src="/logo.png" alt="Porchside Pet Life Logo" className="h-16 w-16 mx-auto object-contain" />
                 </div>
               </div>
               <div className="space-y-4">
-                <p className="text-xs uppercase tracking-[0.35em] text-brandSage font-semibold">by Porch & Paw</p>
+                <p className="text-xs uppercase tracking-[0.35em] text-[#7A7A59] font-semibold">by Porch & Paw</p>
                 <h1 className={`text-4xl md:text-5xl font-black ${branding.charcoal}`}>Porchside Pet Life</h1>
                 <p className={`text-xl ${branding.taupe} max-w-md mx-auto leading-relaxed`}>
                   The all-in-one guide for devoted dog parents. Cookbooks, health, travel, and journals.
@@ -122,17 +122,19 @@ const OnboardingWizard: React.FC = () => {
               </div>
               <button
                 onClick={nextStep}
-                className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 font-bold text-lg rounded-2xl h-14 px-12 inline-flex items-center justify-center gap-2 shadow-xl transition-all hover:scale-105 active:scale-95"
+                style={{ backgroundColor: '#B55D3B', color: '#FFFFFF' }}
+                className="font-bold text-lg rounded-2xl h-14 px-12 inline-flex items-center justify-center gap-2 shadow-xl transition-all hover:scale-105 active:scale-95"
               >
                 Let's Begin <ChevronRight size={20} />
               </button>
 
-              <div className="pt-6 border-t border-brandTaupe/20 w-full mt-4">
+              <div className="pt-6 border-t border-[#B6A799]/20 w-full mt-4">
                 <p className={`text-sm ${branding.taupe}`}>
                   Already have an account?{' '}
                   <button
                     onClick={() => setIsAuthModalOpen(true)}
-                    className="font-bold text-brandTerracotta hover:underline transition-all"
+                    style={{ color: '#B55D3B' }}
+                    className="font-bold hover:underline transition-all bg-transparent border-none p-0"
                   >
                     Sign In
                   </button>
@@ -145,7 +147,7 @@ const OnboardingWizard: React.FC = () => {
           {step === 2 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 ${branding.terracotta} rounded-2xl flex items-center justify-center text-white`}>
+                <div className="w-12 h-12 bg-[#B55D3B] rounded-2xl flex items-center justify-center text-white">
                   <User size={24} />
                 </div>
                 <div>
@@ -160,7 +162,7 @@ const OnboardingWizard: React.FC = () => {
                   <input 
                     type="text" 
                     placeholder="Buddy, Bella, Max..." 
-                    className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
+                    className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none focus:ring-2 ring-[#B55D3B]/20 px-4"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
@@ -171,7 +173,7 @@ const OnboardingWizard: React.FC = () => {
                     <input 
                       type="text" 
                       placeholder="Golden Retriever..." 
-                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
+                      className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none focus:ring-2 ring-[#B55D3B]/20 px-4"
                       value={formData.breed}
                       onChange={e => setFormData({...formData, breed: e.target.value})}
                     />
@@ -180,7 +182,7 @@ const OnboardingWizard: React.FC = () => {
                     <label className="label"><span className={`label-text font-bold ${branding.taupe}`}>Their Birthday?</span></label>
                     <input 
                       type="date" 
-                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none focus:ring-2 ring-brandTerracotta/20"
+                      className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none focus:ring-2 ring-[#B55D3B]/20 px-4"
                       value={formData.birthDate}
                       onChange={e => setFormData({...formData, birthDate: e.target.value})}
                     />
@@ -189,13 +191,14 @@ const OnboardingWizard: React.FC = () => {
               </div>
 
               <div className="flex justify-between items-center pt-6">
-                <button onClick={prevStep} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity">
+                <button onClick={prevStep} style={{ color: '#2D2A27' }} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity bg-transparent border-none">
                   <ChevronLeft size={20} /> Back
                 </button>
                 <button 
                   onClick={nextStep} 
                   disabled={!formData.name}
-                  className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 disabled:bg-brandTerracotta/40 disabled:text-white/60 font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
+                  style={formData.name ? { backgroundColor: '#B55D3B', color: '#FFFFFF' } : { backgroundColor: '#B55D3B', color: '#FFFFFF', opacity: 0.4 }}
+                  className="font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
                 >
                   Continue <ChevronRight size={20} />
                 </button>
@@ -207,7 +210,7 @@ const OnboardingWizard: React.FC = () => {
           {step === 3 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 ${branding.sage} rounded-2xl flex items-center justify-center text-white`}>
+                <div className="w-12 h-12 bg-[#7A7A59] rounded-2xl flex items-center justify-center text-white">
                   <Camera size={24} />
                 </div>
                 <div>
@@ -217,11 +220,11 @@ const OnboardingWizard: React.FC = () => {
               </div>
 
               <div className="flex flex-col items-center gap-8 py-4">
-                <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-brandCream shadow-xl bg-brandTaupe/10 flex items-center justify-center relative group">
+                <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-[#F4F0EA] shadow-xl bg-[#B6A799]/10 flex items-center justify-center relative group">
                   {formData.photoUrl ? (
                     <img src={formData.photoUrl} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="text-brandTaupe"><PawPrint size={80} /></div>
+                    <div className="text-[#B6A799]"><PawPrint size={80} /></div>
                   )}
                 </div>
 
@@ -232,18 +235,19 @@ const OnboardingWizard: React.FC = () => {
                     📸 Upload Profile Photo
                   </label>
                   {selectedPhotoFile && (
-                    <p className="mt-2 text-center text-xs text-brandTaupe">Selected: {selectedPhotoFile.name}</p>
+                    <p className="mt-2 text-center text-xs text-[#B6A799]">Selected: {selectedPhotoFile.name}</p>
                   )}
                 </div>
               </div>
 
               <div className="flex justify-between items-center pt-6">
-                <button onClick={prevStep} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity">
+                <button onClick={prevStep} style={{ color: '#2D2A27' }} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity bg-transparent border-none">
                   <ChevronLeft size={20} /> Back
                 </button>
                 <button 
                   onClick={nextStep}
-                  className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
+                  style={{ backgroundColor: '#B55D3B', color: '#FFFFFF' }}
+                  className="font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
                 >
                   Continue <ChevronRight size={20} />
                 </button>
@@ -255,7 +259,7 @@ const OnboardingWizard: React.FC = () => {
           {step === 4 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 ${branding.terracotta} rounded-2xl flex items-center justify-center text-white`}>
+                <div className="w-12 h-12 bg-[#B55D3B] rounded-2xl flex items-center justify-center text-white">
                   <Heart size={24} />
                 </div>
                 <div>
@@ -272,16 +276,16 @@ const OnboardingWizard: React.FC = () => {
                     <input 
                       type="number" 
                       placeholder="0.0" 
-                      className="input input-bordered w-full rounded-2xl h-14 bg-brandCream border-none pl-12 focus:ring-2 ring-brandTerracotta/20"
+                      className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none pl-12 focus:ring-2 ring-[#B55D3B]/20"
                       value={formData.weight}
                       onChange={e => setFormData({...formData, weight: e.target.value})}
                     />
                   </div>
                 </div>
 
-                <div className="space-y-4 pt-4 border-t border-brandTaupe/20">
+                <div className="space-y-4 pt-4 border-t border-[#B6A799]/20">
                   <div className="flex items-center gap-2">
-                    <Stethoscope size={20} className={branding.terracottaText} />
+                    <Stethoscope size={20} className="text-[#B55D3B]" />
                     <h3 className={`font-bold ${branding.charcoal}`}>Veterinarian Details</h3>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -290,7 +294,7 @@ const OnboardingWizard: React.FC = () => {
                       <input 
                         type="text" 
                         placeholder="Dr. Paws..." 
-                        className="input input-bordered w-full rounded-xl h-12 bg-brandCream border-none"
+                        className="input input-bordered w-full rounded-xl h-12 bg-[#F4F0EA] border-none px-3"
                         value={formData.vetName}
                         onChange={e => setFormData({...formData, vetName: e.target.value})}
                       />
@@ -302,7 +306,7 @@ const OnboardingWizard: React.FC = () => {
                         <input 
                           type="text" 
                           placeholder="Phone or Email" 
-                          className="input input-bordered w-full rounded-xl h-12 bg-brandCream border-none pl-10"
+                          className="input input-bordered w-full rounded-xl h-12 bg-[#F4F0EA] border-none pl-10"
                           value={formData.vetContact}
                           onChange={e => setFormData({...formData, vetContact: e.target.value})}
                         />
@@ -313,13 +317,14 @@ const OnboardingWizard: React.FC = () => {
               </div>
 
               <div className="flex justify-between items-center pt-6">
-                <button onClick={prevStep} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity">
+                <button onClick={prevStep} style={{ color: '#2D2A27' }} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 transition-opacity bg-transparent border-none">
                   <ChevronLeft size={20} /> Back
                 </button>
                 <button 
                   onClick={handleSubmit} 
                   disabled={loading}
-                  className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 disabled:bg-brandTerracotta/40 font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
+                  style={{ backgroundColor: '#B55D3B', color: '#FFFFFF' }}
+                  className="font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
                 >
                   {loading ? (
                     <span className="loading loading-spinner h-5 w-5"></span>
@@ -335,11 +340,11 @@ const OnboardingWizard: React.FC = () => {
           {step === 5 && (
             <div className="text-center space-y-8 py-10 animate-in zoom-in duration-700">
               <div className="flex justify-center relative">
-                <div className="w-32 h-32 bg-brandSage rounded-full flex items-center justify-center text-white shadow-2xl relative z-10">
+                <div className="w-32 h-32 bg-[#7A7A59] rounded-full flex items-center justify-center text-white shadow-2xl relative z-10">
                   <Check size={64} />
                 </div>
                 <div className="absolute inset-0 scale-150 opacity-20 animate-ping">
-                   <div className="w-32 h-32 bg-brandSage rounded-full mx-auto" />
+                   <div className="w-32 h-32 bg-[#7A7A59] rounded-full mx-auto" />
                 </div>
               </div>
               <div className="space-y-4">
@@ -350,7 +355,8 @@ const OnboardingWizard: React.FC = () => {
               </div>
               <button 
                 onClick={() => window.location.reload()} 
-                className="bg-brandTerracotta text-white hover:bg-brandTerracotta/90 font-bold text-lg rounded-2xl h-14 px-12 inline-flex items-center justify-center gap-2 shadow-xl transition-all hover:scale-105 active:scale-95 mt-4"
+                style={{ backgroundColor: '#B55D3B', color: '#FFFFFF' }}
+                className="font-bold text-lg rounded-2xl h-14 px-12 inline-flex items-center justify-center gap-2 shadow-xl transition-all hover:scale-105 active:scale-95 mt-4"
               >
                 Start Tracking
               </button>
