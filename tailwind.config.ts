@@ -1,7 +1,8 @@
 import type { Config } from 'tailwindcss';
+// @ts-ignore
 import daisyui from 'daisyui';
 
-export default {
+const config = {
   content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
@@ -34,4 +35,6 @@ export default {
       },
     ],
   },
-} satisfies Config;
+};
+
+export default config as any;
