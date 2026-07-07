@@ -67,7 +67,7 @@ const MainLayout: React.FC = () => {
         </div>
       )}
 
-      {/* RE-STYLED SIDEBAR: LIGHT CREAM BACKGROUND, CHOCOLATE TEXT */}
+      {/* FIXED SIDEBAR: FIXED LIGHT CREAM BACKGROUND, DARK TEXT */}
       <aside style={{ width: '320px', minHeight: '100vh', backgroundColor: '#F4F0EA', borderRight: '1px solid rgba(182, 167, 153, 0.3)', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
         <div>
           <div className="mb-10 px-4 py-2">
@@ -82,19 +82,19 @@ const MainLayout: React.FC = () => {
             </div>
           </div>
           
-          <ul className="space-y-1 overflow-y-auto max-h-[50vh] list-none p-0 m-0">
+          <ul className="space-y-1 overflow-y-auto max-h-[45vh] list-none p-0 m-0">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
                 <li key={item.path}>
                   <Link 
                     to={item.path} 
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-                      isActive 
-                        ? 'bg-[#B55D3B] text-[#FFFFFF]' 
-                        : 'hover:bg-[#2D2A27]/5 text-[#2D2A27]'
-                    }`}
-                    style={{ textDecoration: 'none', color: isActive ? '#FFFFFF' : '#2D2A27' }}
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+                    style={{ 
+                      textDecoration: 'none', 
+                      backgroundColor: isActive ? '#B55D3B' : 'transparent', 
+                      color: isActive ? '#FFFFFF' : '#2D2A27' 
+                    }}
                   >
                     <span>{item.icon}</span>
                     <span>{item.name}</span>
@@ -105,9 +105,9 @@ const MainLayout: React.FC = () => {
           </ul>
         </div>
         
-        {/* COMPACTED PROFILE CARD BLOCK */}
-        <div className="space-y-4" style={{ marginTop: 'auto', paddingTop: '1rem' }}>
-          <Link to="/account" className="block p-4 bg-[#2D2A27]/5 rounded-xl border border-[#B6A799]/20 hover:bg-[#2D2A27]/10 transition-all" style={{ textDecoration: 'none' }}>
+        {/* PROFILE BLOCK AT THE BOTTOM */}
+        <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <Link to="/account" className="block p-4 rounded-xl border border-[#B6A799]/20 hover:bg-[#2D2A27]/5 transition-all" style={{ textDecoration: 'none', backgroundColor: 'rgba(45, 42, 39, 0.05)' }}>
             <div className="flex items-center gap-3 mb-2">
               <div className="avatar">
                 <div className="bg-[#B55D3B] text-[#FFFFFF] rounded-full w-9 h-9 flex items-center justify-center overflow-hidden">
@@ -137,8 +137,8 @@ const MainLayout: React.FC = () => {
             )}
           </Link>
 
-          {/* SUBSCRIPTION PLAN MANAGER CONTAINER */}
-          <div className="p-4 bg-[#B55D3B]/10 rounded-xl border border-[#B6A799]/20">
+          {/* PLAN MANAGEMENT CONTAINER */}
+          <div className="p-4 rounded-xl border border-[#B6A799]/20" style={{ backgroundColor: 'rgba(181, 93, 59, 0.1)' }}>
             <p className="text-sm font-bold mb-1 text-[#2D2A27]">Plan: {plan}</p>
             <p className="text-xs mb-3 text-[#7A7A59] font-medium leading-relaxed">
               {plan === 'Premium' ? 'Full access unlocked!' : plan === 'Memory' ? 'Memory Vault access active.' : 'Unlock unlimited profiles and memory vault.'}
@@ -162,4 +162,6 @@ const MainLayout: React.FC = () => {
       <PlanModal isOpen={isPlanModalOpen} onClose={() => setIsPlanModalOpen(false)} />
     </div>
   );
-};export default MainLayout;
+};
+
+export default MainLayout;
