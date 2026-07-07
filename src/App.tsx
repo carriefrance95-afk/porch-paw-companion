@@ -3,6 +3,7 @@ import './index.css';
 import { supabase } from './utils/supabaseClient';
 import Dashboard from './pages/Dashboard';
 import logoImg from '../Porch & Paw Logo (6).png';
+import { PetProvider } from './context/PetContext'; // 🐾 Added your context provider import
 
 interface AuthMessage {
   type: 'success' | 'error';
@@ -193,48 +194,51 @@ const App: React.FC = () => {
               </div>
             </nav>
 
-            {showSettings ? (
-              <div className="p-6 max-w-xl mx-auto bg-white mt-8 rounded-2xl border border-[#B6A799]/30 shadow-md">
-                <div className="border-b border-[#B6A799]/20 pb-3 mb-4">
-                  <h2 className="text-xl font-serif font-bold text-[#2D2A27]">⚙️ Account Settings</h2>
-                  <p className="text-xs text-[#7A7A59] font-medium">Porchside Pet Life Platform Controls</p>
-                </div>
-
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#2D2A27]/60 mb-2">Legal Suite & Documentation</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <a href="https://legal.porch-and-paw.com/legal-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🌿 Legal Center Home</a>
-                      <a href="https://legal.porch-and-paw.com/terms-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">📄 Terms of Use</a>
-                      <a href="https://legal.porch-and-paw.com/privacy-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🔒 Privacy Policy</a>
-                      <a href="https://legal.porch-and-paw.com/legal_disclaimer-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">⚖️ Legal Disclaimer</a>
-                      <a href="https://legal.porch-and-paw.com/subscription-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">💳 Subscription & Cancellation</a>
-                      <a href="https://legal.porch-and-paw.com/community-guidelines-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🐾 Community Guidelines</a>
-                      <a href="https://legal.porch-and-paw.com/copyright-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">©️ Copyright & IP Policy</a>
-                      <a href="https://legal.porch-and-paw.com/deletion-retention-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🗑️ Data Retention Policy</a>
-                      <a href="https://legal.porch-and-paw.com/affiliate-disclosure-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🤝 Affiliate Disclosure</a>
-                      <a href="https://legal.porch-and-paw.com/cookie-policy-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🍪 Cookie Policy</a>
-                    </div>
-                    <a href="https://legal.porch-and-paw.com/contact-legal-requests" target="_blank" rel="noreferrer" className="mt-2 block text-center p-2.5 bg-[#F4F0EA]/70 border border-[#B6A799]/30 rounded-xl text-xs font-bold text-[#B55D3B] hover:bg-[#B55D3B] hover:text-white transition-colors">📬 Contact & Official Legal Requests</a>
+            {/* 🐾 Wrap the internal routing views inside your context provider context */}
+            <PetProvider>
+              {showSettings ? (
+                <div className="p-6 max-w-xl mx-auto bg-white mt-8 rounded-2xl border border-[#B6A799]/30 shadow-md">
+                  <div className="border-b border-[#B6A799]/20 pb-3 mb-4">
+                    <h2 className="text-xl font-serif font-bold text-[#2D2A27]">⚙️ Account Settings</h2>
+                    <p className="text-xs text-[#7A7A59] font-medium">Porchside Pet Life Platform Controls</p>
                   </div>
 
-                  <div className="pt-4 border-t border-[#B6A799]/20 flex items-center justify-between">
+                  <div className="space-y-6">
                     <div>
-                      <p className="text-xs font-bold text-[#2D2A27]">Profile Erasure</p>
-                      <p className="text-[11px] text-[#2D2A27]/60">Permanently drop your beta account and wipe all metadata.</p>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-[#2D2A27]/60 mb-2">Legal Suite & Documentation</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <a href="https://legal.porch-and-paw.com/legal-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🌿 Legal Center Home</a>
+                        <a href="https://legal.porch-and-paw.com/terms-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">📄 Terms of Use</a>
+                        <a href="https://legal.porch-and-paw.com/privacy-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🔒 Privacy Policy</a>
+                        <a href="https://legal.porch-and-paw.com/legal_disclaimer-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">⚖️ Legal Disclaimer</a>
+                        <a href="https://legal.porch-and-paw.com/subscription-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">💳 Subscription & Cancellation</a>
+                        <a href="https://legal.porch-and-paw.com/community-guidelines-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🐾 Community Guidelines</a>
+                        <a href="https://legal.porch-and-paw.com/copyright-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">©️ Copyright & IP Policy</a>
+                        <a href="https://legal.porch-and-paw.com/deletion-retention-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🗑️ Data Retention Policy</a>
+                        <a href="https://legal.porch-and-paw.com/affiliate-disclosure-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🤝 Affiliate Disclosure</a>
+                        <a href="https://legal.porch-and-paw.com/cookie-policy-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🍪 Cookie Policy</a>
+                      </div>
+                      <a href="https://legal.porch-and-paw.com/contact-legal-requests" target="_blank" rel="noreferrer" className="mt-2 block text-center p-2.5 bg-[#F4F0EA]/70 border border-[#B6A799]/30 rounded-xl text-xs font-bold text-[#B55D3B] hover:bg-[#B55D3B] hover:text-white transition-colors">📬 Contact & Official Legal Requests</a>
                     </div>
-                    <button 
-                      onClick={() => alert("Account deletion request logged.")}
-                      className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold rounded-lg transition-colors"
-                    >
-                      Delete Account
-                    </button>
+
+                    <div className="pt-4 border-t border-[#B6A799]/20 flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-bold text-[#2D2A27]">Profile Erasure</p>
+                        <p className="text-[11px] text-[#2D2A27]/60">Permanently drop your beta account and wipe all metadata.</p>
+                      </div>
+                      <button 
+                        onClick={() => alert("Account deletion request logged.")}
+                        className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold rounded-lg transition-colors"
+                      >
+                        Delete Account
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <Dashboard />
-            )}
+              ) : (
+                <Dashboard />
+              )}
+            </PetProvider>
           </div>
         )}
       </div>
