@@ -7,7 +7,15 @@ import {
 import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
-  const { profiles, vaccines, medications, appointments, journal } = usePets();
+  // Add fallback empty arrays to prevent blank screen crashes when data is initializing
+  const { 
+    profiles = [], 
+    vaccines = [], 
+    medications = [], 
+    appointments = [], 
+    journal = [] 
+  } = usePets() || {};
+
   const [userPhoto, setUserPhoto] = useState<string>('');
 
   // Load user photo choice from localStorage on mount
@@ -30,15 +38,15 @@ const Dashboard: React.FC = () => {
   };
 
   const upcomingVaccines = vaccines
-    .filter(v => new Date(v.nextDueDate) > new Date())
+    .filter(v => v?.nextDueDate && new Date(v.nextDueDate) > new Date())
     .map(v => ({ ...v, type: 'vaccine', sortDate: v.nextDueDate }));
 
   const activeMeds = medications
-    .filter(m => m.active)
+    .filter(m => m?.active)
     .map(m => ({ ...m, type: 'medication', sortDate: m.startDate }));
 
   const upcomingAppointments = appointments
-    .filter(a => !a.completed)
+    .filter(a => a && !a.completed)
     .map(a => ({ ...a, type: 'appointment', sortDate: a.date }));
 
   const allReminders = [...upcomingVaccines, ...upcomingAppointments]
@@ -69,7 +77,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <Link to="/emergency" className="btn gap-2 rounded-full bg-[#B55D3B] text-white border-[#B55D3B] hover:bg-brandCharcoal hover:border-brandCharcoal shadow-md hover:shadow-lg transition-all px-6">
+          <Link to="/emergency" className="btn gap-2 rounded-full bg-[#B55D3B] text-white border-[#B55D3B] hover:bg-brandCharcoal hover:border-brandCharcoal shadow-md hover:shadow-lg transition-all px-6 no-underline inline-flex items-center justify-center text-sm font-bold h-10">
             <ShieldAlert size={18} />
             Emergency Hub
           </Link>
@@ -131,7 +139,7 @@ const Dashboard: React.FC = () => {
               <h2 className="text-2xl font-bold font-serif flex items-center gap-3 text-brandCharcoal">
                 <Bell className="text-[#B55D3B]" /> Upcoming Reminders
               </h2>
-              <Link to="/reminders" className="btn btn-ghost btn-sm rounded-xl font-bold">View All</Link>
+              <Link to="/reminders" className="btn btn-ghost btn-sm rounded-xl font-bold no-underline">View All</Link>
             </div>
 
             {allReminders.length === 0 ? (
@@ -140,7 +148,7 @@ const Dashboard: React.FC = () => {
                 <p className="text-xs text-neutral/60 max-w-md mx-auto mb-4 leading-relaxed">
                   Tap 'Schedule something' or use the Reminders tab on your sidebar to organize vaccinations, medication times, or upcoming vet appointments.
                 </p>
-                <Link to="/reminders" className="btn btn-sm px-6 rounded-xl bg-[#B55D3B] text-white border-[#B55D3B] hover:bg-[#9E5033] no-underline">Schedule something</Link>
+                <Link to="/reminders" className="btn btn-sm px-6 rounded-xl bg-[#B55D3B] text-white border-[#B55D3B] hover:bg-[#9E5033] no-underline inline-flex items-center justify-center text-xs font-bold h-8">Schedule something</Link>
               </div>
             ) : (
               <div className="space-y-3">
@@ -153,7 +161,7 @@ const Dashboard: React.FC = () => {
                       <div>
                         <p className="font-bold text-lg text-brandCharcoal">{r.type === 'vaccine' ? r.vaccineName : r.providerName}</p>
                         <div className="flex items-center gap-2 text-sm opacity-60">
-                          <span className="badge badge-ghost badge-sm">{profiles.find(p => p.id === r.dogId)?.name}</span>
+                          <span className="badge badge-ghost badge-sm">{profiles.find(p => p.id === r.dogId)?.name || 'Pet'}</span>
                           {r.type === 'appointment' && <span className="flex items-center gap-1"><MapPin size={12} /> {r.time}</span>}
                         </div>
                       </div>
@@ -169,11 +177,11 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link to="/directory" className="bg-white p-6 rounded-[2rem] border border-brandTaupe/30 flex items-center gap-4 hover:shadow-md transition-all">
+            <Link to="/directory" className="bg-white p-6 rounded-[2rem] border border-brandTaupe/30 flex items-center gap-4 hover:shadow-md transition-all no-underline">
               <div className="bg-[#8C8275]/10 p-4 rounded-2xl text-[#8C8275]"><Users /></div>
               <div><h4 className="font-bold text-brandCharcoal font-serif">Care Directory</h4><p className="text-xs opacity-60">Vets, groomers & more</p></div>
             </Link>
-            <Link to="/content" className="bg-white p-6 rounded-[2rem] border border-brandTaupe/30 flex items-center gap-4 hover:shadow-md transition-all">
+            <Link to="/content" className="bg-white p-6 rounded-[2rem] border border-brandTaupe/30 flex items-center gap-4 hover:shadow-md transition-all no-underline">
               <div className="bg-[#A2A795]/10 p-4 rounded-2xl text-[#A2A795]"><ChefHat /></div>
               <div><h4 className="font-bold text-brandCharcoal font-serif">Porch & Paw Kitchen</h4><p className="text-xs opacity-60">Healthy dog recipes</p></div>
             </Link>
@@ -219,7 +227,7 @@ const Dashboard: React.FC = () => {
               <p className="text-brandCharcoal/80 text-sm leading-relaxed mb-6 font-medium">
                 Keep your dog hydrated! Fresh water should be available at all times, especially after playtime or walks in the sun.
               </p>
-              <Link to="/content" className="btn btn-sm px-6 rounded-2xl bg-[#A2A795] text-white border-[#A2A795] hover:bg-[#8F9483] font-bold shadow-sm">
+              <Link to="/content" className="btn btn-sm px-6 rounded-2xl bg-[#A2A795] text-white border-[#A2A795] hover:bg-[#8F9483] font-bold shadow-sm no-underline inline-flex items-center justify-center text-xs h-8">
                 View Care Archive
               </Link>
             </div>
@@ -229,7 +237,7 @@ const Dashboard: React.FC = () => {
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-brandTaupe/30">
             <h3 className="text-xl font-bold font-serif text-brandCharcoal mb-6">Quick Actions</h3>
             <div className="grid grid-cols-1 gap-3">
-              <Link to="/journal" style={{ backgroundColor: '#A2A795', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
+              <Link to="/journal" style={{ backgroundColor: '#A2A795', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all no-underline">
                 <Plus size={20} />
                 <div className="text-left">
                   <div className="font-bold">New Journal Entry</div>
@@ -237,7 +245,7 @@ const Dashboard: React.FC = () => {
                 </div>
               </Link>
 
-              <Link to="/profiles" style={{ backgroundColor: '#B55D3B', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
+              <Link to="/profiles" style={{ backgroundColor: '#B55D3B', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all no-underline">
                 <Plus size={20} />
                 <div className="text-left">
                   <div className="font-bold">Add Profile</div>
@@ -245,7 +253,7 @@ const Dashboard: React.FC = () => {
                 </div>
               </Link>
 
-              <Link to="/reminders" style={{ backgroundColor: '#5C5C50', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
+              <Link to="/reminders" style={{ backgroundColor: '#5C5C50', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all no-underline">
                 <Calendar size={20} />
                 <div className="text-left">
                   <div className="font-bold">Schedule Appt</div>
@@ -253,7 +261,7 @@ const Dashboard: React.FC = () => {
                 </div>
               </Link>
 
-              <Link to="/travel" style={{ backgroundColor: '#8C8275', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
+              <Link to="/travel" style={{ backgroundColor: '#8C8275', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all no-underline">
                 <Briefcase size={20} />
                 <div className="text-left">
                   <div className="font-bold">Packing List</div>
@@ -261,7 +269,7 @@ const Dashboard: React.FC = () => {
                 </div>
               </Link>
 
-              <Link to="/store" style={{ backgroundColor: '#5C4D41', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
+              <Link to="/store" style={{ backgroundColor: '#5C4D41', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all no-underline">
                 <ShoppingBag size={20} />
                 <div className="text-left">
                   <div className="font-bold">Shop Boutique</div>
@@ -269,7 +277,7 @@ const Dashboard: React.FC = () => {
                 </div>
               </Link>
 
-              <Link to="/emergency" style={{ backgroundColor: '#B91C1C', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all">
+              <Link to="/emergency" style={{ backgroundColor: '#B91C1C', color: '#ffffff' }} className="quick-action-card rounded-2xl px-5 py-4 flex items-center justify-start gap-4 shadow-sm hover:shadow-md transition-all no-underline">
                 <ShieldAlert size={20} />
                 <div className="text-left">
                   <div className="font-bold">Emergency Kit</div>
