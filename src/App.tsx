@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabaseClient';
 import Kitchen from './pages/Kitchen';
+// 👇 THIS IS THE MISSING IMPORT THAT WAS BREAKING YOUR ENTIRE UI Stylesheet
+import './index.css'; 
 
 interface AuthMessage {
   type: 'success' | 'error';
