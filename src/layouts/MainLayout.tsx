@@ -162,4 +162,4 @@ const MainLayout: React.FC = () => {
       <PlanModal isOpen={isPlanModalOpen} onClose={() => setIsPlanModalOpen(false)} />
     </div>
   );
-};
+};export default MainLayout;
