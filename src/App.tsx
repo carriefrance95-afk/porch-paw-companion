@@ -21,8 +21,38 @@ function App() {
   return (
     <AuthProvider>
       <PetProvider>
-        {/* THIS HOOK FORCES DAISYUI TO USE YOUR LIGHT CREAM VALUES AND STRIPS OUT THE CHOCOLATE HOVER OVERRIDES */}
-        <div data-theme="mytheme" style={{ minHeight: '100vh', backgroundColor: '#FDFBF7', color: '#2D2A27' }}>
+        {/* THE ULTIMATE OVERRIDE: INLINE GLOBAL OVERRIDES THAT DAISYUI CANNOT BYPASS */}
+        <style dangerouslySetInnerHTML={{__html: `
+          /* 1. FORCE SIDEBAR LIGHT CREAM BACKGROUND */
+          aside, .drawer-side, [class*="drawer-side"], .bg-base-200, .bg-neutral {
+            background-color: #F4F0EA !important;
+          }
+          
+          /* 2. FORCE MENU TEXT TO DARK CHOCOLATE CHARCOAL */
+          aside a, .drawer-side a, aside span, aside p, aside h1 {
+            color: #2D2A27 !important;
+          }
+          
+          /* 3. ACTIVE DASHBOARD ITEM BACKGROUND */
+          aside a[href="/"].bg-\\[\\#B55D3B\\], 
+          aside a.bg-primary {
+            background-color: #B55D3B !important;
+            color: #FFFFFF !important;
+          }
+          aside a[href="/"] span {
+            color: inherit !important;
+          }
+
+          /* 4. FORCE EMERGENCY HUB BUTTON TO BRAND TERRACOTTA */
+          a[href="/emergency"], .emergency-hub-btn, [class*="emergency"] {
+            background-color: #B55D3B !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            border: none !important;
+          }
+        `}} />
+
+        <div style={{ minHeight: '100vh', backgroundColor: '#FDFBF7', color: '#2D2A27' }}>
           <Router>
             <Routes>
               <Route path="/" element={<MainLayout />}>
