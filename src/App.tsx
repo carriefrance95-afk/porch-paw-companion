@@ -14,33 +14,36 @@ import ContentLibrary from './pages/ContentLibrary';
 import Store from './pages/Store';
 import AffiliateHub from './pages/AffiliateHub';
 import VetVisitHub from './pages/VetVisitHub';
-import AccountSettings from './pages/AccountSettings'; // New Import
+import AccountSettings from './pages/AccountSettings'; 
 import NotFound from './pages/NotFound';
 
 function App() {
   return (
     <AuthProvider>
       <PetProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="profiles" element={<Profiles />} />
-              <Route path="health" element={<HealthWellness />} />
-              <Route path="reminders" element={<Reminders />} />
-              <Route path="emergency" element={<Emergency />} />
-              <Route path="directory" element={<Directory />} />
-              <Route path="journal" element={<JournalMemories />} />
-              <Route path="travel" element={<Travel />} />
-              <Route path="content" element={<ContentLibrary />} />
-              <Route path="store" element={<Store />} />
-              <Route path="partners" element={<AffiliateHub />} />
-              <Route path="vet-visit-prep" element={<VetVisitHub />} />
-              <Route path="account" element={<AccountSettings />} /> {/* Registered Path */}
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </Router>
+        {/* THIS HOOK FORCES DAISYUI TO USE YOUR LIGHT CREAM VALUES AND STRIPS OUT THE CHOCOLATE HOVER OVERRIDES */}
+        <div data-theme="mytheme" style={{ minHeight: '100vh', backgroundColor: '#FDFBF7', color: '#2D2A27' }}>
+          <Router>
+            <Routes>
+              <Route path="/" element={<MainLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="profiles" element={<Profiles />} />
+                <Route path="health" element={<HealthWellness />} />
+                <Route path="reminders" element={<Reminders />} />
+                <Route path="emergency" element={<Emergency />} />
+                <Route path="directory" element={<Directory />} />
+                <Route path="journal" element={<JournalMemories />} />
+                <Route path="travel" element={<Travel />} />
+                <Route path="content" element={<ContentLibrary />} />
+                <Route path="store" element={<Store />} />
+                <Route path="partners" element={<AffiliateHub />} />
+                <Route path="vet-visit-prep" element={<VetVisitHub />} />
+                <Route path="account" element={<AccountSettings />} /> 
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </Router>
+        </div>
       </PetProvider>
     </AuthProvider>
   );
