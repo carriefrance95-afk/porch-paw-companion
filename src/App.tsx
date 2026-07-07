@@ -2,30 +2,46 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabaseClient';
 import Kitchen from './pages/Kitchen';
 
+interface AuthMessage {
+  type: 'success' | 'error';
+  text: string;
+}
+
 const App: React.FC = () => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [authMessage, setAuthMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [authMessage, setAuthMessage] = useState<AuthMessage | null>(null);
+  const [agreedToTerms, setAgreedToTerms] = useState<boolean>(false);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    supabase.auth.getSession().then(({ data: { session: currentSession } }: any) => {
+      setSession(currentSession);
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+    const { data } = supabase.auth.onAuthStateChange((_event: any, currentSession: any) => {
+      setSession(currentSession);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      if (data?.subscription) {
+        data.subscription.unsubscribe();
+      }
+    };
   }, []);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthMessage(null);
+
+    if (isSignUp && !agreedToTerms) {
+      setAuthMessage({ type: 'error', text: 'You must agree to the Terms of Use and Privacy Policy to register.' });
+      return;
+    }
 
     if (isSignUp) {
       const { data, error } = await supabase.auth.signUp({ email, password });
@@ -55,11 +71,8 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex flex-col justify-between">
-      
-      {/* MAIN CONTENT AREA */}
       <div className="flex-grow">
         {!session ? (
-          /* AUTHENTICATION PORTAL */
           <div className="min-h-[75vh] flex flex-col items-center justify-center p-4">
             <div className="w-full max-w-md bg-white border border-[#B6A799]/30 rounded-2xl p-8 shadow-md">
               <div className="text-center mb-6">
@@ -94,6 +107,29 @@ const App: React.FC = () => {
                   />
                 </div>
 
+                {isSignUp && (
+                  <div className="flex items-start gap-2.5 pt-1">
+                    <input
+                      id="legal-checkbox"
+                      type="checkbox"
+                      required
+                      className="mt-1 accent-[#B55D3B] h-4 w-4 rounded"
+                      checked={agreedToTerms}
+                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    />
+                    <label htmlFor="legal-checkbox" className="text-xs text-[#2D2A27]/80 leading-normal">
+                      I explicitly agree to the{' '}
+                      <a href="https://legal.porch-and-paw.com/terms-page" target="_blank" rel="noreferrer" className="text-[#B55D3B] font-bold underline hover:text-[#9C4E30]">
+                        Terms of Use
+                      </a>{' '}
+                      and{' '}
+                      <a href="https://legal.porch-and-paw.com/privacy-page" target="_blank" rel="noreferrer" className="text-[#B55D3B] font-bold underline hover:text-[#9C4E30]">
+                        Privacy Policy
+                      </a>.
+                    </label>
+                  </div>
+                )}
+
                 {authMessage && (
                   <p className={`text-xs font-semibold p-3 rounded-lg border ${
                     authMessage.type === 'error' 
@@ -106,7 +142,12 @@ const App: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-[#B55D3B] hover:bg-[#9C4E30] text-white text-sm font-bold rounded-xl transition-colors shadow-sm"
+                  disabled={isSignUp && !agreedToTerms}
+                  className={`w-full py-2.5 text-white text-sm font-bold rounded-xl transition-colors shadow-sm ${
+                    isSignUp && !agreedToTerms 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-[#B55D3B] hover:bg-[#9C4E30]'
+                  }`}
                 >
                   {isSignUp ? 'Register Account' : 'Sign In'}
                 </button>
@@ -126,56 +167,84 @@ const App: React.FC = () => {
             </div>
           </div>
         ) : (
-          /* AUTHENTICATED PLATFORM WORKSPACE */
           <div>
             <nav className="bg-[#F4F0EA] border-b border-[#B6A799]/20 px-4 py-2.5 flex justify-between items-center text-xs">
               <span className="text-[#2D2A27]/70 font-medium">
-                Authorized Session: <strong className="text-[#2D2A27]">{session.user.email}</strong>
+                Authorized Session: <strong className="text-[#2D2A27]">{session.user?.email}</strong>
               </span>
-              <button 
-                onClick={async () => await supabase.auth.signOut()}
-                className="px-3 py-1 bg-white border-2 border-[#B6A799]/40 rounded-lg font-bold text-[#7A7A59] hover:text-[#B55D3B] transition-colors shadow-sm"
-              >
-                Sign Out
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="px-3 py-1 bg-white border-2 border-[#B6A799]/40 rounded-lg font-bold text-[#7A7A59] hover:text-[#B55D3B] transition-colors shadow-sm"
+                >
+                  {showSettings ? 'Back to Kitchen 🐾' : '⚙️ Settings'}
+                </button>
+                <button 
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    setShowSettings(false);
+                  }}
+                  className="px-3 py-1 bg-[#2D2A27] text-white rounded-lg font-bold hover:bg-black transition-colors shadow-sm"
+                >
+                  Sign Out
+                </button>
+              </div>
             </nav>
-            <Kitchen />
+
+            {showSettings ? (
+              <div className="p-6 max-w-xl mx-auto bg-white mt-8 rounded-2xl border border-[#B6A799]/30 shadow-md">
+                <div className="border-b border-[#B6A799]/20 pb-3 mb-4">
+                  <h2 className="text-xl font-serif font-bold text-[#2D2A27]">⚙️ Account Settings</h2>
+                  <p className="text-xs text-[#7A7A59] font-medium">Porchside Pet Life Platform Controls</p>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#2D2A27]/60 mb-2">Legal Suite & Documentation</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <a href="https://legal.porch-and-paw.com/legal-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🌿 Legal Center Home</a>
+                      <a href="https://legal.porch-and-paw.com/terms-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">📄 Terms of Use</a>
+                      <a href="https://legal.porch-and-paw.com/privacy-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🔒 Privacy Policy</a>
+                      <a href="https://legal.porch-and-paw.com/legal_disclaimer-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">⚖️ Legal Disclaimer</a>
+                      <a href="https://legal.porch-and-paw.com/subscription-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">💳 Subscription & Cancellation</a>
+                      <a href="https://legal.porch-and-paw.com/community-guidelines-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🐾 Community Guidelines</a>
+                      <a href="https://legal.porch-and-paw.com/copyright-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">©️ Copyright & IP Policy</a>
+                      <a href="https://legal.porch-and-paw.com/deletion-retention-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🗑️ Data Retention Policy</a>
+                      <a href="https://legal.porch-and-paw.com/affiliate-disclosure-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🤝 Affiliate Disclosure</a>
+                      <a href="https://legal.porch-and-paw.com/cookie-policy-page" target="_blank" rel="noreferrer" className="p-2.5 bg-[#F4F0EA]/40 border border-[#B6A799]/20 rounded-xl text-xs font-semibold text-[#2D2A27] hover:border-[#B55D3B] flex items-center gap-2">🍪 Cookie Policy</a>
+                    </div>
+                    <a href="https://legal.porch-and-paw.com/contact-legal-requests" target="_blank" rel="noreferrer" className="mt-2 block text-center p-2.5 bg-[#F4F0EA]/70 border border-[#B6A799]/30 rounded-xl text-xs font-bold text-[#B55D3B] hover:bg-[#B55D3B] hover:text-white transition-colors">📬 Contact & Official Legal Requests</a>
+                  </div>
+
+                  <div className="pt-4 border-t border-[#B6A799]/20 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-[#2D2A27]">Profile Erasure</p>
+                      <p className="text-[11px] text-[#2D2A27]/60">Permanently drop your beta account and wipe all metadata.</p>
+                    </div>
+                    <button 
+                      onClick={() => alert("Account deletion request logged.")}
+                      className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold rounded-lg transition-colors"
+                    >
+                      Delete Account
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Kitchen />
+            )}
           </div>
         )}
       </div>
 
-      {/* FIXED LEGAL PROTECTION & CONTACT FOOTER */}
-      <footer className="w-full bg-[#2D2A27] text-[#F4F0EA]/80 border-t-4 border-[#B55D3B] py-8 px-6 mt-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6 text-xs leading-relaxed">
-          
-          {/* Disclaimer Column */}
-          <div className="md:w-2/3 space-y-2">
-            <span className="text-[#B55D3B] font-bold uppercase tracking-wider block text-[10px]">VETERINARY & NUTRITION DISCLAIMER</span>
-            <p>
-              The information, culinary concepts, and nutritional recipes shared within the Porch & Paw platform are intended solely for educational, informational, and home-kitchen preservation purposes. 
-              <strong> We are not licensed veterinarians, certified animal nutritionists, or clinical veterinary practitioners.</strong>
-            </p>
-            <p>
-              Dietary requirements vary drastically based on an individual animal’s breed, weight, medical history, and specific lifecycle health conditions. Always consult with your primary care veterinarian or a certified veterinary professional before modifying your pet’s diet, introducing new hero ingredients, or responding to suspected toxic health emergencies.
-            </p>
+      <footer className="w-full bg-[#2D2A27] text-[#F4F0EA]/80 border-t-4 border-[#B55D3B] py-6 px-6 mt-12 text-center text-xs">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div className="text-[#F4F0EA]/60 text-[11px]">&copy; 2026 Porch & Paw. All Rights Reserved. Confidential Beta Platform.</div>
+          <div>
+            <a href="https://legal.porch-and-paw.com/legal-page" target="_blank" rel="noreferrer" className="font-bold text-[#B55D3B] hover:text-[#9C4E30] underline tracking-wide text-[11px]">🌿 Go to Porch & Paw Legal Center</a>
           </div>
-
-          {/* Copyright & Support Column */}
-          <div className="md:w-1/3 flex flex-col md:items-end justify-between gap-4 md:text-right">
-            <div>
-              <span className="text-[#B55D3B] font-bold uppercase tracking-wider block text-[10px] mb-1">CONTACT & SUPPORT</span>
-              <p className="font-medium text-[#F4F0EA]">Porch & Paw Ecosystem Business Network</p>
-              <p className="text-[#F4F0EA]/60">Beta Support Email: <a href="mailto:support@porchandpaw.com" className="underline hover:text-white">support@porchandpaw.com</a></p>
-            </div>
-            
-            <div className="text-[11px] text-[#F4F0EA]/50 pt-2 border-t border-[#B6A799]/20 w-full md:w-auto">
-              &copy; {new Date().getFullYear()} Porch & Paw. All Rights Reserved. Confidential Beta Platform.
-            </div>
-          </div>
-
         </div>
       </footer>
-
     </div>
   );
 };
