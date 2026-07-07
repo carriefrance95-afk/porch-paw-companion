@@ -51,7 +51,7 @@ const MainLayout: React.FC = () => {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', width: '100%', backgroundColor: '#F4F0EA' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', width: '100%', backgroundColor: '#FDFBF7' }}>
       {isMigrating && (
         <div className="fixed inset-0 bg-[#F4F0EA]/80 backdrop-blur-md z-[9999] flex flex-col items-center justify-center p-8 text-center">
           <div className="w-24 h-24 mb-6">
@@ -67,8 +67,8 @@ const MainLayout: React.FC = () => {
         </div>
       )}
 
-      {/* FIXED SIDEBAR LEFT MENU */}
-      <aside style={{ width: '320px', minHeight: '100vh', backgroundColor: '#F4F0EA', borderRight: '1px solid rgba(182, 167, 153, 0.3)', padding: '1rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
+      {/* RE-STYLED SIDEBAR: LIGHT CREAM BACKGROUND, CHOCOLATE TEXT */}
+      <aside style={{ width: '320px', minHeight: '100vh', backgroundColor: '#F4F0EA', borderRight: '1px solid rgba(182, 167, 153, 0.3)', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexShrink: 0 }}>
         <div>
           <div className="mb-10 px-4 py-2">
             <div className="flex items-center gap-3">
@@ -82,19 +82,19 @@ const MainLayout: React.FC = () => {
             </div>
           </div>
           
-          <ul className="space-y-1 overflow-y-auto max-h-[50vh] list-none p-0">
+          <ul className="space-y-1 overflow-y-auto max-h-[50vh] list-none p-0 m-0">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
                 <li key={item.path}>
                   <Link 
                     to={item.path} 
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
                       isActive 
-                        ? 'bg-[#B55D3B] text-[#F4F0EA] font-bold' 
+                        ? 'bg-[#B55D3B] text-[#FFFFFF]' 
                         : 'hover:bg-[#2D2A27]/5 text-[#2D2A27]'
                     }`}
-                    style={{ textDecoration: 'none' }}
+                    style={{ textDecoration: 'none', color: isActive ? '#FFFFFF' : '#2D2A27' }}
                   >
                     <span>{item.icon}</span>
                     <span>{item.name}</span>
@@ -105,11 +105,12 @@ const MainLayout: React.FC = () => {
           </ul>
         </div>
         
-        <div className="mt-auto pt-4 space-y-4">
-          <Link to="/account" className="block p-4 bg-[#2D2A27]/5 rounded-xl border border-[#B6A799]/20 hover:bg-[#2D2A27]/10 transition-all no-underline" style={{ textDecoration: 'none' }}>
-            <div className="flex items-center gap-3 mb-3">
+        {/* COMPACTED PROFILE CARD BLOCK */}
+        <div className="space-y-4" style={{ marginTop: 'auto', paddingTop: '1rem' }}>
+          <Link to="/account" className="block p-4 bg-[#2D2A27]/5 rounded-xl border border-[#B6A799]/20 hover:bg-[#2D2A27]/10 transition-all" style={{ textDecoration: 'none' }}>
+            <div className="flex items-center gap-3 mb-2">
               <div className="avatar">
-                <div className="bg-[#B55D3B] text-[#F4F0EA] rounded-full w-8 h-8 flex items-center justify-center overflow-hidden">
+                <div className="bg-[#B55D3B] text-[#FFFFFF] rounded-full w-9 h-9 flex items-center justify-center overflow-hidden">
                   {ownerAvatar ? (
                     <img src={ownerAvatar} alt="Owner Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -121,14 +122,14 @@ const MainLayout: React.FC = () => {
                 <p className="text-sm font-bold truncate text-[#2D2A27] m-0">
                   {user ? user.email : 'Guest Mode'}
                 </p>
-                <p className="text-[11px] text-[#7A7A59] font-medium m-0">
+                <p className="text-[11px] text-[#7A7A59] font-semibold m-0">
                   {user ? 'Cloud Synced' : 'Local Storage Only'}
                 </p>
               </div>
             </div>
             {user && (
               <button 
-                className="btn btn-xs btn-ghost btn-block text-[#2D2A27] hover:bg-[#2D2A27]/20 mt-1 font-bold"
+                className="w-full py-1 text-center bg-transparent border-none text-xs font-bold text-[#2D2A27] opacity-60 hover:opacity-100 mt-1 cursor-pointer"
                 onClick={(e) => { e.preventDefault(); signOut(); }}
               >
                 Sign Out
@@ -136,13 +137,14 @@ const MainLayout: React.FC = () => {
             )}
           </Link>
 
+          {/* SUBSCRIPTION PLAN MANAGER CONTAINER */}
           <div className="p-4 bg-[#B55D3B]/10 rounded-xl border border-[#B6A799]/20">
-            <p className="text-sm font-semibold mb-1 text-[#2D2A27]">Plan: {plan}</p>
-            <p className="text-xs mb-3 text-[#7A7A59] font-medium">
+            <p className="text-sm font-bold mb-1 text-[#2D2A27]">Plan: {plan}</p>
+            <p className="text-xs mb-3 text-[#7A7A59] font-medium leading-relaxed">
               {plan === 'Premium' ? 'Full access unlocked!' : plan === 'Memory' ? 'Memory Vault access active.' : 'Unlock unlimited profiles and memory vault.'}
             </p>
             <button 
-              className="btn btn-sm btn-block rounded-lg bg-[#B55D3B] text-[#F4F0EA] border-[#B55D3B] hover:bg-[#B55D3B]/90"
+              className="w-full py-2 px-3 rounded-lg bg-[#B55D3B] text-[#FFFFFF] border-none font-bold text-xs cursor-pointer hover:bg-[#A04F31] transition-colors"
               onClick={() => setIsPlanModalOpen(true)}
             >
               Manage Access
@@ -152,7 +154,7 @@ const MainLayout: React.FC = () => {
       </aside>
       
       {/* MAIN VIEW AREA */}
-      <main style={{ flexGrow: 1, backgroundColor: '#FDFBF7', padding: '1.5rem' }}>
+      <main style={{ flexGrow: 1, backgroundColor: '#FDFBF7', padding: '2rem', overflowY: 'auto', height: '100vh' }}>
         <Outlet />
       </main>
 
@@ -161,5 +163,3 @@ const MainLayout: React.FC = () => {
     </div>
   );
 };
-
-export default MainLayout;
