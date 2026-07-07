@@ -34,7 +34,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     } catch (err: any) {
       setError(err.message || 'An error occurred during authentication');
     } finally {
-      loading && setLoading(false);
+      // Corrected: Removed the conditional check to prevent bundler errors
+      setLoading(false);
     }
   };
 
@@ -64,7 +65,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <p className="text-[#2D2A27] text-sm opacity-90">We've sent a confirmation link to <span className="font-bold">{email}</span>.</p>
             <button 
               style={{ backgroundColor: '#B55D3B', borderColor: '#B55D3B', color: '#FFFFFF' }} 
-              className="w-full h-12 font-bold rounded-xl transition-all shadow-md active:scale-95 border cursor-pointer mt-4" 
+              className="w-full h-12 font-bold rounded-xl transition-all shadow-md active:scale-95 border cursor-pointer mt-4 text-white" 
               onClick={onClose}
             >
               Got it
@@ -109,8 +110,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <button 
               type="submit" 
               disabled={loading}
-              style={{ backgroundColor: '#B55D3B', borderColor: '#B55D3B', color: '#FFFFFF' }}
-              className="w-full h-12 text-base font-bold rounded-xl shadow-md transition-all active:scale-95 border cursor-pointer mt-2 flex items-center justify-center gap-2"
+              style={{ backgroundColor: '#B55D3B', borderColor: '#B55D3B' }}
+              className="w-full h-12 text-base font-bold rounded-xl shadow-md transition-all active:scale-95 border cursor-pointer mt-2 flex items-center justify-center gap-2 text-white"
             >
               {loading ? (
                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>

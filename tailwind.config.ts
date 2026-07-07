@@ -1,8 +1,7 @@
 import type { Config } from 'tailwindcss';
-// @ts-ignore
-import daisyui from 'daisyui';
+const daisyui = require('daisyui');
 
-const config = {
+const config: Config = {
   content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
@@ -25,16 +24,28 @@ const config = {
     themes: [
       {
         porchside: {
-          "primary": "#B55D3B",       // Maps brandTerracotta to main buttons
-          "secondary": "#7A7A59",     // Maps brandSage
-          "accent": "#3D261C",        // Maps brandChocolate
-          "neutral": "#2D2A27",       // Maps brandCharcoal
-          "base-100": "#F4F0EA",      // Maps brandCream as global page background
-          "info": "#B6A799",          // Maps brandTaupe
+          "primary": "#B55D3B",
+          "primary-content": "#ffffff",
+          "secondary": "#7A7A59",
+          "secondary-content": "#ffffff",
+          "accent": "#3D261C",
+          "accent-content": "#ffffff",
+          "neutral": "#2D2A27",
+          "neutral-content": "#ffffff",
+          "base-100": "#F4F0EA",
+          "base-content": "#2D2A27",
+          "info": "#B6A799",
+          "info-content": "#ffffff",
+          "success": "#7A7A59",
+          "success-content": "#ffffff",
+          "warning": "#B6A799",
+          "warning-content": "#2D2A27",
+          "error": "#B55D3B",
+          "error-content": "#ffffff",
         },
       },
     ],
   },
 };
 
-export default config as any;
+export default config;
