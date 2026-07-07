@@ -21,6 +21,7 @@ function App() {
   return (
     <AuthProvider>
       <PetProvider>
+        {/* ISOLATED COMPONENT STYLE TARGETING */}
         <style dangerouslySetInnerHTML={{__html: `
           /* 1. FORCE SIDEBAR LIGHT CREAM BACKGROUND */
           aside, .drawer-side, [class*="drawer-side"], .bg-base-200, .bg-neutral {
@@ -42,32 +43,49 @@ function App() {
             color: inherit !important;
           }
 
-          /* 4. EMERGENCY HUB BUTTON ALIGNMENT & PADDING FIX */
-          a[href="/emergency"], 
-          .emergency-hub-btn, 
-          [class*="emergency"],
-          button[class*="bg-\\[\\#B55D3B\\]"],
-          a[class*="bg-\\[\\#B55D3B\\]"] {
+          /* 4. CHOP OUT SIDEBAR OVERRIDES - RESTORE NORMAL SIDEBAR LINKS */
+          aside a[href="/emergency"] {
+            background-color: transparent !important;
+            color: #2D2A27 !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0.625rem 1rem !important;
+            min-height: auto !important;
+          }
+          aside a[href="/emergency"]:hover {
+            background-color: rgba(45, 42, 39, 0.05) !important;
+          }
+          aside a[href="/emergency"] * {
+            color: #2D2A27 !important;
+          }
+
+          /* 5. FIX THE CORNER EMERGENCY HUB BUTTON - SCALE AND ALIGNMENT */
+          main a[href="/emergency"],
+          .btn[href="/emergency"] {
             background-color: #B55D3B !important;
             color: #FFFFFF !important;
             font-weight: 700 !important;
             border: none !important;
             box-shadow: 0 4px 12px rgba(181, 93, 59, 0.2) !important;
             
-            /* FORCES VERTICAL CENTERING AND ADDS CUSHION AT THE BOTTOM */
+            /* INCREASE PILL BUTTON WIDTH AND HEADING SCALE */
             display: inline-flex !important;
-            flex-direction: column !important;
+            flex-direction: row !important;
             align-items: center !important;
             justify-content: center !important;
-            padding: 0.6rem 1.5rem 0.7rem 1.5rem !important;
-            line-height: 1.2 !important;
-            min-height: 3.5rem !important;
+            gap: 0.5rem !important;
+            padding: 0.75rem 2rem !important;
+            min-width: 175px !important;
+            min-height: 3rem !important;
+            border-radius: 9999px !important;
           }
 
-          /* FORCE THE INSIDE TEXT AND ICONS WHITE */
-          a[href="/emergency"] *, 
-          .emergency-hub-btn *, 
-          [class*="emergency"] * {
+          /* FORCE INTERIOR TOP BUTTON TEXT WHITE */
+          main a[href="/emergency"] *,
+          .btn[href="/emergency"] * {
             color: #FFFFFF !important;
           }
         `}} />
