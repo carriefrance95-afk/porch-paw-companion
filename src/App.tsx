@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './index.css';
 import { supabase } from './utils/supabaseClient';
 import Dashboard from './pages/Dashboard';
-import logoImg from './Porch & Paw Logo (6).png';
+import logoImg from '../Porch & Paw Logo (6).png';
 
 interface AuthMessage {
   type: 'success' | 'error';
