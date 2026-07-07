@@ -21,7 +21,6 @@ function App() {
   return (
     <AuthProvider>
       <PetProvider>
-        {/* THE ULTIMATE OVERRIDE: INLINE GLOBAL OVERRIDES THAT DAISYUI CANNOT BYPASS */}
         <style dangerouslySetInnerHTML={{__html: `
           /* 1. FORCE SIDEBAR LIGHT CREAM BACKGROUND */
           aside, .drawer-side, [class*="drawer-side"], .bg-base-200, .bg-neutral {
@@ -43,12 +42,33 @@ function App() {
             color: inherit !important;
           }
 
-          /* 4. FORCE EMERGENCY HUB BUTTON TO BRAND TERRACOTTA */
-          a[href="/emergency"], .emergency-hub-btn, [class*="emergency"] {
+          /* 4. EMERGENCY HUB BUTTON ALIGNMENT & PADDING FIX */
+          a[href="/emergency"], 
+          .emergency-hub-btn, 
+          [class*="emergency"],
+          button[class*="bg-\\[\\#B55D3B\\]"],
+          a[class*="bg-\\[\\#B55D3B\\]"] {
             background-color: #B55D3B !important;
             color: #FFFFFF !important;
             font-weight: 700 !important;
             border: none !important;
+            box-shadow: 0 4px 12px rgba(181, 93, 59, 0.2) !important;
+            
+            /* FORCES VERTICAL CENTERING AND ADDS CUSHION AT THE BOTTOM */
+            display: inline-flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0.6rem 1.5rem 0.7rem 1.5rem !important;
+            line-height: 1.2 !important;
+            min-height: 3.5rem !important;
+          }
+
+          /* FORCE THE INSIDE TEXT AND ICONS WHITE */
+          a[href="/emergency"] *, 
+          .emergency-hub-btn *, 
+          [class*="emergency"] * {
+            color: #FFFFFF !important;
           }
         `}} />
 
