@@ -54,6 +54,7 @@ const App: React.FC = () => {
           type: 'success', 
           text: 'Account created! Please check your email inbox for a verification link.' 
         });
+        setIsSignUp(false);
       } else {
         setAuthMessage({ type: 'success', text: 'Account created successfully!' });
       }
