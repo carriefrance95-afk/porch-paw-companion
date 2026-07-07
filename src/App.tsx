@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabaseClient';
 import Kitchen from './pages/Kitchen';
-import './index.css'; 
 
 interface AuthMessage {
   type: 'success' | 'error';
@@ -71,20 +70,18 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] flex flex-col justify-between font-sans">
+    <div className="min-h-screen bg-[#FDFBF7] flex flex-col justify-between">
       <div className="flex-grow">
         {!session ? (
           <div className="min-h-[75vh] flex flex-col items-center justify-center p-4">
             <div className="w-full max-w-md bg-white border border-[#B6A799]/30 rounded-2xl p-8 shadow-md">
               <div className="text-center mb-6">
-                {/* Logo and Branding Header */}
                 <h1 className="text-3xl font-serif font-bold text-[#2D2A27] mb-1">Porch & Paw</h1>
                 <p className="text-xs uppercase tracking-wider text-[#7A7A59] font-bold">
                   {isSignUp ? 'Beta Registration' : 'Beta Tester Portal'}
                 </p>
               </div>
 
-              {/* Login / Registration Form */}
               <form onSubmit={handleAuthSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Email Address</label>
@@ -110,7 +107,6 @@ const App: React.FC = () => {
                   />
                 </div>
 
-                {/* Explicit Legal Verification for Registrations */}
                 {isSignUp && (
                   <div className="flex items-start gap-2.5 pt-1">
                     <input
@@ -157,7 +153,6 @@ const App: React.FC = () => {
                 </button>
               </form>
 
-              {/* Toggler between Login and Registration states */}
               <div className="mt-6 pt-4 border-t border-[#B6A799]/20 text-center">
                 <button
                   onClick={() => {
@@ -173,10 +168,9 @@ const App: React.FC = () => {
           </div>
         ) : (
           <div>
-            {/* Authenticated Workspace Header Dashboard */}
             <nav className="bg-[#F4F0EA] border-b border-[#B6A799]/20 px-4 py-2.5 flex justify-between items-center text-xs">
               <span className="text-[#2D2A27]/70 font-medium">
-                Authorized Beta Session: <strong className="text-[#2D2A27]">{session.user?.email}</strong>
+                Authorized Session: <strong className="text-[#2D2A27]">{session.user?.email}</strong>
               </span>
               <div className="flex items-center gap-3">
                 <button
@@ -204,7 +198,6 @@ const App: React.FC = () => {
                   <p className="text-xs text-[#7A7A59] font-medium">Porchside Pet Life Platform Controls</p>
                 </div>
 
-                {/* Complete 10-Link Legal Infrastructure Suite */}
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-xs font-bold uppercase tracking-wider text-[#2D2A27]/60 mb-2">Legal Suite & Documentation</h3>
@@ -244,7 +237,6 @@ const App: React.FC = () => {
         )}
       </div>
 
-      {/* Global Brand Footer */}
       <footer className="w-full bg-[#2D2A27] text-[#F4F0EA]/80 border-t-4 border-[#B55D3B] py-6 px-6 mt-12 text-center text-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
           <div className="text-[#F4F0EA]/60 text-[11px]">&copy; 2026 Porch & Paw. All Rights Reserved. Confidential Beta Platform.</div>
