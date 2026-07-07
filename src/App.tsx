@@ -10,7 +10,7 @@ import Emergency from './pages/Emergency';
 import Directory from './pages/Directory';
 import JournalMemories from './pages/JournalMemories';
 import Travel from './pages/Travel';
-import ContentLibrary from './pages/ContentLibrary';
+import Kitchen from './pages/Kitchen';
 import Store from './pages/Store';
 import AffiliateHub from './pages/AffiliateHub';
 import VetVisitHub from './pages/VetVisitHub';
@@ -71,7 +71,6 @@ function App() {
             border: none !important;
             box-shadow: 0 4px 12px rgba(181, 93, 59, 0.2) !important;
             
-            /* INCREASE PILL BUTTON WIDTH AND HEADING SCALE */
             display: inline-flex !important;
             flex-direction: row !important;
             align-items: center !important;
@@ -102,7 +101,7 @@ function App() {
                 <Route path="directory" element={<Directory />} />
                 <Route path="journal" element={<JournalMemories />} />
                 <Route path="travel" element={<Travel />} />
-                <Route path="content" element={<ContentLibrary />} />
+                <Route path="content" element={<Kitchen />} />
                 <Route path="store" element={<Store />} />
                 <Route path="partners" element={<AffiliateHub />} />
                 <Route path="vet-visit-prep" element={<VetVisitHub />} />
