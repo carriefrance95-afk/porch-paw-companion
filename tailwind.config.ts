@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss';
+
+// @ts-ignore
 import daisyui from 'daisyui';
 
 const config = {
