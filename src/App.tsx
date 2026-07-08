@@ -103,6 +103,8 @@ const OnboardingGate: React.FC<{ session: any; children: React.ReactNode }> = ({
 const PublicEntryFlow: React.FC = () => {
   const [screen, setScreen] = useState<'welcome' | 'plan' | 'signup' | 'signin' | 'verify'>('welcome');
   const [selectedPlan, setSelectedPlan] = useState<PlanId>('Premium');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -130,6 +132,11 @@ const PublicEntryFlow: React.FC = () => {
     e.preventDefault();
     setAuthMessage(null);
 
+    if (!firstName.trim() || !lastName.trim()) {
+      setAuthMessage({ type: 'error', text: 'Please enter your first and last name.' });
+      return;
+    }
+
     if (!agreedToTerms || !agreedToPrivacy) {
       setAuthMessage({ type: 'error', text: 'You must accept the Terms of Use and Privacy Policy before creating an account.' });
       return;
@@ -147,7 +154,12 @@ const PublicEntryFlow: React.FC = () => {
       password,
       options: {
         data: {
-          selected_plan: selectedPlan
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          full_name: `${firstName.trim()} ${lastName.trim()}`,
+          selected_plan: selectedPlan,
+          beta_status: 'Beta Tester',
+          billing_status: 'Beta Access - Billing Disabled'
         }
       }
     });
@@ -160,6 +172,14 @@ const PublicEntryFlow: React.FC = () => {
     }
 
     localStorage.setItem('pending_selected_plan', selectedPlan);
+    localStorage.setItem('pending_beta_status', 'Beta Tester');
+    localStorage.setItem('pending_billing_status', 'Beta Access - Billing Disabled');
+    localStorage.setItem('pending_owner_profile', JSON.stringify({
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      name: `${firstName.trim()} ${lastName.trim()}`,
+      email
+    }));
 
     if (data.session) {
       setAuthMessage({ type: 'success', text: 'Account created successfully. Continue setup to finish your profile.' });
@@ -269,11 +289,37 @@ const PublicEntryFlow: React.FC = () => {
             <img src={logoImg} alt="Porch & Paw Logo" className="h-24 w-24 object-contain mb-3" />
             <h1 className="text-3xl font-serif font-bold text-[#2D2A27] mb-1">Create Your Account</h1>
             <p className="text-xs uppercase tracking-wider text-[#7A7A59] font-bold">
-              Selected Plan: {selectedPlan}
+              Selected Plan: {selectedPlan} Beta · Billing Disabled
             </p>
           </div>
 
           <form onSubmit={handleSignup} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">First Name</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full px-4 py-2 bg-white border border-[#B6A799]/40 rounded-xl text-sm focus:outline-none focus:border-[#B55D3B]"
+                  placeholder="Carrie"
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Last Name</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full px-4 py-2 bg-white border border-[#B6A799]/40 rounded-xl text-sm focus:outline-none focus:border-[#B55D3B]"
+                  placeholder="France"
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Email Address</label>
               <input
@@ -354,10 +400,10 @@ const PublicEntryFlow: React.FC = () => {
 
             <button
               type="submit"
-              disabled={submitting || !agreedToTerms || !agreedToPrivacy}
+              disabled={submitting || !firstName.trim() || !lastName.trim() || !agreedToTerms || !agreedToPrivacy}
               className="w-full py-2.5 text-white text-sm font-bold rounded-xl transition-colors shadow-sm bg-[#B55D3B] hover:bg-[#9C4E30] disabled:opacity-50"
             >
-              {submitting ? 'Creating Account...' : 'Create Account'}
+              {submitting ? 'Creating Account...' : 'Create Beta Account'}
             </button>
           </form>
 
