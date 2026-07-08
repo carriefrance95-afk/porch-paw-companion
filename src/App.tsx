@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './index.css';
-import { Routes, Route, Navigate, Link } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from './utils/supabaseClient';
 import logoImg from '../Porch & Paw Logo (6).png';
-import { PetProvider } from './context/PetContext';
+import { PetProvider, usePets } from './context/PetContext';
 import { AuthProvider } from './context/AuthContext';
 import Sidebar from './components/Sidebar.tsx';
+import OnboardingWizard from './components/OnboardingWizard';
 
 // Import all exact pages from your project's file structure
 import Dashboard from './pages/Dashboard';
@@ -23,6 +24,16 @@ interface AuthMessage {
   type: 'success' | 'error';
   text: string;
 }
+
+const OnboardingGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { profiles } = usePets();
+
+  if (profiles.length === 0) {
+    return <OnboardingWizard />;
+  }
+
+  return <>{children}</>;
+};
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any>(null);
@@ -287,7 +298,8 @@ const App: React.FC = () => {
               </nav>
 
               <PetProvider>
-                <div className="flex flex-1 items-stretch">
+                <OnboardingGate>
+                  <div className="flex flex-1 items-stretch">
                   <Sidebar />
                   
                   <div className="flex-1 overflow-y-auto">
@@ -305,7 +317,8 @@ const App: React.FC = () => {
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </div>
-                </div>
+                  </div>
+                </OnboardingGate>
               </PetProvider>
             </div>
           )}
@@ -386,5 +399,4 @@ const App: React.FC = () => {
     </AuthProvider>
   );
 };
-
 export default App;
