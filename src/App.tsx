@@ -605,84 +605,84 @@ const App: React.FC = () => {
         {!session ? (
           <PublicEntryFlow />
         ) : (
-          <div className="w-full flex-grow flex flex-col">
-            <nav className="bg-[#F4F0EA] border-b border-[#B6A799]/20 px-4 py-3 flex justify-between items-center relative z-40 shadow-sm">
-              <div className="flex items-center gap-3">
-                <img src={logoImg} alt="Porch & Paw Logo" className="h-7 w-auto object-contain" />
-                <span className="text-[#2D2A27] font-serif font-bold text-sm hidden sm:inline">Porch & Paw Portal</span>
-              </div>
-
-              <div className="flex items-center gap-4" ref={dropdownRef}>
-                <span className="text-[#2D2A27]/70 text-xs font-medium hidden md:inline">
-                  Logged in as: <strong className="text-[#2D2A27]">{session.user?.email}</strong>
-                </span>
-
-                <button
-                  onClick={() => setProfileOpen(!profileOpen)}
-                  type="button"
-                  className="h-9 w-9 rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-[#B55D3B] text-white flex items-center justify-center font-bold text-sm shadow-sm hover:scale-105 active:scale-95 transition-all overflow-hidden cursor-pointer"
-                >
-                  {humanProfile.photo ? (
-                    <img src={humanProfile.photo} alt="Owner Pic" className="w-full h-full object-cover" />
-                  ) : (
-                    <span>{humanProfile.name?.charAt(0).toUpperCase() || session.user?.email?.charAt(0).toUpperCase() || '👤'}</span>
-                  )}
-                </button>
-
-                {profileOpen && (
-                  <div className="absolute right-4 top-14 w-80 md:w-96 bg-white border border-[#B6A799]/40 rounded-2xl shadow-xl p-5 text-left animate-in fade-in slide-in-from-top-2 duration-150 flex flex-col gap-4">
-                    <div>
-                      <h4 className="text-xs uppercase font-black tracking-widest text-[#7A7A59] mb-2">👤 Personal Information</h4>
-                      <div className="bg-[#F4F0EA]/40 p-3 rounded-xl border border-[#B6A799]/10 text-xs space-y-1.5">
-                        <p className="text-[#2D2A27]"><strong>Name:</strong> {humanProfile.name || 'Not completed'}</p>
-                        <p className="text-[#2D2A27] truncate"><strong>Email:</strong> {session.user?.email}</p>
-                        <p className="text-[#2D2A27]"><strong>Phone:</strong> {humanProfile.phone || 'Not provided'}</p>
-                        <p className="text-[#2D2A27]"><strong>Address:</strong> {humanProfile.address || 'Not provided'}</p>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-xs uppercase font-black tracking-widest text-[#7A7A59] mb-2">💳 Membership & Subscription</h4>
-                      <div className="bg-[#F4F0EA]/60 p-3 rounded-xl border border-[#B6A799]/20 text-xs flex flex-col gap-1">
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-[#2D2A27]">Current Plan:</span>
-                          <span className="badge bg-[#B55D3B] text-white font-bold rounded-md px-2 py-0.5 text-[10px]">
-                            {localStorage.getItem(`selected_plan_${session.user.id}`) || 'Premium'}
-                          </span>
-                        </div>
-                        <p className="text-[#2D2A27]/60 text-[10px]">Beta access is currently unlocked for testing.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 pt-1 border-t border-[#B6A799]/20">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setProfileOpen(false);
-                          setPlanManagementOpen(true);
-                        }}
-                        className="flex-1 py-2 bg-[#F4F0EA] hover:bg-[#EAE4DA] text-[#2D2A27] font-bold text-xs rounded-xl transition-all border-0 cursor-pointer text-center"
-                      >
-                        Change Plan
-                      </button>
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          setProfileOpen(false);
-                          await supabase.auth.signOut();
-                        }}
-                        className="flex-1 py-2 bg-[#2D2A27] hover:bg-black text-white font-bold text-xs rounded-xl transition-all border-0 cursor-pointer text-center"
-                      >
-                        Sign Out
-                      </button>
-                    </div>
+          <PetProvider>
+            <OnboardingGate session={session}>
+              <div className="w-full flex-grow flex flex-col">
+                <nav className="bg-[#F4F0EA] border-b border-[#B6A799]/20 px-4 py-3 flex justify-between items-center relative z-40 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <img src={logoImg} alt="Porch & Paw Logo" className="h-7 w-auto object-contain" />
+                    <span className="text-[#2D2A27] font-serif font-bold text-sm hidden sm:inline">Porch & Paw Portal</span>
                   </div>
-                )}
-              </div>
-            </nav>
 
-            <PetProvider>
-              <OnboardingGate session={session}>
+                  <div className="flex items-center gap-4" ref={dropdownRef}>
+                    <span className="text-[#2D2A27]/70 text-xs font-medium hidden md:inline">
+                      Logged in as: <strong className="text-[#2D2A27]">{session.user?.email}</strong>
+                    </span>
+
+                    <button
+                      onClick={() => setProfileOpen(!profileOpen)}
+                      type="button"
+                      className="h-9 w-9 rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-[#B55D3B] text-white flex items-center justify-center font-bold text-sm shadow-sm hover:scale-105 active:scale-95 transition-all overflow-hidden cursor-pointer"
+                    >
+                      {humanProfile.photo ? (
+                        <img src={humanProfile.photo} alt="Owner Pic" className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{humanProfile.name?.charAt(0).toUpperCase() || session.user?.email?.charAt(0).toUpperCase() || '👤'}</span>
+                      )}
+                    </button>
+
+                    {profileOpen && (
+                      <div className="absolute right-4 top-14 w-80 md:w-96 bg-white border border-[#B6A799]/40 rounded-2xl shadow-xl p-5 text-left animate-in fade-in slide-in-from-top-2 duration-150 flex flex-col gap-4">
+                        <div>
+                          <h4 className="text-xs uppercase font-black tracking-widest text-[#7A7A59] mb-2">👤 Personal Information</h4>
+                          <div className="bg-[#F4F0EA]/40 p-3 rounded-xl border border-[#B6A799]/10 text-xs space-y-1.5">
+                            <p className="text-[#2D2A27]"><strong>Name:</strong> {humanProfile.name || 'Not completed'}</p>
+                            <p className="text-[#2D2A27] truncate"><strong>Email:</strong> {session.user?.email}</p>
+                            <p className="text-[#2D2A27]"><strong>Phone:</strong> {humanProfile.phone || 'Not provided'}</p>
+                            <p className="text-[#2D2A27]"><strong>Address:</strong> {humanProfile.address || 'Not provided'}</p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 className="text-xs uppercase font-black tracking-widest text-[#7A7A59] mb-2">💳 Membership & Subscription</h4>
+                          <div className="bg-[#F4F0EA]/60 p-3 rounded-xl border border-[#B6A799]/20 text-xs flex flex-col gap-1">
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold text-[#2D2A27]">Current Plan:</span>
+                              <span className="badge bg-[#B55D3B] text-white font-bold rounded-md px-2 py-0.5 text-[10px]">
+                                {localStorage.getItem(`selected_plan_${session.user.id}`) || 'Premium'}
+                              </span>
+                            </div>
+                            <p className="text-[#2D2A27]/60 text-[10px]">Beta access is currently unlocked for testing.</p>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2 pt-1 border-t border-[#B6A799]/20">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setProfileOpen(false);
+                              setPlanManagementOpen(true);
+                            }}
+                            className="flex-1 py-2 bg-[#F4F0EA] hover:bg-[#EAE4DA] text-[#2D2A27] font-bold text-xs rounded-xl transition-all border-0 cursor-pointer text-center"
+                          >
+                            Change Plan
+                          </button>
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              setProfileOpen(false);
+                              await supabase.auth.signOut();
+                            }}
+                            className="flex-1 py-2 bg-[#2D2A27] hover:bg-black text-white font-bold text-xs rounded-xl transition-all border-0 cursor-pointer text-center"
+                          >
+                            Sign Out
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </nav>
+
                 <div className="flex flex-1 items-stretch">
                   <Sidebar />
 
@@ -702,9 +702,9 @@ const App: React.FC = () => {
                     </Routes>
                   </div>
                 </div>
-              </OnboardingGate>
-            </PetProvider>
-          </div>
+              </div>
+            </OnboardingGate>
+          </PetProvider>
         )}
       </div>
 
