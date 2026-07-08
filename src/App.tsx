@@ -3,7 +3,7 @@ import './index.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from './utils/supabaseClient';
 import logoImg from '../Porch & Paw Logo (6).png';
-import { PetProvider, usePets } from './context/PetContext';
+import { PetProvider } from './context/PetContext';
 import { AuthProvider } from './context/AuthContext';
 import Sidebar from './components/Sidebar.tsx';
 import OnboardingWizard from './components/OnboardingWizard';
@@ -25,10 +25,30 @@ interface AuthMessage {
   text: string;
 }
 
-const OnboardingGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { profiles } = usePets();
+const OnboardingGate: React.FC<{ session: any; children: React.ReactNode }> = ({ session, children }) => {
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
 
-  if (profiles.length === 0) {
+  useEffect(() => {
+    if (!session?.user?.id) {
+      setOnboardingComplete(false);
+      return;
+    }
+
+    const key = `onboarding_complete_${session.user.id}`;
+    setOnboardingComplete(localStorage.getItem(key) === 'true');
+
+    const handleOnboardingComplete = () => {
+      setOnboardingComplete(localStorage.getItem(key) === 'true');
+    };
+
+    window.addEventListener('porchside:onboarding-complete', handleOnboardingComplete);
+
+    return () => {
+      window.removeEventListener('porchside:onboarding-complete', handleOnboardingComplete);
+    };
+  }, [session?.user?.id]);
+
+  if (!onboardingComplete) {
     return <OnboardingWizard />;
   }
 
@@ -298,7 +318,7 @@ const App: React.FC = () => {
               </nav>
 
               <PetProvider>
-                <OnboardingGate>
+                <OnboardingGate session={session}>
                   <div className="flex flex-1 items-stretch">
                   <Sidebar />
                   

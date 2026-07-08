@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePets } from '../context/PetContext';
+import { supabase } from '../utils/supabaseClient';
 import {
   PawPrint, Camera, Heart, Activity,
   ChevronRight, ChevronLeft, Check,
@@ -70,6 +71,13 @@ const OnboardingWizard: React.FC = () => {
         phone: formData.vetContact || 'Not provided',
         notes: `Primary vet for ${formData.name}`
       });
+    }
+
+    const { data: { session } }: any = await supabase.auth.getSession();
+
+    if (session?.user?.id) {
+      localStorage.setItem(`onboarding_complete_${session.user.id}`, 'true');
+      window.dispatchEvent(new Event('porchside:onboarding-complete'));
     }
 
     setLoading(false);
