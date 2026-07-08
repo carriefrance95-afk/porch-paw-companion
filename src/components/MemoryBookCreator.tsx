@@ -68,7 +68,7 @@ const MemoryBookCreator: React.FC = () => {
   };
 
   // Helper to chunk memories for pages
-  const memoryChunks = [];
+  const memoryChunks: Array<typeof dogMemories> = [];
   for (let i = 0; i < dogMemories.length; i += 4) {
     memoryChunks.push(dogMemories.slice(i, i + 4));
   }
