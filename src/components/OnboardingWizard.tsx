@@ -1,484 +1,224 @@
 import React, { useState } from 'react';
-import { usePets } from '../context/PetContext';
-import { supabase } from '../utils/supabaseClient';
-import {
-  PawPrint, Camera, Heart, Activity,
-  ChevronRight, ChevronLeft, Check,
-  User, Sparkles, Stethoscope, Mail, Phone, MapPin, Shield
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, Minus, Plus } from 'lucide-react';
 
 const OnboardingWizard: React.FC = () => {
-  const { addProfile, addWeightEntry, addDirectoryEntry, setPlan } = usePets();
   const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [selectedPhotoFile, setSelectedPhotoFile] = useState<File | null>(null);
-  const [selectedOwnerPhotoFile, setSelectedOwnerPhotoFile] = useState<File | null>(null);
-
-  const [ownerData, setOwnerData] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    emergencyContact: '',
-    photo: ''
-  });
-
-  const [formData, setFormData] = useState({
-    name: '',
-    breed: '',
-    birthDate: '',
-    photoUrl: '',
-    weight: '',
-    vetName: '',
-    vetContact: '',
-    allergies: '',
-    medications: '',
-    microchipId: '',
-    insuranceProvider: ''
-  });
+  const [dogCount, setDogCount] = useState(1);
 
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
 
-  const handleOwnerPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const increaseDogCount = () => setDogCount(prev => Math.min(prev + 1, 10));
+  const decreaseDogCount = () => setDogCount(prev => Math.max(prev - 1, 1));
 
-    setSelectedOwnerPhotoFile(file);
-    const localPreviewUrl = URL.createObjectURL(file);
-    setOwnerData({ ...ownerData, photo: localPreviewUrl });
-  };
+  const progressPercent = step === 1 ? 14 : step === 2 ? 28 : 42;
 
-  const handleDogPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const ProgressHeader = () => (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between text-xs font-bold uppercase tracking-[0.25em] text-[#7A7A59]">
+        <span>Step {step} of 7</span>
+        <span>{step === 1 ? 'About 5 minutes' : 'You can add more later'}</span>
+      </div>
 
-    setSelectedPhotoFile(file);
-    const localPreviewUrl = URL.createObjectURL(file);
-    setFormData({ ...formData, photoUrl: localPreviewUrl });
-  };
+      <div className="h-2 w-full rounded-full bg-[#E9E1D7] overflow-hidden">
+        <div
+          className="h-full rounded-full bg-[#7A7A59] transition-all duration-500"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
+    </div>
+  );
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    const { data: { session } }: any = await supabase.auth.getSession();
-
-    if (!session?.user?.id) {
-      setLoading(false);
-      alert('Your session expired. Please sign in again.');
-      return;
-    }
-
-    const selectedPlan = localStorage.getItem('pending_selected_plan') || 'Premium';
-    setPlan(selectedPlan as any);
-    localStorage.setItem(`selected_plan_${session.user.id}`, selectedPlan);
-
-    localStorage.setItem(`owner_profile_${session.user.id}`, JSON.stringify({
-      ...ownerData,
-      name: ownerData.name || 'Beta Tester'
-    }));
-
-    const dogId = Math.random().toString(36).substr(2, 9);
-
-    addProfile({
-      id: dogId,
-      name: formData.name,
-      breed: formData.breed,
-      birthDate: formData.birthDate,
-      currentWeight: parseFloat(formData.weight) || 0,
-      goalWeight: undefined,
-      microchipId: formData.microchipId || undefined,
-      insuranceProvider: formData.insuranceProvider || undefined,
-      photoUrl: formData.photoUrl || '',
-      weightHistory: []
-    });
-
-    if (formData.weight) {
-      addWeightEntry(dogId, {
-        id: Math.random().toString(36).substr(2, 9),
-        date: new Date().toISOString().split('T')[0],
-        weight: parseFloat(formData.weight)
-      });
-    }
-
-    if (formData.vetName) {
-      addDirectoryEntry({
-        id: Math.random().toString(36).substr(2, 9),
-        name: formData.vetName,
-        category: 'Vet',
-        phone: formData.vetContact || 'Not provided',
-        notes: `Primary vet for ${formData.name}`
-      });
-    }
-
-    localStorage.setItem(`onboarding_complete_${session.user.id}`, 'true');
-    window.dispatchEvent(new Event('porchside:onboarding-complete'));
-
-    setLoading(false);
-    nextStep();
-  };
-
-  const branding = {
-    ivory: 'bg-[#F4F0EA]',
-    terracotta: 'bg-[#B55D3B]',
-    charcoal: 'text-[#2D2A27]',
-    taupe: 'text-[#B6A799]',
-    taupeLight: 'text-[#B6A799]/80',
-    sage: 'bg-[#7A7A59]'
-  };
+  const StitchCard = ({ mood = 'welcome' }: { mood?: 'welcome' | 'thinking' | 'ready' }) => (
+    <div className="relative mx-auto flex h-44 w-44 items-center justify-center rounded-full bg-[#F4F0EA] border border-[#B6A799]/30 shadow-xl overflow-hidden">
+      <div className="absolute inset-4 rounded-full bg-white/70" />
+      <div className="relative z-10 text-center">
+        <div className="text-6xl mb-2">{mood === 'thinking' ? '🐶' : mood === 'ready' ? '🐾' : '🏡'}</div>
+        <p className="text-xs font-black uppercase tracking-[0.2em] text-[#B55D3B]">Stitch</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className={`min-h-screen ${branding.ivory} flex items-center justify-center p-4 font-sans`}>
-      <div className="max-w-2xl w-full bg-white rounded-[3rem] shadow-2xl overflow-hidden relative border border-[#B6A799]/20">
-        {step < 5 && (
-          <div className="absolute top-0 left-0 w-full h-2 bg-[#B6A799]/20 flex">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className={`flex-1 transition-all duration-500 ${step >= i ? branding.sage : 'bg-transparent'}`} />
-            ))}
-          </div>
-        )}
+    <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-5xl overflow-hidden rounded-[2.5rem] border border-[#B6A799]/25 bg-white shadow-2xl">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] min-h-[680px]">
+          <div className="relative bg-gradient-to-br from-[#F4F0EA] via-[#FDFBF7] to-[#EAE4DA] p-8 md:p-12 flex flex-col justify-between overflow-hidden">
+            <div className="absolute -top-20 -right-20 h-56 w-56 rounded-full bg-[#B55D3B]/10 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-[#7A7A59]/10 blur-3xl" />
 
-        <div className="p-8 md:p-12">
-          {step === 1 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#B55D3B] rounded-2xl flex items-center justify-center text-white">
-                  <User size={24} />
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-[#7A7A59] font-bold">Step 1</p>
-                  <h2 className={`text-3xl font-bold ${branding.charcoal}`}>Your Profile</h2>
-                  <p className={branding.taupeLight}>Tell us who is caring for this furry family member.</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-32 h-32 rounded-full overflow-hidden border-8 border-[#F4F0EA] shadow-xl bg-[#B6A799]/10 flex items-center justify-center">
-                  {ownerData.photo ? (
-                    <img src={ownerData.photo} alt="Owner preview" className="w-full h-full object-cover" />
-                  ) : (
-                    <User size={54} className="text-[#B6A799]" />
-                  )}
-                </div>
-                <input type="file" accept="image/*" className="hidden" id="owner-photo-upload" onChange={handleOwnerPhotoUpload} />
-                <label htmlFor="owner-photo-upload" className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#B55D3B] bg-[#F4F0EA] px-5 py-3 font-bold text-[#2D2A27] hover:bg-[#EFE8DE] transition-colors">
-                  📸 Upload Your Photo
-                </label>
-                {selectedOwnerPhotoFile && <p className="text-xs text-[#B6A799]">Selected: {selectedOwnerPhotoFile.name}</p>}
-              </div>
-
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Your Name</label>
-                  <input
-                    type="text"
-                    placeholder="Carrie"
-                    className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none px-4"
-                    value={ownerData.name}
-                    onChange={e => setOwnerData({ ...ownerData, name: e.target.value })}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Phone</label>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" size={18} />
-                      <input
-                        type="text"
-                        placeholder="Phone number"
-                        className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none pl-12"
-                        value={ownerData.phone}
-                        onChange={e => setOwnerData({ ...ownerData, phone: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Emergency Contact</label>
-                    <div className="relative">
-                      <Shield className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" size={18} />
-                      <input
-                        type="text"
-                        placeholder="Name + phone"
-                        className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none pl-12"
-                        value={ownerData.emergencyContact}
-                        onChange={e => setOwnerData({ ...ownerData, emergencyContact: e.target.value })}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Address</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" size={18} />
-                    <input
-                      type="text"
-                      placeholder="Home address"
-                      className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none pl-12"
-                      value={ownerData.address}
-                      onChange={e => setOwnerData({ ...ownerData, address: e.target.value })}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end pt-6">
-                <button
-                  onClick={nextStep}
-                  disabled={!ownerData.name}
-                  style={ownerData.name ? { backgroundColor: '#B55D3B', color: '#FFFFFF' } : { backgroundColor: '#B55D3B', color: '#FFFFFF', opacity: 0.4 }}
-                  className="font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
-                >
-                  Continue <ChevronRight size={20} />
-                </button>
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[#7A7A59] shadow-sm">
+                <Home size={14} />
+                Porchside Pet Life
               </div>
             </div>
-          )}
 
-          {step === 2 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#B55D3B] rounded-2xl flex items-center justify-center text-white">
-                  <PawPrint size={24} />
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-[#7A7A59] font-bold">Step 2</p>
-                  <h2 className={`text-3xl font-bold ${branding.charcoal}`}>Dog Profile</h2>
-                  <p className={branding.taupeLight}>Tell us the basics about your companion.</p>
-                </div>
-              </div>
+            <div className="relative z-10 py-10">
+              <StitchCard mood={step === 1 ? 'welcome' : 'thinking'} />
 
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Dog's Name</label>
-                  <input
-                    type="text"
-                    placeholder="Buddy, Bella, Max..."
-                    className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none px-4"
-                    value={formData.name}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Breed</label>
-                    <input
-                      type="text"
-                      placeholder="Cocker Spaniel..."
-                      className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none px-4"
-                      value={formData.breed}
-                      onChange={e => setFormData({ ...formData, breed: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Birthday</label>
-                    <input
-                      type="date"
-                      className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none px-4"
-                      value={formData.birthDate}
-                      onChange={e => setFormData({ ...formData, birthDate: e.target.value })}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Current Weight (lbs)</label>
-                  <div className="relative">
-                    <Activity className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" size={20} />
-                    <input
-                      type="number"
-                      placeholder="0.0"
-                      className="input input-bordered w-full rounded-2xl h-14 bg-[#F4F0EA] border-none pl-12"
-                      value={formData.weight}
-                      onChange={e => setFormData({ ...formData, weight: e.target.value })}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center pt-6">
-                <button onClick={prevStep} style={{ color: '#2D2A27' }} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 bg-transparent border-none">
-                  <ChevronLeft size={20} /> Back
-                </button>
-                <button
-                  onClick={nextStep}
-                  disabled={!formData.name}
-                  style={formData.name ? { backgroundColor: '#B55D3B', color: '#FFFFFF' } : { backgroundColor: '#B55D3B', color: '#FFFFFF', opacity: 0.4 }}
-                  className="font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
-                >
-                  Continue <ChevronRight size={20} />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#7A7A59] rounded-2xl flex items-center justify-center text-white">
-                  <Camera size={24} />
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-[#7A7A59] font-bold">Step 3</p>
-                  <h2 className={`text-3xl font-bold ${branding.charcoal}`}>Profile Photo</h2>
-                  <p className={branding.taupeLight}>Add a photo to personalize their profile.</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-8 py-4">
-                <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-[#F4F0EA] shadow-xl bg-[#B6A799]/10 flex items-center justify-center">
-                  {formData.photoUrl ? (
-                    <img src={formData.photoUrl} alt="Dog preview" className="w-full h-full object-cover" />
-                  ) : (
-                    <PawPrint size={80} className="text-[#B6A799]" />
-                  )}
-                </div>
-
-                <input type="file" accept="image/*" className="hidden" id="dog-photo-upload-onboarding" onChange={handleDogPhotoUpload} />
-                <label htmlFor="dog-photo-upload-onboarding" className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#B55D3B] bg-[#F4F0EA] px-5 py-4 font-bold text-[#2D2A27] hover:bg-[#EFE8DE] transition-colors">
-                  📸 Upload Dog Photo
-                </label>
-                {selectedPhotoFile && <p className="text-xs text-[#B6A799]">Selected: {selectedPhotoFile.name}</p>}
-              </div>
-
-              <div className="flex justify-between items-center pt-6">
-                <button onClick={prevStep} style={{ color: '#2D2A27' }} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 bg-transparent border-none">
-                  <ChevronLeft size={20} /> Back
-                </button>
-                <button onClick={nextStep} style={{ backgroundColor: '#B55D3B', color: '#FFFFFF' }} className="font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all">
-                  Continue <ChevronRight size={20} />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 4 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#B55D3B] rounded-2xl flex items-center justify-center text-white">
-                  <Heart size={24} />
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-[#7A7A59] font-bold">Step 4</p>
-                  <h2 className={`text-3xl font-bold ${branding.charcoal}`}>Health Basics</h2>
-                  <p className={branding.taupeLight}>Start with the most important care details.</p>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Vet Name</label>
-                    <input
-                      type="text"
-                      placeholder="Dr. Smith"
-                      className="input input-bordered w-full rounded-xl h-12 bg-[#F4F0EA] border-none px-3"
-                      value={formData.vetName}
-                      onChange={e => setFormData({ ...formData, vetName: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Vet Contact</label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 opacity-30" size={16} />
-                      <input
-                        type="text"
-                        placeholder="Phone or Email"
-                        className="input input-bordered w-full rounded-xl h-12 bg-[#F4F0EA] border-none pl-10"
-                        value={formData.vetContact}
-                        onChange={e => setFormData({ ...formData, vetContact: e.target.value })}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Microchip ID</label>
-                  <input
-                    type="text"
-                    placeholder="Optional"
-                    className="input input-bordered w-full rounded-xl h-12 bg-[#F4F0EA] border-none px-3"
-                    value={formData.microchipId}
-                    onChange={e => setFormData({ ...formData, microchipId: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Allergies</label>
-                  <textarea
-                    placeholder="Optional"
-                    className="textarea textarea-bordered w-full rounded-xl bg-[#F4F0EA] border-none p-3"
-                    value={formData.allergies}
-                    onChange={e => setFormData({ ...formData, allergies: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Medications</label>
-                  <textarea
-                    placeholder="Optional"
-                    className="textarea textarea-bordered w-full rounded-xl bg-[#F4F0EA] border-none p-3"
-                    value={formData.medications}
-                    onChange={e => setFormData({ ...formData, medications: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2D2A27] mb-1">Insurance Provider</label>
-                  <input
-                    type="text"
-                    placeholder="Optional"
-                    className="input input-bordered w-full rounded-xl h-12 bg-[#F4F0EA] border-none px-3"
-                    value={formData.insuranceProvider}
-                    onChange={e => setFormData({ ...formData, insuranceProvider: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center pt-6">
-                <button onClick={prevStep} style={{ color: '#2D2A27' }} className="inline-flex items-center gap-2 font-bold opacity-60 hover:opacity-100 bg-transparent border-none">
-                  <ChevronLeft size={20} /> Back
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  disabled={loading}
-                  style={{ backgroundColor: '#B55D3B', color: '#FFFFFF' }}
-                  className="font-bold rounded-2xl h-14 px-10 inline-flex items-center justify-center gap-2 shadow-lg transition-all"
-                >
-                  {loading ? <span className="loading loading-spinner h-5 w-5"></span> : <>Finish Setup <Sparkles size={20} className="ml-1" /></>}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 5 && (
-            <div className="text-center space-y-8 py-10 animate-in zoom-in duration-700">
-              <div className="flex justify-center relative">
-                <div className="w-32 h-32 bg-[#7A7A59] rounded-full flex items-center justify-center text-white shadow-2xl relative z-10">
-                  <Check size={64} />
-                </div>
-                <div className="absolute inset-0 scale-150 opacity-20 animate-ping">
-                  <div className="w-32 h-32 bg-[#7A7A59] rounded-full mx-auto" />
-                </div>
-              </div>
-              <div className="space-y-4">
-                <h1 className={`text-4xl font-black ${branding.charcoal}`}>All Set! 🐶</h1>
-                <p className={`text-xl ${branding.taupe} max-w-md mx-auto leading-relaxed`}>
-                  {formData.name}'s profile is ready. You're all set to start tracking wellness, preserving memories, and planning adventures.
+              <div className="mt-8 rounded-[2rem] bg-white/75 border border-white p-6 shadow-sm">
+                <p className="text-xs font-black uppercase tracking-[0.25em] text-[#B55D3B] mb-3">
+                  A note from Stitch
                 </p>
+
+                {step === 1 && (
+                  <p className="text-[#2D2A27]/80 leading-relaxed">
+                    I'm right here whenever you need a helping paw. You don't have to get everything perfect today.
+                    We'll take this one step at a time, and you can always come back later.
+                  </p>
+                )}
+
+                {step === 2 && (
+                  <p className="text-[#2D2A27]/80 leading-relaxed">
+                    Every dog gets their own space for memories, health records, recipes, milestones, and adventures.
+                    Tell me how many you'd like to welcome today.
+                  </p>
+                )}
+
+                {step > 2 && (
+                  <p className="text-[#2D2A27]/80 leading-relaxed">
+                    Great. Next we'll set up your account details and start welcoming your dogs into the porch.
+                  </p>
+                )}
               </div>
+            </div>
+
+            <div className="relative z-10 text-xs text-[#7A7A59] leading-relaxed">
+              🐾 Need a break? No worries. Your progress will be saved as we build this flow.
+            </div>
+          </div>
+
+          <div className="p-8 md:p-12 flex flex-col">
+            <ProgressHeader />
+
+            <div className="flex-1 flex flex-col justify-center py-10">
+              {step === 1 && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="space-y-5">
+                    <p className="text-xs font-black uppercase tracking-[0.3em] text-[#7A7A59]">Welcome Home</p>
+                    <h1 className="text-5xl md:text-6xl font-serif font-black text-[#2D2A27] leading-tight">
+                      Welcome home.
+                    </h1>
+                    <div className="space-y-4 text-lg text-[#2D2A27]/75 leading-relaxed">
+                      <p>Hi! I'm Stitch.</p>
+                      <p>
+                        Before we jump in, let's spend just a few minutes getting everything ready for you and your dogs.
+                      </p>
+                      <p>
+                        Life with dogs isn't about getting everything perfect. It's about enjoying every moment together.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-[2rem] bg-[#F4F0EA] border border-[#B6A799]/20 p-6">
+                    <p className="text-sm font-black uppercase tracking-[0.2em] text-[#7A7A59] mb-4">
+                      You'll set up:
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="rounded-2xl bg-white p-4 text-center shadow-sm">
+                        <div className="text-2xl mb-2">👤</div>
+                        <p className="text-sm font-bold text-[#2D2A27]">Your account</p>
+                      </div>
+                      <div className="rounded-2xl bg-white p-4 text-center shadow-sm">
+                        <div className="text-2xl mb-2">🐶</div>
+                        <p className="text-sm font-bold text-[#2D2A27]">Your dog(s)</p>
+                      </div>
+                      <div className="rounded-2xl bg-white p-4 text-center shadow-sm">
+                        <div className="text-2xl mb-2">❤️</div>
+                        <p className="text-sm font-bold text-[#2D2A27]">Health basics</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {step === 2 && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="space-y-5">
+                    <p className="text-xs font-black uppercase tracking-[0.3em] text-[#7A7A59]">Your Dogs</p>
+                    <h1 className="text-4xl md:text-5xl font-serif font-black text-[#2D2A27] leading-tight">
+                      How many dogs would you like to add today?
+                    </h1>
+                    <p className="text-lg text-[#2D2A27]/75 leading-relaxed">
+                      Each dog will have their own health center, journal, memory timeline, recipes, and milestones.
+                      You can always add more dogs later.
+                    </p>
+                  </div>
+
+                  <div className="rounded-[2rem] bg-[#F4F0EA] border border-[#B6A799]/20 p-8 text-center">
+                    <p className="text-xs font-black uppercase tracking-[0.25em] text-[#7A7A59] mb-6">
+                      Dogs joining today
+                    </p>
+
+                    <div className="flex items-center justify-center gap-6">
+                      <button
+                        type="button"
+                        onClick={decreaseDogCount}
+                        disabled={dogCount <= 1}
+                        className="h-14 w-14 rounded-2xl bg-white border border-[#B6A799]/30 shadow-sm flex items-center justify-center text-[#2D2A27] disabled:opacity-30"
+                      >
+                        <Minus size={22} />
+                      </button>
+
+                      <div className="min-w-[120px]">
+                        <div className="text-7xl font-black text-[#B55D3B] leading-none">{dogCount}</div>
+                        <p className="text-sm font-bold text-[#2D2A27]/60 mt-2">
+                          {dogCount === 1 ? 'dog' : 'dogs'}
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={increaseDogCount}
+                        className="h-14 w-14 rounded-2xl bg-white border border-[#B6A799]/30 shadow-sm flex items-center justify-center text-[#2D2A27]"
+                      >
+                        <Plus size={22} />
+                      </button>
+                    </div>
+
+                    <p className="text-sm text-[#2D2A27]/60 mt-6">
+                      Setting up more than one dog? We'll walk through each profile one at a time.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {step === 3 && (
+                <div className="space-y-6 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <StitchCard mood="ready" />
+                  <h1 className="text-4xl font-serif font-black text-[#2D2A27]">
+                    Screen 3 is next.
+                  </h1>
+                  <p className="text-lg text-[#2D2A27]/70 max-w-xl mx-auto">
+                    Dog count saved for this session: <strong>{dogCount}</strong>.
+                    Next we'll build the About You screen with address fields and clear instructions.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#B6A799]/20 pt-6">
               <button
-                onClick={() => window.location.reload()}
-                style={{ backgroundColor: '#B55D3B', color: '#FFFFFF' }}
-                className="font-bold text-lg rounded-2xl h-14 px-12 inline-flex items-center justify-center gap-2 shadow-xl transition-all hover:scale-105 active:scale-95 mt-4"
+                type="button"
+                onClick={prevStep}
+                disabled={step === 1}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-black text-[#7A7A59] disabled:opacity-30"
               >
-                Go to Dashboard
+                <ChevronLeft size={18} />
+                Back
+              </button>
+
+              <button
+                type="button"
+                onClick={nextStep}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#B55D3B] hover:bg-[#9C4E30] px-8 py-4 text-white font-black shadow-lg transition-all"
+              >
+                {step === 1 ? "Let's Get Started" : step === 2 ? 'Continue' : 'Next'}
+                <ChevronRight size={20} />
               </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
