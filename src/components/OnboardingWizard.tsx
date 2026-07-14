@@ -21,7 +21,7 @@ const OnboardingWizard: React.FC = () => {
 
   const PawProgress = () => (
     <div className="space-y-2 relative z-10">
-      <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-[0.25em] text-[#7a7b5a]">
+      <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-black uppercase tracking-[0.25em] text-[#6F7250]">
         <span>Step {step} of {totalSteps}</span>
         <span>{step === 1 ? 'About 5 minutes' : 'You can add more later'}</span>
       </div>
@@ -36,12 +36,12 @@ const OnboardingWizard: React.FC = () => {
             <span
               key={pawStep}
               className={`inline-flex h-7 w-7 items-center justify-center rounded-full transition-all duration-300 ${
-                isCurrent ? 'scale-110 bg-[#f5f1ea] shadow-sm' : 'scale-100'
+                isCurrent ? 'scale-110 bg-[#F4F0EA] shadow-sm' : 'scale-100'
               }`}
               title={`Step ${pawStep}`}
             >
               <span className={`text-lg leading-none transition-all duration-300 ${
-                isComplete ? 'text-[#b65e3c]' : 'text-[#b7a89a]/45'
+                isComplete ? 'text-[#244B63]' : 'text-[#B6A799]/45'
               }`}>
                 🐾
               </span>
@@ -52,165 +52,222 @@ const OnboardingWizard: React.FC = () => {
     </div>
   );
 
-  const StoryIcon = ({ icon, label }: { icon: string; label: string }) => (
-    <div className="rounded-2xl bg-white/95 p-3 text-center shadow-sm border border-[#b7a89a]/20">
-      <div className="mx-auto mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-[#f5f1ea] shadow-inner text-2xl">
-        {icon}
+  const StoryIcon = ({ src, label }: { src: string; label: string }) => (
+    <div className="rounded-2xl bg-white/95 p-3 text-center shadow-sm border border-[#B6A799]/10 flex flex-col items-center justify-center min-h-[105px]">
+      <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[#F4F0EA] shadow-inner p-1">
+        <img 
+          src={src} 
+          alt={label} 
+          className="w-full h-full object-contain"
+          onError={(e) => {
+            // Fallback case-casing check if local server environment path differs
+            console.log(`Image failed to load: ${src}`);
+          }}
+        />
       </div>
-      <p className="text-xs sm:text-sm font-black text-[#2e2b28] leading-tight">{label}</p>
+      <p className="text-xs font-black text-[#2D2A27] leading-tight mt-1">{label}</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#f5f1ea] flex items-center justify-center p-0 sm:p-4 font-sans select-none overflow-x-hidden">
-      <div className="w-full max-w-7xl h-auto lg:h-[calc(100vh-2rem)] lg:max-h-[850px] overflow-hidden bg-white sm:rounded-[2.25rem] border border-[#b7a89a]/30 shadow-2xl relative">
-        
-        {/* Dynamic Responsive Screen Grid Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] h-full min-h-[100vh] lg:min-h-0">
-          
-          {/* Left Column: Premium Typography & Interactive Coded Interface */}
-          <main className="bg-[#f5f1ea] lg:bg-[#FFFDF9] p-6 sm:p-10 lg:p-12 flex flex-col justify-between order-2 lg:order-1 relative z-30">
-            <PawProgress />
+    <>
+      <style>{`
+        .note-paper {
+          background-image:
+            radial-gradient(circle at 10% 20%, rgba(122, 114, 89, 0.05) 0 1px, transparent 1px),
+            linear-gradient(135deg, rgba(255,255,255,0.78), rgba(253,251,247,0.94));
+          background-size: 18px 18px, 100% 100%;
+        }
 
-            {/* Centralized Dynamic Viewport Content Wrapper */}
-            <div className="flex-1 flex flex-col justify-center py-10 lg:py-6 max-w-xl mx-auto w-full">
-              {step === 1 && (
-                <section className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="space-y-4">
-                    <p className="text-[11px] font-black uppercase tracking-[0.35em] text-[#7a7b5a]">
-                      Welcome Home
-                    </p>
-                    <h1 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif font-black text-[#2e2b28] leading-[0.95]">
-                      Welcome<br />home.
-                    </h1>
-                    <div className="space-y-4 text-base lg:text-[17px] text-[#2e2b28]/80 leading-relaxed pt-2">
-                      <p>
-                        Before we head inside, let's spend just a few minutes getting everything ready for you and your dogs.
-                      </p>
-                      <p className="text-sm text-[#2e2b28]/60 italic font-medium">
-                        "Life with dogs isn't about getting everything perfect. It's about enjoying every moment together."
-                      </p>
-                    </div>
-                  </div>
+        .porch-stitch {
+          opacity: 0;
+          transform: scale(1.012) translateY(3px);
+          transition: opacity 700ms ease, transform 900ms ease;
+          transform-origin: center center;
+        }
 
-                  <div className="rounded-[1.75rem] bg-[#f5f1ea]/80 border border-[#b7a89a]/30 p-5 shadow-inner">
-                    <p className="text-[11px] font-black uppercase tracking-[0.25em] text-[#7a7b5a] mb-3">
-                      Your Phase 1 Setup Checklist:
-                    </p>
-                    <div className="grid grid-cols-3 gap-3">
-                      <StoryIcon icon="👤" label="About You" />
-                      <StoryIcon icon="🐶" label="Meet Dogs" />
-                      <StoryIcon icon="❤️" label="Safety Center" />
-                    </div>
-                  </div>
-                </section>
-              )}
+        .porch-stitch-loaded {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      `}</style>
 
-              {step === 2 && (
-                <section className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="space-y-3">
-                    <p className="text-[11px] font-black uppercase tracking-[0.35em] text-[#7a7b5a]">
-                      Your Household Dogs
-                    </p>
-                    <h2 className="text-4xl lg:text-[3.25rem] font-serif font-black text-[#2e2b28] leading-tight">
-                      How many dogs join today?
-                    </h2>
-                    <p className="text-base text-[#2e2b28]/75 leading-relaxed">
-                      Each dog gets an interactive profile linking health files, active calendars, and vital care notes.
-                    </p>
-                  </div>
-
-                  <div className="rounded-[1.75rem] bg-[#FFFDF9] border border-[#b7a89a]/30 p-6 text-center shadow-sm max-w-md mx-auto w-full">
-                    <p className="text-[11px] font-black uppercase tracking-[0.25em] text-[#7a7b5a] mb-4">
-                      Dogs joining today
-                    </p>
-                    <div className="flex items-center justify-center gap-6">
-                      <button
-                        type="button"
-                        onClick={decreaseDogCount}
-                        disabled={dogCount <= 1}
-                        className="h-12 w-12 rounded-2xl bg-[#f5f1ea] border border-[#b7a89a]/30 shadow-sm flex items-center justify-center text-[#2e2b28] disabled:opacity-30 hover:scale-105 active:scale-95 transition-all"
-                      >
-                        <Minus size={20} />
-                      </button>
-                      <div className="min-w-[100px]">
-                        <div className="text-6xl font-black text-[#b65e3c] leading-none">{dogCount}</div>
-                        <p className="text-xs font-black text-[#2e2b28]/50 mt-1 uppercase tracking-wider">
-                          {dogCount === 1 ? 'Companion' : 'Companions'}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={increaseDogCount}
-                        className="h-12 w-12 rounded-2xl bg-[#f5f1ea] border border-[#b7a89a]/30 shadow-sm flex items-center justify-center text-[#2e2b28] hover:scale-105 active:scale-95 transition-all"
-                      >
-                        <Plus size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </section>
-              )}
-
-              {step === 3 && (
-                <section className="space-y-4 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="mx-auto h-16 w-16 rounded-full bg-[#b65e3c]/10 flex items-center justify-center text-3xl border border-[#b65e3c]/20 shadow-sm">👤</div>
-                  <h3 className="text-3xl font-serif font-black text-[#2e2b28]">
-                    Let's create your account profile
-                  </h3>
-                  <p className="text-base text-[#2e2b28]/70 max-w-md mx-auto">
-                    We'll establish your basic home details and owner information next to configure the database for your <strong>{dogCount}</strong> {dogCount === 1 ? 'dog' : 'dogs'}.
-                  </p>
-                </section>
-              )}
-            </div>
-
-            {/* Bottom Form Actions Control Panel */}
-            <div className="space-y-4 border-t border-[#b7a89a]/20 pt-4 relative z-40">
-              <div className="flex items-center justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={prevStep}
-                  disabled={step === 1}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black text-[#7a7b5a] disabled:opacity-0 hover:bg-[#f5f1ea] transition-all duration-200"
-                >
-                  <ChevronLeft size={16} />
-                  Back
-                </button>
-
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#b65e3c] hover:bg-[#8a6a52] px-8 py-3.5 text-white font-black text-base shadow-md hover:shadow-lg transition-all transform hover:scale-[1.01] active:scale-[0.99] relative z-50 cursor-pointer"
-                >
-                  {step === 1 ? "Let's Go!" : step === 2 ? 'Continue' : 'Next'}
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-              <p className="text-center text-xs text-[#2e2b28]/50">
-                ☕ Need a break? Progress is actively logged so you won't lose your place.
-              </p>
-            </div>
-          </main>
-
-          {/* Right Column: High-End Vector Animation Frame Panel */}
-          <div className="relative h-[40vh] lg:h-full overflow-hidden bg-[#f5f1ea] border-b lg:border-b-0 lg:border-l border-[#b7a89a]/20 order-1 lg:order-2 z-10">
-            <div className="absolute inset-0 flex items-center justify-center p-6 lg:p-12">
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-0 sm:p-3 font-sans">
+        <div className="w-full max-w-7xl h-auto lg:h-[calc(100vh-1.5rem)] lg:max-h-[900px] lg:min-h-[700px] overflow-hidden bg-white sm:rounded-[2.25rem] border border-[#B6A799]/25 shadow-2xl relative">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.95fr] h-full">
+            
+            {/* Left Panel: Original Cozy Layout Structure Restored */}
+            <div className="relative min-h-[460px] lg:min-h-full overflow-hidden bg-[#F4F0EA] border-b lg:border-b-0 lg:border-r border-[#B6A799]/20">
               <img
                 src="/welcome-stitch.svg"
-                alt="Stitch Attentive Companion vector art"
-                className={`max-h-[35vh] lg:max-h-[75vh] w-full object-contain transition-all duration-700 ease-out transform ${
-                  porchLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
-                }`}
+                alt="Stitch waiting on the Porch & Paw porch"
+                className={`absolute inset-0 h-full w-full object-cover porch-stitch ${porchLoaded ? 'porch-stitch-loaded' : ''}`}
               />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7]/90 via-[#FDFBF7]/5 to-transparent" />
+
+              {/* Floating Storyboard Paper Overlay */}
+              <div className="absolute left-7 right-7 bottom-7 md:left-6 md:right-auto md:bottom-9 md:w-[375px] rounded-[1.65rem] bg-[#FFFDF8]/94 backdrop-blur-[2px] shadow-[0_14px_35px_rgba(45,42,39,0.18)] p-4 md:p-5 note-paper z-20">
+                {step === 1 && (
+                  <div className="space-y-2 text-sm md:text-[15px] text-[#2D2A27]/82 leading-snug">
+                    <p>Hi, friend.</p>
+                    <p>I'm so glad you're here.</p>
+                    <p>Before we head inside, let's get a few things ready for you and your dogs.</p>
+                    <p>There's no rush.</p>
+                    <p>We'll take it one step at a time, and if you need to come back later, I'll be right here waiting.</p>
+                  </div>
+                )}
+
+                {step === 2 && (
+                  <div className="space-y-2 text-sm md:text-[15px] text-[#2D2A27]/82 leading-snug">
+                    <p>Every dog deserves their own little place to call home.</p>
+                    <p className="font-black text-[#B55D3B]">Tell me how many dogs you'd like to welcome today.</p>
+                  </div>
+                )}
+
+                {step > 2 && (
+                  <div className="space-y-2 text-sm md:text-[15px] text-[#2D2A27]/82 leading-snug">
+                    <p>Perfect.</p>
+                    <p>Next we'll build the rest of your family's porch step by step.</p>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Subdued Elegant Lighting Overlay Layer */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#f5f1ea]/40 pointer-events-none" />
-          </div>
+            {/* Right Panel: Clean Typography & Device Actions (Click Layer Restored) */}
+            <main className="bg-[#FDFBF7] p-5 sm:p-7 md:p-9 lg:p-10 flex flex-col min-h-[680px] lg:min-h-0 relative z-30">
+              <PawProgress />
 
+              <div className="flex-1 flex flex-col justify-center py-6 lg:py-5">
+                {step === 1 && (
+                  <section className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="space-y-4">
+                      <p className="text-[11px] font-black uppercase tracking-[0.35em] text-[#6F7250]">
+                        Welcome Home
+                      </p>
+
+                      <h1 className="text-5xl sm:text-6xl lg:text-[4.75rem] font-serif font-black text-[#2D2A27] leading-[0.92]">
+                        Welcome<br />home.
+                      </h1>
+
+                      <div className="space-y-3 text-base lg:text-[17px] text-[#2D2A27]/75 leading-relaxed max-w-xl">
+                        <p><strong className="text-[#2D2A27]">Hi! I'm Stitch.</strong></p>
+                        <p>
+                          Before we head inside, let's spend just a few minutes getting everything ready for you and your dogs.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Checklist Grid using your EXACT case-sensitive SVG names */}
+                    <div className="rounded-[1.75rem] bg-[#F4F0EA] border border-[#B6A799]/20 p-4 lg:p-5 shadow-sm">
+                      <p className="text-[11px] font-black uppercase tracking-[0.25em] text-[#6F7250] mb-3">
+                        You'll set up:
+                      </p>
+
+                      <div className="grid grid-cols-3 gap-3">
+                        <StoryIcon src="/About You.svg" label="About You" />
+                        <StoryIcon src="/Meet Your Dogs.svg" label="Meet Dogs" />
+                        <StoryIcon src="/Peace of Mind.svg" label="Safety" />
+                      </div>
+                    </div>
+                  </section>
+                )}
+
+                {step === 2 && (
+                  <section className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="space-y-4">
+                      <p className="text-[11px] font-black uppercase tracking-[0.35em] text-[#6F7250]">
+                        Your Dogs
+                      </p>
+
+                      <h1 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-serif font-black text-[#2D2A27] leading-tight">
+                        How many dogs would you like to add today?
+                      </h1>
+
+                      <p className="text-base lg:text-[17px] text-[#2D2A27]/75 leading-relaxed max-w-xl">
+                        Each dog will have their own health center, active layout grids, reminders, and milestones.
+                      </p>
+                    </div>
+
+                    <div className="rounded-[1.75rem] bg-[#F4F0EA] border border-[#B6A799]/20 p-6 lg:p-7 text-center shadow-sm">
+                      <p className="text-[11px] font-black uppercase tracking-[0.25em] text-[#6F7250] mb-5">
+                        Dogs joining today
+                      </p>
+
+                      <div className="flex items-center justify-center gap-5 lg:gap-7">
+                        <button
+                          type="button"
+                          onClick={decreaseDogCount}
+                          disabled={dogCount <= 1}
+                          className="h-13 w-13 min-h-13 min-w-13 rounded-2xl bg-white border border-[#B6A799]/30 shadow-sm flex items-center justify-center text-[#2D2A27] disabled:opacity-30 hover:scale-105 active:scale-95 transition-all"
+                        >
+                          <Minus size={21} />
+                        </button>
+
+                        <div className="min-w-[115px]">
+                          <div className="text-7xl lg:text-[5rem] font-black text-[#B55D3B] leading-none">{dogCount}</div>
+                          <p className="text-sm font-black text-[#2D2A27]/60 mt-1">
+                            {dogCount === 1 ? 'dog' : 'dogs'}
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={increaseDogCount}
+                          className="h-13 w-13 min-h-13 min-w-13 rounded-2xl bg-white border border-[#B6A799]/30 shadow-sm flex items-center justify-center text-[#2D2A27] hover:scale-105 active:scale-95 transition-all"
+                        >
+                          <Plus size={21} />
+                        </button>
+                      </div>
+                    </div>
+                  </section>
+                )}
+
+                {step === 3 && (
+                  <section className="space-y-6 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="mx-auto h-20 w-20 rounded-full bg-[#F4F0EA] flex items-center justify-center text-4xl border border-[#B6A799]/20 shadow-sm">🐾</div>
+                    <h1 className="text-4xl font-serif font-black text-[#2D2A27]">
+                      Screen 3 is next.
+                    </h1>
+                    <p className="text-lg text-[#2D2A27]/70 max-w-xl mx-auto">
+                      Dog count saved for this session: <strong>{dogCount}</strong>. Next we'll load your owner profile fields.
+                    </p>
+                  </section>
+                )}
+              </div>
+
+              {/* Bottom Action Strip - Stacked on top for unblocked priority clicking */}
+              <div className="space-y-3 border-t border-[#B6A799]/20 pt-4 relative z-40">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    disabled={step === 1}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-black text-[#6F7250] disabled:opacity-0 hover:bg-[#F4F0EA] transition-colors"
+                  >
+                    <ChevronLeft size={18} />
+                    Back
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl bg-[#B55D3B] hover:bg-[#9C4E30] px-8 py-3.5 text-white font-black text-base shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] relative z-50 cursor-pointer"
+                  >
+                    {step === 1 ? "Let's Go!" : step === 2 ? 'Continue' : 'Next'}
+                    <ChevronRight size={21} />
+                  </button>
+                </div>
+                <p className="text-center text-xs sm:text-sm text-[#2D2A27]/60 leading-relaxed">
+                  ☕ Need a break? No worries. We'll save your progress so you can pick up right where you left off.
+                </p>
+              </div>
+            </main>
+
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
