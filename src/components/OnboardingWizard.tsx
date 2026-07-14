@@ -20,13 +20,13 @@ const OnboardingWizard: React.FC = () => {
   const decreaseDogCount = () => setDogCount(prev => Math.max(prev - 1, 1));
 
   const PawProgress = () => (
-    <div className="space-y-2 relative z-10">
+    <div className="space-y-2 relative z-10 w-full">
       <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-black uppercase tracking-[0.25em] text-[#6F7250]">
         <span>Step {step} of {totalSteps}</span>
         <span>{step === 1 ? 'About 5 minutes' : 'You can add more later'}</span>
       </div>
 
-      <div className="flex items-center gap-2 pt-1" aria-label={`Step ${step} of ${totalSteps}`}>
+      <div className="flex items-center gap-1.5 pt-1 overflow-x-auto no-scrollbar" aria-label={`Step ${step} of ${totalSteps}`}>
         {Array.from({ length: totalSteps }).map((_, index) => {
           const pawStep = index + 1;
           const isComplete = pawStep <= step;
@@ -35,12 +35,12 @@ const OnboardingWizard: React.FC = () => {
           return (
             <span
               key={pawStep}
-              className={`inline-flex h-7 w-7 items-center justify-center rounded-full transition-all duration-300 ${
-                isCurrent ? 'scale-110 bg-[#F4F0EA] shadow-sm' : 'scale-100'
+              className={`inline-flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full transition-all duration-300 flex-shrink-0 ${
+                isCurrent ? 'scale-105 bg-[#F4F0EA] shadow-sm' : 'scale-100'
               }`}
               title={`Step ${pawStep}`}
             >
-              <span className={`text-lg leading-none transition-all duration-300 ${
+              <span className={`text-base sm:text-lg leading-none transition-all duration-300 ${
                 isComplete ? 'text-[#244B63]' : 'text-[#B6A799]/45'
               }`}>
                 🐾
@@ -53,19 +53,18 @@ const OnboardingWizard: React.FC = () => {
   );
 
   const StoryIcon = ({ src, label }: { src: string; label: string }) => (
-    <div className="rounded-2xl bg-white/95 p-3 text-center shadow-sm border border-[#B6A799]/10 flex flex-col items-center justify-center min-h-[105px]">
-      <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[#F4F0EA] shadow-inner p-1">
+    <div className="rounded-xl bg-white/95 p-2 sm:p-3 text-center shadow-sm border border-[#B6A799]/10 flex flex-col items-center justify-center min-h-[90px] sm:min-h-[105px]">
+      <div className="mx-auto mb-1.5 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#F4F0EA] shadow-inner p-1">
         <img 
           src={src} 
           alt={label} 
           className="w-full h-full object-contain"
           onError={(e) => {
-            // Fallback case-casing check if local server environment path differs
-            console.log(`Image failed to load: ${src}`);
+            console.log(`Asset pipeline path missing or mismatch: ${src}`);
           }}
         />
       </div>
-      <p className="text-xs font-black text-[#2D2A27] leading-tight mt-1">{label}</p>
+      <p className="text-[11px] sm:text-xs font-black text-[#2D2A27] leading-tight mt-0.5">{label}</p>
     </div>
   );
 
@@ -90,26 +89,30 @@ const OnboardingWizard: React.FC = () => {
           opacity: 1;
           transform: scale(1) translateY(0);
         }
+
+        /* Hide scrollbar utility for mobile step viewports */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-0 sm:p-3 font-sans">
-        <div className="w-full max-w-7xl h-auto lg:h-[calc(100vh-1.5rem)] lg:max-h-[900px] lg:min-h-[700px] overflow-hidden bg-white sm:rounded-[2.25rem] border border-[#B6A799]/25 shadow-2xl relative">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.95fr] h-full">
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-0 sm:p-4 font-sans">
+        <div className="w-full max-w-6xl h-screen sm:h-auto lg:h-[calc(100vh-2rem)] lg:max-h-[820px] overflow-y-auto lg:overflow-hidden bg-white sm:rounded-[2rem] border border-[#B6A799]/25 shadow-2xl relative">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] h-full min-h-screen sm:min-h-0">
             
-            {/* Left Panel: Original Cozy Layout Structure Restored */}
-            <div className="relative min-h-[460px] lg:min-h-full overflow-hidden bg-[#F4F0EA] border-b lg:border-b-0 lg:border-r border-[#B6A799]/20">
+            {/* Left Panel: Graphic Workspace Container Layout */}
+            <div className="relative min-h-[320px] sm:min-h-[400px] lg:min-h-full overflow-hidden bg-[#F4F0EA] border-b lg:border-b-0 lg:border-r border-[#B6A799]/20">
               <img
                 src="/welcome-stitch.svg"
                 alt="Stitch waiting on the Porch & Paw porch"
                 className={`absolute inset-0 h-full w-full object-cover porch-stitch ${porchLoaded ? 'porch-stitch-loaded' : ''}`}
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7]/90 via-[#FDFBF7]/5 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7]/95 via-[#FDFBF7]/10 to-transparent lg:from-[#F4F0EA]/80" />
 
-              {/* Floating Storyboard Paper Overlay */}
-              <div className="absolute left-7 right-7 bottom-7 md:left-6 md:right-auto md:bottom-9 md:w-[375px] rounded-[1.65rem] bg-[#FFFDF8]/94 backdrop-blur-[2px] shadow-[0_14px_35px_rgba(45,42,39,0.18)] p-4 md:p-5 note-paper z-20">
+              {/* Responsive Overlay Floating Paper Card */}
+              <div className="absolute left-4 right-4 bottom-4 sm:left-6 sm:bottom-6 lg:left-6 lg:bottom-8 lg:w-[360px] rounded-2xl bg-[#FFFDF8]/94 backdrop-blur-[2px] shadow-[0_10px_25px_rgba(45,42,39,0.12)] p-4 sm:p-5 note-paper z-20">
                 {step === 1 && (
-                  <div className="space-y-2 text-sm md:text-[15px] text-[#2D2A27]/82 leading-snug">
+                  <div className="space-y-1.5 text-xs sm:text-sm text-[#2D2A27]/85 leading-snug font-medium">
                     <p>Hi, friend.</p>
                     <p>I'm so glad you're here.</p>
                     <p>Before we head inside, let's get a few things ready for you and your dogs.</p>
@@ -119,14 +122,14 @@ const OnboardingWizard: React.FC = () => {
                 )}
 
                 {step === 2 && (
-                  <div className="space-y-2 text-sm md:text-[15px] text-[#2D2A27]/82 leading-snug">
+                  <div className="space-y-1.5 text-xs sm:text-sm text-[#2D2A27]/85 leading-snug font-medium">
                     <p>Every dog deserves their own little place to call home.</p>
-                    <p className="font-black text-[#B55D3B]">Tell me how many dogs you'd like to welcome today.</p>
+                    <p className="font-bold text-[#B55D3B]">Tell me how many dogs you'd like to welcome today.</p>
                   </div>
                 )}
 
                 {step > 2 && (
-                  <div className="space-y-2 text-sm md:text-[15px] text-[#2D2A27]/82 leading-snug">
+                  <div className="space-y-1.5 text-xs sm:text-sm text-[#2D2A27]/85 leading-snug font-medium">
                     <p>Perfect.</p>
                     <p>Next we'll build the rest of your family's porch step by step.</p>
                   </div>
@@ -134,23 +137,23 @@ const OnboardingWizard: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Panel: Clean Typography & Device Actions (Click Layer Restored) */}
-            <main className="bg-[#FDFBF7] p-5 sm:p-7 md:p-9 lg:p-10 flex flex-col min-h-[680px] lg:min-h-0 relative z-30">
+            {/* Right Panel: Content Input Workspace */}
+            <main className="bg-[#FDFBF7] p-5 sm:p-8 lg:p-10 flex flex-col justify-between relative z-30 min-h-[480px] lg:min-h-0">
               <PawProgress />
 
-              <div className="flex-1 flex flex-col justify-center py-6 lg:py-5">
+              <div className="flex-1 flex flex-col justify-center py-6 lg:py-4">
                 {step === 1 && (
-                  <section className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div className="space-y-4">
-                      <p className="text-[11px] font-black uppercase tracking-[0.35em] text-[#6F7250]">
+                  <section className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-400">
+                    <div className="space-y-2.5">
+                      <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.35em] text-[#6F7250]">
                         Welcome Home
                       </p>
 
-                      <h1 className="text-5xl sm:text-6xl lg:text-[4.75rem] font-serif font-black text-[#2D2A27] leading-[0.92]">
-                        Welcome<br />home.
+                      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black text-[#2D2A27] leading-tight">
+                        Welcome home.
                       </h1>
 
-                      <div className="space-y-3 text-base lg:text-[17px] text-[#2D2A27]/75 leading-relaxed max-w-xl">
+                      <div className="space-y-2 text-sm sm:text-base text-[#2D2A27]/75 leading-relaxed max-w-md">
                         <p><strong className="text-[#2D2A27]">Hi! I'm Stitch.</strong></p>
                         <p>
                           Before we head inside, let's spend just a few minutes getting everything ready for you and your dogs.
@@ -158,55 +161,55 @@ const OnboardingWizard: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Checklist Grid using your EXACT case-sensitive SVG names */}
-                    <div className="rounded-[1.75rem] bg-[#F4F0EA] border border-[#B6A799]/20 p-4 lg:p-5 shadow-sm">
-                      <p className="text-[11px] font-black uppercase tracking-[0.25em] text-[#6F7250] mb-3">
+                    {/* True Extension-Matched Checklist Grid */}
+                    <div className="rounded-2xl bg-[#F4F0EA] border border-[#B6A799]/20 p-4 shadow-sm">
+                      <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.25em] text-[#6F7250] mb-3">
                         You'll set up:
                       </p>
 
-                      <div className="grid grid-cols-3 gap-3">
-                        <StoryIcon src="/About You.svg" label="About You" />
-                        <StoryIcon src="/Meet Your Dogs.svg" label="Meet Dogs" />
-                        <StoryIcon src="/Peace of Mind.svg" label="Safety" />
+                      <div className="grid grid-cols-3 gap-2.5">
+                        <StoryIcon src="/About You.png" label="About You" />
+                        <StoryIcon src="/Meet Your Dogs.png" label="Meet Dogs" />
+                        <StoryIcon src="/Peace of Mind.png" label="Safety" />
                       </div>
                     </div>
                   </section>
                 )}
 
                 {step === 2 && (
-                  <section className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div className="space-y-4">
-                      <p className="text-[11px] font-black uppercase tracking-[0.35em] text-[#6F7250]">
+                  <section className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-400">
+                    <div className="space-y-2">
+                      <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.35em] text-[#6F7250]">
                         Your Dogs
                       </p>
 
-                      <h1 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-serif font-black text-[#2D2A27] leading-tight">
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-black text-[#2D2A27] leading-snug">
                         How many dogs would you like to add today?
                       </h1>
 
-                      <p className="text-base lg:text-[17px] text-[#2D2A27]/75 leading-relaxed max-w-xl">
+                      <p className="text-xs sm:text-sm text-[#2D2A27]/75 leading-relaxed max-w-md">
                         Each dog will have their own health center, active layout grids, reminders, and milestones.
                       </p>
                     </div>
 
-                    <div className="rounded-[1.75rem] bg-[#F4F0EA] border border-[#B6A799]/20 p-6 lg:p-7 text-center shadow-sm">
-                      <p className="text-[11px] font-black uppercase tracking-[0.25em] text-[#6F7250] mb-5">
+                    <div className="rounded-2xl bg-[#F4F0EA] border border-[#B6A799]/20 p-4 sm:p-6 text-center shadow-sm">
+                      <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.25em] text-[#6F7250] mb-4">
                         Dogs joining today
                       </p>
 
-                      <div className="flex items-center justify-center gap-5 lg:gap-7">
+                      <div className="flex items-center justify-center gap-4 sm:gap-6">
                         <button
                           type="button"
                           onClick={decreaseDogCount}
                           disabled={dogCount <= 1}
-                          className="h-13 w-13 min-h-13 min-w-13 rounded-2xl bg-white border border-[#B6A799]/30 shadow-sm flex items-center justify-center text-[#2D2A27] disabled:opacity-30 hover:scale-105 active:scale-95 transition-all"
+                          className="h-11 w-11 sm:h-12 sm:w-12 rounded-xl bg-white border border-[#B6A799]/30 shadow-sm flex items-center justify-center text-[#2D2A27] disabled:opacity-30 active:scale-95 transition-all"
                         >
-                          <Minus size={21} />
+                          <Minus size={18} />
                         </button>
 
-                        <div className="min-w-[115px]">
-                          <div className="text-7xl lg:text-[5rem] font-black text-[#B55D3B] leading-none">{dogCount}</div>
-                          <p className="text-sm font-black text-[#2D2A27]/60 mt-1">
+                        <div className="min-w-[80px]">
+                          <div className="text-5xl sm:text-6xl font-black text-[#B55D3B] leading-none">{dogCount}</div>
+                          <p className="text-xs font-black text-[#2D2A27]/60 mt-0.5">
                             {dogCount === 1 ? 'dog' : 'dogs'}
                           </p>
                         </div>
@@ -214,9 +217,9 @@ const OnboardingWizard: React.FC = () => {
                         <button
                           type="button"
                           onClick={increaseDogCount}
-                          className="h-13 w-13 min-h-13 min-w-13 rounded-2xl bg-white border border-[#B6A799]/30 shadow-sm flex items-center justify-center text-[#2D2A27] hover:scale-105 active:scale-95 transition-all"
+                          className="h-11 w-11 sm:h-12 sm:w-12 rounded-xl bg-white border border-[#B6A799]/30 shadow-sm flex items-center justify-center text-[#2D2A27] active:scale-95 transition-all"
                         >
-                          <Plus size={21} />
+                          <Plus size={18} />
                         </button>
                       </div>
                     </div>
@@ -224,42 +227,42 @@ const OnboardingWizard: React.FC = () => {
                 )}
 
                 {step === 3 && (
-                  <section className="space-y-6 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div className="mx-auto h-20 w-20 rounded-full bg-[#F4F0EA] flex items-center justify-center text-4xl border border-[#B6A799]/20 shadow-sm">🐾</div>
-                    <h1 className="text-4xl font-serif font-black text-[#2D2A27]">
+                  <section className="space-y-4 text-center animate-in fade-in slide-in-from-bottom-3 duration-400">
+                    <div className="mx-auto h-16 w-16 rounded-full bg-[#F4F0EA] flex items-center justify-center text-3xl border border-[#B6A799]/20 shadow-sm">🐾</div>
+                    <h1 className="text-2xl sm:text-3xl font-serif font-black text-[#2D2A27]">
                       Screen 3 is next.
                     </h1>
-                    <p className="text-lg text-[#2D2A27]/70 max-w-xl mx-auto">
+                    <p className="text-sm sm:text-base text-[#2D2A27]/70 max-w-sm mx-auto">
                       Dog count saved for this session: <strong>{dogCount}</strong>. Next we'll load your owner profile fields.
                     </p>
                   </section>
                 )}
               </div>
 
-              {/* Bottom Action Strip - Stacked on top for unblocked priority clicking */}
-              <div className="space-y-3 border-t border-[#B6A799]/20 pt-4 relative z-40">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              {/* Bottom Action Strip - Optimized for Mobile Thumb Taps */}
+              <div className="space-y-3 border-t border-[#B6A799]/15 pt-4 w-full">
+                <div className="flex flex-row items-center justify-between gap-3">
                   <button
                     type="button"
                     onClick={prevStep}
                     disabled={step === 1}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-black text-[#6F7250] disabled:opacity-0 hover:bg-[#F4F0EA] transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-black text-[#6F7250] disabled:opacity-0 hover:bg-[#F4F0EA] transition-colors"
                   >
-                    <ChevronLeft size={18} />
+                    <ChevronLeft size={16} />
                     Back
                   </button>
 
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl bg-[#B55D3B] hover:bg-[#9C4E30] px-8 py-3.5 text-white font-black text-base shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] relative z-50 cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#B55D3B] hover:bg-[#9C4E30] px-6 sm:px-8 py-2.5 sm:py-3 text-white font-black text-sm sm:text-base shadow-md transition-all active:scale-[0.98] cursor-pointer"
                   >
                     {step === 1 ? "Let's Go!" : step === 2 ? 'Continue' : 'Next'}
-                    <ChevronRight size={21} />
+                    <ChevronRight size={18} />
                   </button>
                 </div>
-                <p className="text-center text-xs sm:text-sm text-[#2D2A27]/60 leading-relaxed">
-                  ☕ Need a break? No worries. We'll save your progress so you can pick up right where you left off.
+                <p className="text-center text-[11px] sm:text-xs text-[#2D2A27]/50 leading-normal">
+                  ☕ Need a break? No worries. We'll save your progress as you go.
                 </p>
               </div>
             </main>
