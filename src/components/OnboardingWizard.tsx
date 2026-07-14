@@ -53,18 +53,21 @@ const OnboardingWizard: React.FC = () => {
   );
 
   const StoryIcon = ({ src, label }: { src: string; label: string }) => (
-    <div className="rounded-xl bg-white/95 p-1.5 text-center shadow-sm border border-[#B6A799]/10 flex flex-col items-center justify-center min-h-[80px] sm:min-h-[90px]">
-      <div className="mx-auto mb-1 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-[#F4F0EA] shadow-inner p-1">
-        <img 
-          src={src} 
-          alt={label} 
-          className="w-full h-full object-contain"
+    <div className="group rounded-2xl bg-white/95 px-3 py-4 text-center shadow-sm border border-[#B6A799]/15 flex flex-col items-center justify-center min-h-[132px] sm:min-h-[148px] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+      <div className="mx-auto mb-3 flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center">
+        <img
+          src={src}
+          alt={label}
+          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
           onError={(e) => {
             console.log(`Asset link check missing: ${src}`);
           }}
         />
       </div>
-      <p className="text-[9px] sm:text-xs font-black text-[#2D2A27] leading-tight mt-0.5">{label}</p>
+
+      <p className="text-sm sm:text-base font-black text-[#2D2A27] leading-tight">
+        {label}
+      </p>
     </div>
   );
 
@@ -161,15 +164,15 @@ const OnboardingWizard: React.FC = () => {
                     </div>
 
                     {/* Exact Icon Mapping Container */}
-                    <div className="rounded-xl bg-[#F4F0EA] border border-[#B6A799]/15 p-3 shadow-sm">
-                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#6F7250] mb-2">
+                    <div className="rounded-2xl bg-[#F4F0EA] border border-[#B6A799]/15 p-4 sm:p-5 shadow-sm">
+                      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#6F7250] mb-3">
                         You'll set up:
                       </p>
 
-                      <div className="grid grid-cols-3 gap-2">
-                        <StoryIcon src="/assets/ABOUT YOU.png" label="About You" />
-                        <StoryIcon src="/assets/MEET YOUR DOG.png" label="Meet Dogs" />
-                        <StoryIcon src="/assets/SAFETY.png" label="Safety" />
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <StoryIcon src="/assets/aboutyou.png" label="About You" />
+                        <StoryIcon src="/assets/meetyourdog.png" label="Meet Dogs" />
+                        <StoryIcon src="/assets/safety.png" label="Safety" />
                       </div>
                     </div>
                   </section>
