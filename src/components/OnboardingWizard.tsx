@@ -101,7 +101,7 @@ const OnboardingWizard: React.FC = () => {
             {/* Left Panel: Scaled Main Image Viewport using /stitch-porch.svg */}
             <div className="relative min-h-[240px] sm:min-h-[300px] lg:min-h-full overflow-hidden bg-[#F4F0EA] border-b lg:border-b-0 lg:border-r border-[#B6A799]/20">
               <img
-                src="/stitch-porch.svg"
+                src="/assets/stitch-porch.svg"
                 alt="Stitch waiting on the Porch & Paw porch"
                 className={`absolute inset-0 h-full w-full object-cover porch-stitch ${porchLoaded ? 'porch-stitch-loaded' : ''}`}
               />
@@ -167,9 +167,9 @@ const OnboardingWizard: React.FC = () => {
                       </p>
 
                       <div className="grid grid-cols-3 gap-2">
-                        <StoryIcon src="/About You.svg" label="About You" />
-                        <StoryIcon src="/Meet Your Dogs.png" label="Meet Dogs" />
-                        <StoryIcon src="/Peace of Mind.png" label="Safety" />
+                        <StoryIcon src="/assets/ABOUT YOU.png" label="About You" />
+                        <StoryIcon src="/assets/MEET YOUR DOG.png" label="Meet Dogs" />
+                        <StoryIcon src="/assets/SAFETY.png" label="Safety" />
                       </div>
                     </div>
                   </section>
