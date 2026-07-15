@@ -52,13 +52,22 @@ const OnboardingWizard: React.FC = () => {
     </div>
   );
 
-  const StoryIcon = ({ src, label }: { src: string; label: string }) => (
-    <div className="group rounded-[22px] bg-white px-4 py-5 text-center shadow-sm border border-[#D8D3CA]/70 flex min-h-[220px] flex-col items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(45,42,39,0.10)]">
+  const StoryIcon = ({
+    src,
+    label,
+    imageScale = 1,
+  }: {
+    src: string;
+    label: string;
+    imageScale?: number;
+  }) => (
+    <div className="group rounded-[22px] bg-white px-3 py-5 text-center shadow-sm border border-[#D8D3CA]/70 flex min-h-[205px] flex-col items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(45,42,39,0.10)]">
       <div className="flex flex-1 items-center justify-center">
-        <div className="flex h-28 w-28 sm:h-32 sm:w-32 items-center justify-center">
+        <div className="flex h-28 w-28 sm:h-30 sm:w-30 lg:h-32 lg:w-32 items-center justify-center overflow-visible">
           <img
             src={src}
             alt={label}
+            style={{ transform: `scale(${imageScale})` }}
             className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
             onError={() => {
               console.log(`Asset link check missing: ${src}`);
@@ -67,7 +76,7 @@ const OnboardingWizard: React.FC = () => {
         </div>
       </div>
 
-      <p className="mt-5 min-h-[48px] flex items-center justify-center text-base sm:text-lg font-black text-[#2D2A27] leading-tight">
+      <p className="mt-4 min-h-[44px] flex items-center justify-center whitespace-normal sm:whitespace-nowrap text-[15px] lg:text-base font-black text-[#2D2A27] leading-tight">
         {label}
       </p>
     </div>
@@ -95,13 +104,37 @@ const OnboardingWizard: React.FC = () => {
           transform: scale(1) translateY(0);
         }
 
+
+        @keyframes card-rise {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .setup-card-grid > * {
+          animation: card-rise 480ms ease both;
+        }
+
+        .setup-card-grid > *:nth-child(2) {
+          animation-delay: 90ms;
+        }
+
+        .setup-card-grid > *:nth-child(3) {
+          animation-delay: 180ms;
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
       <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-0 sm:p-3 font-sans">
-        <div className="w-full max-w-5xl h-screen sm:h-auto lg:h-[calc(100vh-2rem)] lg:max-h-[720px] overflow-y-auto lg:overflow-hidden bg-white sm:rounded-[1.5rem] border border-[#B6A799]/25 shadow-2xl relative">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] h-full min-h-screen sm:min-h-0">
+        <div className="w-full max-w-6xl h-screen sm:h-auto lg:h-[calc(100vh-2rem)] lg:max-h-[720px] overflow-y-auto lg:overflow-hidden bg-white sm:rounded-[1.5rem] border border-[#B6A799]/25 shadow-2xl relative">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] h-full min-h-screen sm:min-h-0">
             
             {/* Left Panel: Scaled Main Image Viewport using /stitch-porch.svg */}
             <div className="relative min-h-[240px] sm:min-h-[300px] lg:min-h-full overflow-hidden bg-[#F4F0EA] border-b lg:border-b-0 lg:border-r border-[#B6A799]/20">
@@ -114,7 +147,7 @@ const OnboardingWizard: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7]/95 via-[#FDFBF7]/10 to-transparent lg:from-[#F4F0EA]/70" />
 
               {/* Floating Story Note Overlay */}
-              <div className="absolute left-3 right-4 bottom-3 sm:left-5 sm:bottom-5 lg:left-5 lg:bottom-6 lg:w-[320px] rounded-xl bg-[#FFFDF8]/94 backdrop-blur-[2px] shadow-[0_6px_18px_rgba(45,42,39,0.08)] p-3.5 note-paper z-20">
+              <div className="absolute left-3 right-4 bottom-3 sm:left-5 sm:bottom-5 lg:left-5 lg:bottom-3 lg:w-[320px] rounded-xl bg-[#FFFDF8]/94 backdrop-blur-[2px] shadow-[0_6px_18px_rgba(45,42,39,0.08)] p-3.5 note-paper z-20 rotate-[1deg]">
                 {step === 1 && (
                   <div className="space-y-1 text-xs sm:text-sm text-[#2D2A27]/85 leading-snug font-medium">
                     <p>Hi, friend.</p>
@@ -142,7 +175,7 @@ const OnboardingWizard: React.FC = () => {
             </div>
 
             {/* Right Panel: Compact Text Layout & True Extension Mappings */}
-            <main className="bg-[#FDFBF7] p-4 sm:p-6 lg:p-7 flex flex-col justify-between relative z-30 min-h-[420px] lg:min-h-0">
+            <main className="bg-[#FCFAF6] p-5 sm:p-7 lg:p-8 flex flex-col justify-between relative z-30 min-h-[420px] lg:min-h-0">
               <PawProgress />
 
               <div className="flex-1 flex flex-col justify-center py-3 lg:py-1">
@@ -166,17 +199,17 @@ const OnboardingWizard: React.FC = () => {
                     </div>
 
                     {/* Exact Icon Mapping Container */}
-                    <div className="rounded-[28px] bg-[#E4E9DD] border border-[#D2D9CC] p-5 sm:p-6 shadow-[0_10px_24px_rgba(45,42,39,0.08)]">
+                    <div className="rounded-[28px] bg-[#E4E9DD] border border-[#D2D9CC] p-5 sm:p-6 lg:px-6 shadow-[0_10px_24px_rgba(45,42,39,0.08)]">
                       <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] text-[#66735A]">
                         🌿 Before We Head Inside...
                       </p>
                       <p className="mt-2 text-sm text-[#68645F] leading-relaxed">
-                        Let's get a few important things ready first.
+                        Let's get a few things ready before we head inside.
                       </p>
-                      <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 items-stretch">
-                        <StoryIcon src="/assets/aboutyou.png" label="About You" />
-                        <StoryIcon src="/assets/meetyourdog.png" label="Your Dogs" />
-                        <StoryIcon src="/assets/safety.png" label="Peace of Mind" />
+                      <div className="setup-card-grid mt-5 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 items-stretch">
+                        <StoryIcon src="/assets/aboutyou.png" label="About You" imageScale={0.96} />
+                        <StoryIcon src="/assets/meetyourdog.png" label="Your Dogs" imageScale={0.92} />
+                        <StoryIcon src="/assets/safety.png" label="Peace of Mind" imageScale={0.9} />
                       </div>
                     </div>
                   </section>
