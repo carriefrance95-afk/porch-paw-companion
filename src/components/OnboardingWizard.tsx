@@ -61,14 +61,14 @@ const OnboardingWizard: React.FC = () => {
     label: string;
     imageScale?: number;
   }) => (
-    <div className="group rounded-[22px] bg-white px-3 py-5 text-center shadow-sm border border-[#D8D3CA]/70 flex min-h-[205px] flex-col items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(45,42,39,0.10)]">
+    <div className="setup-card group rounded-[22px] px-3 py-5 text-center flex min-h-[205px] flex-col items-center justify-between transition-all duration-300">
       <div className="flex flex-1 items-center justify-center">
         <div className="flex h-28 w-28 sm:h-30 sm:w-30 lg:h-32 lg:w-32 items-center justify-center overflow-visible">
           <img
             src={src}
             alt={label}
             style={{ transform: `scale(${imageScale})` }}
-            className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+            className="setup-card-image h-full w-full object-contain transition-transform duration-300"
             onError={() => {
               console.log(`Asset link check missing: ${src}`);
             }}
@@ -128,6 +128,59 @@ const OnboardingWizard: React.FC = () => {
           animation-delay: 180ms;
         }
 
+
+        .setup-card {
+          background: linear-gradient(180deg, #FFFFFF 0%, #FCFBF8 100%);
+          border: 1px solid rgba(255, 255, 255, 0.78);
+          outline: 1px solid rgba(210, 205, 196, 0.38);
+          box-shadow:
+            0 2px 6px rgba(45, 42, 39, 0.05),
+            0 12px 28px rgba(45, 42, 39, 0.10);
+          transform: translateY(0);
+          will-change: transform, box-shadow;
+        }
+
+        .setup-card:hover {
+          transform: translateY(-4px);
+          box-shadow:
+            0 6px 14px rgba(45, 42, 39, 0.06),
+            0 18px 36px rgba(45, 42, 39, 0.14);
+        }
+
+        .setup-card:hover .setup-card-image {
+          transform: scale(1.03);
+        }
+
+        @keyframes stitch-gentle-breathe {
+          0%, 100% { transform: scale(1) translateX(0) rotate(0deg); }
+          50% { transform: scale(1.004) translateX(-1px) rotate(0deg); }
+        }
+
+        @keyframes stitch-curious-tilt {
+          0%, 72%, 100% { transform: scale(1) translateX(0) rotate(0deg); }
+          78% { transform: scale(1.004) translateX(-2px) rotate(-0.7deg); }
+          84% { transform: scale(1.004) translateX(-2px) rotate(-0.7deg); }
+          91% { transform: scale(1) translateX(0) rotate(0deg); }
+        }
+
+        .porch-stitch-loaded.stitch-alive {
+          animation:
+            stitch-gentle-breathe 7s ease-in-out infinite,
+            stitch-curious-tilt 18s ease-in-out 4s infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .porch-stitch-loaded.stitch-alive,
+          .setup-card-grid > * {
+            animation: none !important;
+          }
+
+          .setup-card,
+          .setup-card-image {
+            transition: none !important;
+          }
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
@@ -141,7 +194,7 @@ const OnboardingWizard: React.FC = () => {
               <img
                 src="/assets/stitch-porch.svg"
                 alt="Stitch waiting on the Porch & Paw porch"
-                className={`absolute inset-0 h-full w-full object-cover porch-stitch ${porchLoaded ? 'porch-stitch-loaded' : ''}`}
+                className={`absolute inset-0 h-full w-full object-cover object-left porch-stitch stitch-alive ${porchLoaded ? 'porch-stitch-loaded' : ''}`}
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7]/95 via-[#FDFBF7]/10 to-transparent lg:from-[#F4F0EA]/70" />
