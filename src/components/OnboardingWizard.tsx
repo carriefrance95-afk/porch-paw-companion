@@ -53,8 +53,8 @@ const OnboardingWizard: React.FC = () => {
   );
 
   const StoryIcon = ({ src, label }: { src: string; label: string }) => (
-    <div className="group rounded-2xl bg-white/95 px-3 py-4 text-center shadow-sm border border-[#B6A799]/15 flex flex-col items-center justify-center min-h-[132px] sm:min-h-[148px] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-      <div className="mx-auto mb-3 flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center">
+    <div className="group rounded-2xl bg-white/95 px-4 py-6 text-center shadow-sm border border-[#B6A799]/15 flex flex-col items-center justify-center min-h-[132px] sm:min-h-[148px] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+      <div className="mx-auto mb-3 flex h-24 w-24 sm:h-28 sm:w-28 items-center justify-center">
         <img
           src={src}
           alt={label}
@@ -65,7 +65,7 @@ const OnboardingWizard: React.FC = () => {
         />
       </div>
 
-      <p className="text-sm sm:text-base font-black text-[#2D2A27] leading-tight">
+      <p className="text-base sm:text-lg font-black text-[#2D2A27] leading-tight">
         {label}
       </p>
     </div>
@@ -106,13 +106,13 @@ const OnboardingWizard: React.FC = () => {
               <img
                 src="/assets/stitch-porch.svg"
                 alt="Stitch waiting on the Porch & Paw porch"
-                className={`absolute inset-0 h-full w-full object-cover porch-stitch ${porchLoaded ? 'porch-stitch-loaded' : ''}`}
+                className={`absolute inset-0 h-full w-full object-cover object-left porch-stitch ${porchLoaded ? 'porch-stitch-loaded' : ''}`}
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7]/95 via-[#FDFBF7]/10 to-transparent lg:from-[#F4F0EA]/70" />
 
               {/* Floating Story Note Overlay */}
-              <div className="absolute left-3 right-4 bottom-3 sm:left-5 sm:bottom-5 lg:left-5 lg:bottom-6 lg:w-[320px] rounded-xl bg-[#FFFDF8]/94 backdrop-blur-[2px] shadow-[0_6px_18px_rgba(45,42,39,0.08)] p-3.5 note-paper z-20">
+              <div className="absolute left-3 right-4 bottom-3 sm:left-5 sm:bottom-5 lg:left-5 lg:bottom-6 lg:w-[320px] rounded-3xl bg-[#FFFDF8]/95 backdrop-blur-[2px] shadow-[0_6px_18px_rgba(45,42,39,0.08)] p-3.5 note-paper z-20">
                 {step === 1 && (
                   <div className="space-y-1 text-xs sm:text-sm text-[#2D2A27]/85 leading-snug font-medium">
                     <p>Hi, friend.</p>
@@ -140,7 +140,7 @@ const OnboardingWizard: React.FC = () => {
             </div>
 
             {/* Right Panel: Compact Text Layout & True Extension Mappings */}
-            <main className="bg-[#FDFBF7] p-4 sm:p-6 lg:p-7 flex flex-col justify-between relative z-30 min-h-[420px] lg:min-h-0">
+            <main className="bg-[#FCFAF6] p-6 sm:p-8 lg:p-10 flex flex-col justify-between relative z-30 min-h-[420px] lg:min-h-0">
               <PawProgress />
 
               <div className="flex-1 flex flex-col justify-center py-3 lg:py-1">
@@ -151,25 +151,28 @@ const OnboardingWizard: React.FC = () => {
                         Welcome Home
                       </p>
 
-                      <h1 className="text-2xl sm:text-3xl font-serif font-black text-[#2D2A27] leading-tight">
+                      <h1 className="text-3xl sm:text-4xl font-serif font-black text-[#2D2A27] leading-tight">
                         Welcome home.
                       </h1>
 
                       <div className="space-y-1 text-xs sm:text-sm text-[#2D2A27]/75 leading-relaxed max-w-sm">
-                        <p><strong className="text-[#2D2A27]">Hi! I'm Stitch.</strong></p>
+                        <p><strong className="text-[#2D2A27]">Hi, friend.</strong></p>
                         <p>
-                          Before we head inside, let's spend just a few minutes getting everything ready for you and your dogs.
+                          I'm Stitch. I'm really glad you're here. Before we head inside, let's get everything ready for you and your dogs. I'll be with you every step of the way.
                         </p>
                       </div>
                     </div>
 
                     {/* Exact Icon Mapping Container */}
-                    <div className="rounded-2xl bg-[#F4F0EA] border border-[#B6A799]/15 p-4 sm:p-5 shadow-sm">
+                    <div className="rounded-[28px] bg-[#E4E9DD] border border-[#D2D9CC] p-6 sm:p-7 shadow-md">
                       <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#6F7250] mb-3">
-                        You'll set up:
+                        🌿 Before We Head Inside...
+                      </p>
+                      <p className="text-sm text-[#68645F] mb-5">
+                        We\'ll get these three things ready first.
                       </p>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-3 gap-4 mt-5">
                         <StoryIcon src="/assets/aboutyou.png" label="About You" />
                         <StoryIcon src="/assets/meetyourdog.png" label="Meet Dogs" />
                         <StoryIcon src="/assets/safety.png" label="Safety" />
@@ -257,7 +260,7 @@ const OnboardingWizard: React.FC = () => {
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#B55D3B] hover:bg-[#9C4E30] px-4 sm:px-6 py-2 text-white font-black text-xs sm:text-sm shadow-md transition-all active:scale-[0.98] cursor-pointer"
+                    className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#B55D3B] hover:bg-[#A14C2E] px-8 py-4 shadow-xl text-white font-black text-xs sm:text-sm shadow-md transition-all active:scale-[0.98] cursor-pointer"
                   >
                     {step === 1 ? "Let's Go!" : step === 2 ? 'Continue' : 'Next'}
                     <ChevronRight size={15} />
