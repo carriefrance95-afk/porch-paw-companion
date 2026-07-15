@@ -20,11 +20,29 @@ interface PlanSelectionProps {
   onBack: () => void;
 }
 
-const planIcons: Record<PlanId, string> = {
-  Free: '🐾',
-  Wellness: '❤️',
-  Memory: '📖',
-  Premium: '🏡',
+const planContent: Record<
+  PlanId,
+  {
+    title: string;
+    description: string;
+  }
+> = {
+  Free: {
+    title: 'Your First Porch',
+    description: 'A welcoming place to begin with one dog.',
+  },
+  Wellness: {
+    title: 'Healthy Home',
+    description: 'Everything you need to care for the dogs you love.',
+  },
+  Memory: {
+    title: 'Memory Porch',
+    description: 'Preserve every milestone, photo, and story.',
+  },
+  Premium: {
+    title: 'Everything Under One Roof',
+    description: 'Everything your family needs, all under one roof.',
+  },
 };
 
 const PlanSelection: React.FC<PlanSelectionProps> = ({
@@ -36,24 +54,26 @@ const PlanSelection: React.FC<PlanSelectionProps> = ({
 }) => {
   return (
     <ArrivalLayout maxWidth="large">
-      <div className="mx-auto w-full max-w-4xl py-2 sm:py-4">
+      <div className="mx-auto w-full max-w-5xl py-2 sm:py-4">
         <div className="mb-8 text-center">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[0.28em] text-[#7A7147]">
-            Step 1
+          <p className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-[#7A7147]">
+            Welcome Home · Step 1 of 6
           </p>
 
-          <h1 className="font-serif text-4xl font-bold text-[#2D2A27] sm:text-5xl">
-            Choose Your Plan
+          <h1 className="font-serif text-4xl font-bold leading-tight text-[#2D2A27] sm:text-5xl">
+            Find the Porch That&apos;s Right for You
           </h1>
 
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-[#6B665F] sm:text-base">
-            Choose the experience that feels right for you today. You can change plans later as your porch grows.
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#6B665F] sm:text-base">
+            Choose the experience that fits your family today. You can change
+            your plan anytime as your porch grows.
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {plans.map((plan) => {
             const isSelected = selectedPlan === plan.id;
+            const content = planContent[plan.id];
 
             return (
               <button
@@ -69,35 +89,34 @@ const PlanSelection: React.FC<PlanSelectionProps> = ({
               >
                 {isSelected && (
                   <span className="absolute right-4 top-4 rounded-full bg-[#BF6A43] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white">
-                    Selected
+                    Recommended
                   </span>
                 )}
 
-                <div className="pr-20">
-                  <div className="mb-4 flex items-center gap-3">
-                    <span
-                      aria-hidden="true"
-                      className="flex h-11 w-11 items-center justify-center rounded-full bg-[#DCE4D6] text-xl"
-                    >
-                      {planIcons[plan.id]}
-                    </span>
-
-                    <div>
-                      <h2 className="font-serif text-2xl font-bold text-[#2D2A27]">
-                        {plan.name}
-                      </h2>
-                      <p className="font-semibold text-[#BF6A43]">{plan.price}</p>
-                    </div>
-                  </div>
-
-                  <p className="mb-4 min-h-[48px] text-sm leading-relaxed text-[#6B665F]">
-                    {plan.description}
+                <div className="pr-24">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#7A7147]">
+                    {plan.name}
                   </p>
 
-                  <ul className="space-y-2 text-sm text-[#2D2A27]/80">
+                  <h2 className="mt-2 font-serif text-2xl font-bold text-[#2D2A27]">
+                    {content.title}
+                  </h2>
+
+                  <p className="mt-1 font-semibold text-[#BF6A43]">
+                    {plan.price}
+                  </p>
+
+                  <p className="mt-4 min-h-[48px] text-sm leading-relaxed text-[#6B665F]">
+                    {content.description}
+                  </p>
+
+                  <ul className="mt-5 space-y-2 text-sm text-[#2D2A27]/80">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-start gap-2">
-                        <span aria-hidden="true" className="mt-0.5 text-[#7A7147]">
+                        <span
+                          aria-hidden="true"
+                          className="mt-0.5 text-[#7A7147]"
+                        >
                           ✓
                         </span>
                         <span>{feature}</span>
@@ -111,7 +130,9 @@ const PlanSelection: React.FC<PlanSelectionProps> = ({
         </div>
 
         <div className="mx-auto mt-8 max-w-md">
-          <PrimaryButton onClick={onContinue}>Continue</PrimaryButton>
+          <PrimaryButton onClick={onContinue} className="py-5 text-lg">
+            Let&apos;s Keep Going
+          </PrimaryButton>
 
           <button
             type="button"
@@ -124,7 +145,8 @@ const PlanSelection: React.FC<PlanSelectionProps> = ({
 
         <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-[#E8E1D8] bg-[#FAF7F2] px-4 py-3 text-center">
           <p className="text-xs leading-relaxed text-[#6B665F]">
-            Beta access is currently unlocked. Billing will remain disabled until the public launch.
+            You can change plans later. Beta access is currently unlocked, and
+            billing will remain disabled until public launch.
           </p>
         </div>
       </div>
