@@ -7,6 +7,7 @@ import { PetProvider } from './context/PetContext';
 import Sidebar from './components/Sidebar.tsx';
 import OnboardingWizard from './components/OnboardingWizard';
 import WelcomeScreen from './components/arrival/WelcomeScreen';
+import PlanSelection from './components/arrival/PlanSelection';
 
 import Dashboard from './pages/Dashboard';
 import Profiles from './pages/Profiles';
@@ -219,67 +220,13 @@ const PublicEntryFlow: React.FC = () => {
       )}
 
       {screen === 'plan' && (
-        <div className={cardClass}>
-          <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-[0.25em] text-[#7A7A59] font-bold mb-2">Step 1</p>
-            <h2 className="text-4xl font-serif font-black text-[#2D2A27]">Choose Your Plan</h2>
-            <p className="text-[#8C8275] mt-2">Beta testers can explore plan value before public billing is turned on.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {plans.map(plan => {
-              const isSelected = selectedPlan === plan.id;
-
-              return (
-                <button
-                  key={plan.id}
-                  type="button"
-                  onClick={() => setSelectedPlan(plan.id)}
-                  className={`text-left p-6 rounded-2xl border-2 transition-all hover:shadow-md relative ${
-                    isSelected ? 'border-[#B55D3B] bg-[#FDFBF7] shadow-md' : 'border-[#B6A799]/25 bg-white'
-                  }`}
-                >
-                  {isSelected && (
-                    <span className="absolute top-4 right-4 bg-[#B55D3B] text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full">
-                      Selected
-                    </span>
-                  )}
-
-                  <div className="flex justify-between items-start gap-3 mb-3 pr-20">
-                    <div>
-                      <h3 className="text-2xl font-serif font-black text-[#2D2A27]">{plan.name}</h3>
-                      <p className="text-sm text-[#8C8275]">{plan.description}</p>
-                    </div>
-                    <span className="font-black text-[#B55D3B] whitespace-nowrap">{plan.price}</span>
-                  </div>
-
-                  <ul className="space-y-1 text-sm text-[#2D2A27]/75">
-                    {plan.features.map(feature => (
-                      <li key={feature}>✓ {feature}</li>
-                    ))}
-                  </ul>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => handlePlanContinue(selectedPlan)}
-              className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-[#B55D3B] hover:bg-[#9C4E30] text-white font-black text-base shadow-lg transition-all"
-            >
-              Continue with {selectedPlan} Beta
-            </button>
-
-            <button onClick={() => setScreen('welcome')} className="text-sm font-bold text-[#8C8275] underline">
-              Back
-            </button>
-          </div>
-
-          <p className="text-center text-xs text-[#8C8275] mt-4">
-            Beta access is currently unlocked. Public billing will be added later through Stripe.
-          </p>
-        </div>
+        <PlanSelection
+          plans={plans}
+          selectedPlan={selectedPlan}
+          onSelectPlan={setSelectedPlan}
+          onContinue={() => handlePlanContinue(selectedPlan)}
+          onBack={() => setScreen('welcome')}
+        />
       )}
 
       {screen === 'signup' && (
