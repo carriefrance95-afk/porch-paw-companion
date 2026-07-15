@@ -64,7 +64,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
 
         <div className="relative min-h-[420px] overflow-hidden border-t border-[#E8E1D8] lg:min-h-[680px] lg:border-l lg:border-t-0">
           <img
-            src="/assets/branding/stitch-welcome.png"
+            src="/assets/stitch-welcome.png"
             alt="Stitch sitting on a warm porch beside an open front door"
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
