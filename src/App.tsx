@@ -6,6 +6,7 @@ import logoImg from '../Porch & Paw Logo (6).png';
 import { PetProvider } from './context/PetContext';
 import Sidebar from './components/Sidebar.tsx';
 import OnboardingWizard from './components/OnboardingWizard';
+import WelcomeScreen from './components/arrival/WelcomeScreen';
 
 import Dashboard from './pages/Dashboard';
 import Profiles from './pages/Profiles';
@@ -208,38 +209,13 @@ const PublicEntryFlow: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-4">
       {screen === 'welcome' && (
-        <div className={cardClass}>
-          <div className="text-center max-w-2xl mx-auto py-8">
-            <div className="mx-auto mb-6 w-32 h-32 rounded-full bg-white border border-[#B6A799]/30 shadow-lg flex items-center justify-center overflow-hidden">
-              <img src={logoImg} alt="Porch & Paw Logo" className="w-28 h-28 object-contain" />
-            </div>
-
-            <p className="text-xs uppercase tracking-[0.35em] text-[#7A7A59] font-bold mb-4">by Porch & Paw</p>
-            <h1 className="text-5xl md:text-6xl font-serif font-black text-[#2D2A27] mb-5">Porchside Pet Life</h1>
-            <p className="text-lg md:text-xl text-[#8C8275] leading-relaxed mb-8">
-              The all-in-one guide for devoted dog parents. Cookbooks, health, travel, and journals.
-            </p>
-
-            <button
-              onClick={() => setScreen('plan')}
-              className="px-10 py-4 rounded-2xl bg-[#B55D3B] hover:bg-[#9C4E30] text-white font-black text-lg shadow-lg transition-all"
-            >
-              Start Your Journey
-            </button>
-
-            <div className="mt-8 pt-6 border-t border-[#B6A799]/20">
-              <button
-                onClick={() => {
-                  resetAuthFields();
-                  setScreen('signin');
-                }}
-                className="text-sm font-bold text-[#B55D3B] underline"
-              >
-                Already a member? Sign In
-              </button>
-            </div>
-          </div>
-        </div>
+        <WelcomeScreen
+          onStart={() => setScreen('plan')}
+          onSignIn={() => {
+            resetAuthFields();
+            setScreen('signin');
+          }}
+        />
       )}
 
       {screen === 'plan' && (
