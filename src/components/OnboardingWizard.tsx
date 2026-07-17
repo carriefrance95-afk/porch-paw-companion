@@ -691,7 +691,7 @@ const OnboardingWizard: React.FC = () => {
                         Let's get a few things ready for you and your dogs.
                       </p>
 
-                      <div className="setup-card-grid mt-5 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-3 sm:gap-6">
+                      <div className="setup-card-grid mx-auto mt-5 grid max-w-[560px] grid-cols-1 items-stretch gap-5 sm:grid-cols-2 sm:gap-6">
                         <StoryIcon
                           src="/assets/icons/aboutyou.png"
                           label="About You"
@@ -702,12 +702,6 @@ const OnboardingWizard: React.FC = () => {
                           src="/assets/icons/meetyourdog.png"
                           label="Your Dogs"
                           imageScale={0.92}
-                        />
-
-                        <StoryIcon
-                          src="/assets/icons/safety.png"
-                          label="Peace of Mind"
-                          imageScale={0.9}
                         />
                       </div>
                     </div>
@@ -1156,7 +1150,7 @@ const OnboardingWizard: React.FC = () => {
                 {step === 5 && (
                   <section className="animate-in space-y-5 text-center fade-in slide-in-from-bottom-2 duration-500">
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[#CBD3C3] bg-[#EEF1E9] text-[#B55D3B] shadow-[0_10px_24px_rgba(45,42,39,0.08)]">
-                      <Home size={30} strokeWidth={1.7} />
+                      <Check size={30} strokeWidth={2.2} />
                     </div>
 
                     <div className="space-y-2">
