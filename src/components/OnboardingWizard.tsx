@@ -4,12 +4,22 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock3,
+  Dog,
   Home,
   Minus,
   Plus,
   Sprout,
   UserRound,
 } from 'lucide-react';
+
+type DogProfile = {
+  name: string;
+  breed: string;
+  sex: string;
+  lifeStage: string;
+  birthday: string;
+  weight: string;
+};
 
 const UNITED_STATES = [
   'Alabama',
@@ -81,9 +91,21 @@ const CANADIAN_PROVINCES = [
   'Yukon',
 ];
 
+const createEmptyDogProfile = (): DogProfile => ({
+  name: '',
+  breed: '',
+  sex: '',
+  lifeStage: '',
+  birthday: '',
+  weight: '',
+});
+
 const getDetectedTimeZone = () => {
   try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
+    return (
+      Intl.DateTimeFormat().resolvedOptions().timeZone ||
+      'America/New_York'
+    );
   } catch {
     return 'America/New_York';
   }
@@ -147,6 +169,11 @@ const OnboardingWizard: React.FC = () => {
   const [country, setCountry] = useState('United States');
   const [stateProvince, setStateProvince] = useState('');
 
+  const [dogProfiles, setDogProfiles] = useState<DogProfile[]>([
+    createEmptyDogProfile(),
+  ]);
+  const [currentDogIndex, setCurrentDogIndex] = useState(0);
+
   const totalSteps = 7;
 
   const friendlyTimeZone = useMemo(
@@ -166,6 +193,9 @@ const OnboardingWizard: React.FC = () => {
     return [];
   }, [country]);
 
+  const currentDog =
+    dogProfiles[currentDogIndex] || createEmptyDogProfile();
+
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setPorchLoaded(true);
@@ -174,13 +204,47 @@ const OnboardingWizard: React.FC = () => {
     return () => window.clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setDogProfiles((previousProfiles) => {
+      if (previousProfiles.length === dogCount) {
+        return previousProfiles;
+      }
+
+      if (previousProfiles.length < dogCount) {
+        return [
+          ...previousProfiles,
+          ...Array.from(
+            { length: dogCount - previousProfiles.length },
+            createEmptyDogProfile,
+          ),
+        ];
+      }
+
+      return previousProfiles.slice(0, dogCount);
+    });
+
+    setCurrentDogIndex((previousIndex) =>
+      Math.min(previousIndex, dogCount - 1),
+    );
+  }, [dogCount]);
+
   const nextStep = () => {
+    if (step === 4 && currentDogIndex < dogCount - 1) {
+      setCurrentDogIndex((previousIndex) => previousIndex + 1);
+      return;
+    }
+
     setStep((previousStep) =>
       Math.min(previousStep + 1, totalSteps),
     );
   };
 
   const prevStep = () => {
+    if (step === 4 && currentDogIndex > 0) {
+      setCurrentDogIndex((previousIndex) => previousIndex - 1);
+      return;
+    }
+
     setStep((previousStep) =>
       Math.max(previousStep - 1, 1),
     );
@@ -203,6 +267,58 @@ const OnboardingWizard: React.FC = () => {
   ) => {
     setCountry(event.target.value);
     setStateProvince('');
+  };
+
+  const updateCurrentDog = (
+    field: keyof DogProfile,
+    value: string,
+  ) => {
+    setDogProfiles((previousProfiles) =>
+      previousProfiles.map((dogProfile, index) =>
+        index === currentDogIndex
+          ? {
+              ...dogProfile,
+              [field]: value,
+            }
+          : dogProfile,
+      ),
+    );
+  };
+
+  const isCurrentStepValid = () => {
+    if (step === 3) {
+      return firstName.trim().length > 0;
+    }
+
+    if (step === 4) {
+      return currentDog.name.trim().length > 0;
+    }
+
+    return true;
+  };
+
+  const getPrimaryButtonLabel = () => {
+    if (step === 1) {
+      return "Let's Head Inside";
+    }
+
+    if (step === 2) {
+      return "Let's Keep Going";
+    }
+
+    if (step === 3) {
+      return 'Continue Home';
+    }
+
+    if (step === 4 && currentDogIndex < dogCount - 1) {
+      return 'Meet the Next Dog';
+    }
+
+    if (step === 4) {
+      return 'Welcome Them Home';
+    }
+
+    return 'Next Step';
   };
 
   const PawProgress = () => (
@@ -431,9 +547,7 @@ const OnboardingWizard: React.FC = () => {
                 src="/assets/branding/stitch-welcome.png"
                 alt="Stitch waiting on the Porch & Paw porch"
                 className={`porch-stitch absolute inset-0 h-full w-full object-cover object-[52%_48%] ${
-                  porchLoaded
-                    ? 'porch-stitch-loaded'
-                    : ''
+                  porchLoaded ? 'porch-stitch-loaded' : ''
                 }`}
               />
 
@@ -483,9 +597,7 @@ const OnboardingWizard: React.FC = () => {
                       Every porch is a little different.
                     </p>
 
-                    <p>
-                      Let's make this one feel like yours.
-                    </p>
+                    <p>Let's make this one feel like yours.</p>
 
                     <p className="text-[#B55D3B]">
                       Just the basics for now. You can change
@@ -494,15 +606,32 @@ const OnboardingWizard: React.FC = () => {
                   </div>
                 )}
 
-                {step > 3 && (
-                  <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
+                {step === 4 && (
+                  <div className="space-y-1.5 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
                     <p className="font-bold text-[#2D2A27]">
-                      Perfect.
+                      Now it's my turn to meet your best friend.
                     </p>
 
                     <p>
-                      Next we'll build the rest of your family's
-                      porch one step at a time.
+                      Tell me a little about{' '}
+                      {currentDog.name.trim() || 'your dog'}.
+                    </p>
+
+                    <p className="text-[#B55D3B]">
+                      We only need the basics today.
+                    </p>
+                  </div>
+                )}
+
+                {step > 4 && (
+                  <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
+                    <p className="font-bold text-[#2D2A27]">
+                      They're going to love it here.
+                    </p>
+
+                    <p>
+                      Next we'll finish getting their porch
+                      ready.
                     </p>
                   </div>
                 )}
@@ -621,9 +750,7 @@ const OnboardingWizard: React.FC = () => {
                           </div>
 
                           <p className="mt-0.5 text-[10px] font-black text-[#2D2A27]/60">
-                            {dogCount === 1
-                              ? 'dog'
-                              : 'dogs'}
+                            {dogCount === 1 ? 'dog' : 'dogs'}
                           </p>
                         </div>
 
@@ -859,6 +986,246 @@ const OnboardingWizard: React.FC = () => {
                     </p>
                   </section>
                 )}
+
+                {step === 4 && (
+                  <section className="animate-in space-y-3 fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#6F7250]">
+                          Meet Your Dogs
+                        </p>
+
+                        <h1 className="font-serif text-xl font-black leading-tight text-[#2D2A27] sm:text-2xl">
+                          Now it's my turn to meet your best
+                          friend.
+                        </h1>
+
+                        <p className="max-w-md text-xs leading-relaxed text-[#2D2A27]/70">
+                          Tell us the basics today. You can add
+                          photos, records, favorites, and more
+                          once you're inside.
+                        </p>
+                      </div>
+
+                      {dogCount > 1 && (
+                        <div className="flex-shrink-0 rounded-full border border-[#CBD3C3] bg-[#EEF1E9] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#6F7250]">
+                          Dog {currentDogIndex + 1} of {dogCount}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="rounded-[22px] border border-[#B6A799]/20 bg-white p-4 shadow-[0_10px_24px_rgba(45,42,39,0.07)]">
+                      <div className="mb-3 flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F4F0EA] text-[#B55D3B]">
+                          <Dog size={20} strokeWidth={1.8} />
+                        </div>
+
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#6F7250]">
+                            Their Place on the Porch
+                          </p>
+
+                          <p className="text-xs text-[#2D2A27]/55">
+                            Start with what you know.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <label className="block">
+                          <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                            Dog's Name
+                            <span className="ml-1 text-[#B55D3B]">
+                              *
+                            </span>
+                          </span>
+
+                          <input
+                            type="text"
+                            value={currentDog.name}
+                            onChange={(event) =>
+                              updateCurrentDog(
+                                'name',
+                                event.target.value,
+                              )
+                            }
+                            placeholder="Stitch"
+                            autoComplete="off"
+                            className="onboarding-field"
+                          />
+                        </label>
+
+                        <label className="block">
+                          <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                            Breed
+                            <span className="ml-1 normal-case tracking-normal text-[#2D2A27]/40">
+                              optional
+                            </span>
+                          </span>
+
+                          <input
+                            type="text"
+                            value={currentDog.breed}
+                            onChange={(event) =>
+                              updateCurrentDog(
+                                'breed',
+                                event.target.value,
+                              )
+                            }
+                            placeholder="French Bulldog"
+                            autoComplete="off"
+                            className="onboarding-field"
+                          />
+                        </label>
+
+                        <label className="block">
+                          <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                            Sex
+                          </span>
+
+                          <select
+                            value={currentDog.sex}
+                            onChange={(event) =>
+                              updateCurrentDog(
+                                'sex',
+                                event.target.value,
+                              )
+                            }
+                            className="onboarding-field"
+                          >
+                            <option value="">Choose one</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="unknown">
+                              Not sure
+                            </option>
+                          </select>
+                        </label>
+
+                        <label className="block">
+                          <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                            Life Stage
+                          </span>
+
+                          <select
+                            value={currentDog.lifeStage}
+                            onChange={(event) =>
+                              updateCurrentDog(
+                                'lifeStage',
+                                event.target.value,
+                              )
+                            }
+                            className="onboarding-field"
+                          >
+                            <option value="">Choose one</option>
+                            <option value="puppy">Puppy</option>
+                            <option value="adult">Adult</option>
+                            <option value="senior">Senior</option>
+                            <option value="unknown">
+                              Not sure
+                            </option>
+                          </select>
+                        </label>
+
+                        <label className="block">
+                          <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                            Birthday or Gotcha Day
+                            <span className="ml-1 normal-case tracking-normal text-[#2D2A27]/40">
+                              optional
+                            </span>
+                          </span>
+
+                          <input
+                            type="date"
+                            value={currentDog.birthday}
+                            onChange={(event) =>
+                              updateCurrentDog(
+                                'birthday',
+                                event.target.value,
+                              )
+                            }
+                            className="onboarding-field"
+                          />
+                        </label>
+
+                        <label className="block">
+                          <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                            Current Weight
+                            <span className="ml-1 normal-case tracking-normal text-[#2D2A27]/40">
+                              optional
+                            </span>
+                          </span>
+
+                          <div className="relative">
+                            <input
+                              type="number"
+                              min="0"
+                              step="0.1"
+                              value={currentDog.weight}
+                              onChange={(event) =>
+                                updateCurrentDog(
+                                  'weight',
+                                  event.target.value,
+                                )
+                              }
+                              placeholder="24"
+                              inputMode="decimal"
+                              className="onboarding-field pr-12"
+                            />
+
+                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-[#2D2A27]/40">
+                              lbs
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    <p className="text-center text-[10px] leading-relaxed text-[#2D2A27]/45">
+                      Only their name is required. Everything
+                      else can be completed later.
+                    </p>
+                  </section>
+                )}
+
+                {step === 5 && (
+                  <section className="animate-in space-y-3 text-center fade-in slide-in-from-bottom-2 duration-300">
+                    <h1 className="font-serif text-xl font-black text-[#2D2A27]">
+                      Health Center is next.
+                    </h1>
+
+                    <p className="mx-auto max-w-sm text-xs text-[#2D2A27]/65">
+                      This is the next onboarding screen we will
+                      build.
+                    </p>
+                  </section>
+                )}
+
+                {step === 6 && (
+                  <section className="animate-in space-y-3 text-center fade-in slide-in-from-bottom-2 duration-300">
+                    <h1 className="font-serif text-xl font-black text-[#2D2A27]">
+                      Peace of Mind is next.
+                    </h1>
+
+                    <p className="mx-auto max-w-sm text-xs text-[#2D2A27]/65">
+                      This screen will cover the essential
+                      emergency setup.
+                    </p>
+                  </section>
+                )}
+
+                {step === 7 && (
+                  <section className="animate-in space-y-3 text-center fade-in slide-in-from-bottom-2 duration-300">
+                    <h1 className="font-serif text-xl font-black text-[#2D2A27]">
+                      Welcome home.
+                    </h1>
+
+                    <p className="mx-auto max-w-sm text-xs text-[#2D2A27]/65">
+                      The final completion screen will open
+                      their new porch.
+                    </p>
+                  </section>
+                )}
               </div>
 
               <div className="w-full space-y-2 border-t border-[#B6A799]/15 pt-2.5">
@@ -876,19 +1243,10 @@ const OnboardingWizard: React.FC = () => {
                   <button
                     type="button"
                     onClick={nextStep}
-                    disabled={
-                      step === 3 &&
-                      firstName.trim().length === 0
-                    }
+                    disabled={!isCurrentStepValid()}
                     className="inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#B55D3B] px-4 py-2 text-xs font-black text-white shadow-md transition-all hover:bg-[#9C4E30] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:px-6 sm:text-sm"
                   >
-                    {step === 1
-                      ? "Let's Head Inside"
-                      : step === 2
-                        ? "Let's Keep Going"
-                        : step === 3
-                          ? 'Continue Home'
-                          : 'Next Step'}
+                    {getPrimaryButtonLabel()}
 
                     <ChevronRight size={15} />
                   </button>
