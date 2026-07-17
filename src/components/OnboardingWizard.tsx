@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Minus, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Minus, Plus, Sprout } from 'lucide-react';
 
 const OnboardingWizard: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -10,59 +10,58 @@ const OnboardingWizard: React.FC = () => {
 
   useEffect(() => {
     const timer = window.setTimeout(() => setPorchLoaded(true), 120);
+
     return () => window.clearTimeout(timer);
   }, []);
 
-  const nextStep = () => setStep((prev) => Math.min(prev + 1, totalSteps));
-  const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
+  const nextStep = () => {
+    setStep((previousStep) =>
+      Math.min(previousStep + 1, totalSteps),
+    );
+  };
 
-  const increaseDogCount = () =>
-    setDogCount((prev) => Math.min(prev + 1, 10));
+  const prevStep = () => {
+    setStep((previousStep) =>
+      Math.max(previousStep - 1, 1),
+    );
+  };
 
-  const decreaseDogCount = () =>
-    setDogCount((prev) => Math.max(prev - 1, 1));
+  const increaseDogCount = () => {
+    setDogCount((previousCount) =>
+      Math.min(previousCount + 1, 10),
+    );
+  };
+
+  const decreaseDogCount = () => {
+    setDogCount((previousCount) =>
+      Math.max(previousCount - 1, 1),
+    );
+  };
 
   const PawProgress = () => (
-    <div className="relative z-10 w-full space-y-1">
+    <div className="relative z-10 w-full space-y-2">
       <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.22em] text-[#6F7250]">
         <span>
           Step {step} of {totalSteps}
         </span>
 
         <span>
-          {step === 1 ? 'About 5 minutes' : 'You can add more later'}
+          {step === 1
+            ? 'About 5 minutes'
+            : 'You can add more later'}
         </span>
       </div>
 
       <div
-        className="no-scrollbar flex items-center gap-1 overflow-x-auto pt-0.5"
+        className="flex min-h-[28px] items-center"
         aria-label={`Step ${step} of ${totalSteps}`}
       >
-        {Array.from({ length: totalSteps }).map((_, index) => {
-          const pawStep = index + 1;
-          const isComplete = pawStep <= step;
-          const isCurrent = pawStep === step;
-
-          return (
-            <span
-              key={pawStep}
-              className={`inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full transition-all duration-300 sm:h-6 sm:w-6 ${
-                isCurrent
-                  ? 'scale-105 bg-[#F4F0EA] shadow-sm'
-                  : 'scale-100'
-              }`}
-              title={`Step ${pawStep}`}
-            >
-              <span
-                className={`text-sm leading-none transition-all duration-300 sm:text-base ${
-                  isComplete ? 'text-[#244B63]' : 'text-[#B6A799]/45'
-                }`}
-              >
-                🐾
-              </span>
-            </span>
-          );
-        })}
+        <img
+          src="/assets/progress/paw-progress.svg"
+          alt=""
+          aria-hidden="true"
+          className="h-auto w-[190px] max-w-full object-contain object-left"
+        />
       </div>
     </div>
   );
@@ -82,7 +81,9 @@ const OnboardingWizard: React.FC = () => {
           <img
             src={src}
             alt={label}
-            style={{ transform: `scale(${imageScale})` }}
+            style={{
+              transform: `scale(${imageScale})`,
+            }}
             className="setup-card-image h-full w-full object-contain transition-transform duration-300"
             onError={() => {
               console.log(`Asset link check missing: ${src}`);
@@ -103,30 +104,54 @@ const OnboardingWizard: React.FC = () => {
         .note-paper {
           background-image:
             radial-gradient(
-              circle at 10% 20%,
-              rgba(122, 114, 89, 0.05) 0 1px,
+              circle at 12% 20%,
+              rgba(122, 114, 89, 0.045) 0 1px,
               transparent 1px
             ),
             linear-gradient(
               135deg,
-              rgba(255, 255, 255, 0.78),
-              rgba(253, 251, 247, 0.94)
+              rgba(255, 255, 255, 0.9),
+              rgba(253, 251, 247, 0.97)
             );
           background-size: 18px 18px, 100% 100%;
         }
 
+        .sage-tray {
+          background-image:
+            radial-gradient(
+              circle at 18% 22%,
+              rgba(122, 113, 71, 0.055) 0 1px,
+              transparent 1px
+            ),
+            radial-gradient(
+              circle at 82% 68%,
+              rgba(255, 255, 255, 0.34) 0 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              180deg,
+              #edf1e8 0%,
+              #e4e9dd 52%,
+              #dce3d5 100%
+            );
+          background-size:
+            22px 22px,
+            28px 28px,
+            100% 100%;
+        }
+
         .porch-stitch {
           opacity: 0;
-          transform: scale(1.012) translateY(3px);
+          transform: scale(1.17) translateY(4px);
           transition:
             opacity 700ms ease,
-            transform 900ms ease;
-          transform-origin: center center;
+            transform 1000ms ease;
+          transform-origin: 52% 52%;
         }
 
         .porch-stitch-loaded {
           opacity: 1;
-          transform: scale(1) translateY(0);
+          transform: scale(1.14) translateY(0);
         }
 
         @keyframes card-rise {
@@ -159,10 +184,10 @@ const OnboardingWizard: React.FC = () => {
             #ffffff 0%,
             #fcfbf8 100%
           );
-          border: 1px solid rgba(255, 255, 255, 0.78);
-          outline: 1px solid rgba(210, 205, 196, 0.38);
+          border: 1px solid rgba(255, 255, 255, 0.82);
+          outline: 1px solid rgba(210, 205, 196, 0.42);
           box-shadow:
-            0 2px 6px rgba(45, 42, 39, 0.05),
+            0 2px 6px rgba(45, 42, 39, 0.04),
             0 12px 28px rgba(45, 42, 39, 0.1);
           transform: translateY(0);
           will-change: transform, box-shadow;
@@ -182,11 +207,11 @@ const OnboardingWizard: React.FC = () => {
         @keyframes stitch-gentle-breathe {
           0%,
           100% {
-            transform: scale(1) translateX(0) rotate(0deg);
+            transform: scale(1.14) translateX(0) rotate(0deg);
           }
 
           50% {
-            transform: scale(1.004) translateX(-1px) rotate(0deg);
+            transform: scale(1.145) translateX(-1px) rotate(0deg);
           }
         }
 
@@ -194,19 +219,19 @@ const OnboardingWizard: React.FC = () => {
           0%,
           72%,
           100% {
-            transform: scale(1) translateX(0) rotate(0deg);
+            transform: scale(1.14) translateX(0) rotate(0deg);
           }
 
           78% {
-            transform: scale(1.004) translateX(-2px) rotate(-0.7deg);
+            transform: scale(1.145) translateX(-2px) rotate(-0.7deg);
           }
 
           84% {
-            transform: scale(1.004) translateX(-2px) rotate(-0.7deg);
+            transform: scale(1.145) translateX(-2px) rotate(-0.7deg);
           }
 
           91% {
-            transform: scale(1) translateX(0) rotate(0deg);
+            transform: scale(1.14) translateX(0) rotate(0deg);
           }
         }
 
@@ -223,18 +248,10 @@ const OnboardingWizard: React.FC = () => {
           }
 
           .setup-card,
-          .setup-card-image {
+          .setup-card-image,
+          .porch-stitch {
             transition: none !important;
           }
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
         }
       `}</style>
 
@@ -245,30 +262,35 @@ const OnboardingWizard: React.FC = () => {
               <img
                 src="/assets/branding/stitch-welcome.png"
                 alt="Stitch waiting on the Porch & Paw porch"
-                className={`porch-stitch stitch-alive absolute inset-0 h-full w-full object-cover object-left ${
-                  porchLoaded ? 'porch-stitch-loaded' : ''
+                className={`porch-stitch stitch-alive absolute inset-0 h-full w-full object-cover object-[52%_48%] ${
+                  porchLoaded
+                    ? 'porch-stitch-loaded'
+                    : ''
                 }`}
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7]/95 via-[#FDFBF7]/10 to-transparent lg:from-[#F4F0EA]/70" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7]/92 via-[#FDFBF7]/5 to-transparent lg:from-[#F4F0EA]/55" />
 
-              <div className="note-paper absolute bottom-3 left-3 right-4 z-20 rotate-[1deg] rounded-xl bg-[#FFFDF8]/94 p-3.5 shadow-[0_6px_18px_rgba(45,42,39,0.08)] backdrop-blur-[2px] sm:bottom-5 sm:left-5 lg:bottom-3 lg:left-5 lg:w-[320px]">
+              <div className="note-paper absolute bottom-7 left-5 right-5 z-20 rotate-[2deg] rounded-xl border border-white/70 bg-[#FFFDF8]/95 p-3.5 shadow-[0_5px_14px_rgba(45,42,39,0.07)] backdrop-blur-[2px] sm:bottom-8 sm:left-7 lg:bottom-7 lg:left-7 lg:w-[320px]">
                 {step === 1 && (
                   <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
-                    <p>Hi, friend.</p>
+                    <p className="font-bold text-[#2D2A27]">
+                      Hi, friend.
+                    </p>
 
                     <p>I'm so glad you're here.</p>
 
                     <p>
-                      Before we head inside, let's get a few things ready for
-                      you and your dogs.
+                      I'll help you get everything ready
+                      before we head inside.
                     </p>
 
                     <p>There's no rush.</p>
 
                     <p>
-                      We'll take it one step at a time, and if you need to
-                      come back later, I'll be right here waiting.
+                      We'll take it one step at a time, and
+                      if you need to come back later, I'll
+                      be right here waiting.
                     </p>
                   </div>
                 )}
@@ -276,22 +298,26 @@ const OnboardingWizard: React.FC = () => {
                 {step === 2 && (
                   <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
                     <p>
-                      Every dog deserves their own little place to call home.
+                      Every dog deserves their own little
+                      place to call home.
                     </p>
 
                     <p className="font-bold text-[#B55D3B]">
-                      Tell me how many dogs you'd like to welcome today.
+                      Tell me how many dogs you'd like to
+                      welcome today.
                     </p>
                   </div>
                 )}
 
                 {step > 2 && (
                   <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
-                    <p>Perfect.</p>
+                    <p className="font-bold text-[#2D2A27]">
+                      Perfect.
+                    </p>
 
                     <p>
-                      Next we'll build the rest of your family's porch step
-                      by step.
+                      Next we'll build the rest of your
+                      family's porch one step at a time.
                     </p>
                   </div>
                 )}
@@ -313,28 +339,37 @@ const OnboardingWizard: React.FC = () => {
                         Welcome home.
                       </h1>
 
-                      <div className="max-w-sm space-y-1 text-xs leading-relaxed text-[#2D2A27]/75 sm:text-sm">
+                      <div className="max-w-md space-y-1 text-xs leading-relaxed text-[#2D2A27]/75 sm:text-sm">
                         <p>
                           <strong className="text-[#2D2A27]">
-                            Hi! I'm Stitch.
+                            Hi, I'm Stitch.
                           </strong>
                         </p>
 
                         <p>
-                          Before we head inside, let's spend just a few
-                          minutes getting everything ready for you and your
-                          dogs.
+                          I'll help you get everything ready
+                          before we head inside. We'll take it
+                          one easy step at a time.
                         </p>
                       </div>
                     </div>
 
-                    <div className="rounded-[28px] border border-[#D2D9CC] bg-[#E4E9DD] p-5 shadow-[0_10px_24px_rgba(45,42,39,0.08)] sm:p-6 lg:px-6">
-                      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#66735A] sm:text-xs">
-                        🌿 Before We Head Inside...
-                      </p>
+                    <div className="sage-tray rounded-[28px] border border-[#CBD3C3] p-5 shadow-[0_14px_30px_rgba(45,42,39,0.09)] sm:p-6 lg:px-6">
+                      <div className="flex items-center gap-2">
+                        <Sprout
+                          size={15}
+                          strokeWidth={2}
+                          className="text-[#7A7147]"
+                        />
+
+                        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#66735A] sm:text-xs">
+                          Before We Head Inside...
+                        </p>
+                      </div>
 
                       <p className="mt-2 text-sm leading-relaxed text-[#68645F]">
-                        Let's get a few things ready before we head inside.
+                        Let's get a few things ready for you
+                        and your dogs.
                       </p>
 
                       <div className="setup-card-grid mt-5 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-3 sm:gap-6">
@@ -368,12 +403,14 @@ const OnboardingWizard: React.FC = () => {
                       </p>
 
                       <h1 className="font-serif text-xl font-black leading-snug text-[#2D2A27] sm:text-2xl">
-                        How many dogs would you like to add today?
+                        How many dogs would you like to add
+                        today?
                       </h1>
 
                       <p className="max-w-sm text-xs leading-relaxed text-[#2D2A27]/75">
-                        Each dog will have their own health center, active
-                        layout grids, reminders, and milestones.
+                        Each dog will have their own health
+                        center, reminders, records, and
+                        milestones.
                       </p>
                     </div>
 
@@ -387,6 +424,7 @@ const OnboardingWizard: React.FC = () => {
                           type="button"
                           onClick={decreaseDogCount}
                           disabled={dogCount <= 1}
+                          aria-label="Remove one dog"
                           className="flex h-9 w-10 items-center justify-center rounded-xl border border-[#B6A799]/30 bg-white text-[#2D2A27] shadow-sm transition-all active:scale-95 disabled:opacity-30"
                         >
                           <Minus size={15} />
@@ -398,13 +436,16 @@ const OnboardingWizard: React.FC = () => {
                           </div>
 
                           <p className="mt-0.5 text-[10px] font-black text-[#2D2A27]/60">
-                            {dogCount === 1 ? 'dog' : 'dogs'}
+                            {dogCount === 1
+                              ? 'dog'
+                              : 'dogs'}
                           </p>
                         </div>
 
                         <button
                           type="button"
                           onClick={increaseDogCount}
+                          aria-label="Add one dog"
                           className="flex h-9 w-10 items-center justify-center rounded-xl border border-[#B6A799]/30 bg-white text-[#2D2A27] shadow-sm transition-all active:scale-95"
                         >
                           <Plus size={15} />
@@ -416,8 +457,13 @@ const OnboardingWizard: React.FC = () => {
 
                 {step === 3 && (
                   <section className="animate-in space-y-3 text-center fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#B6A799]/15 bg-[#F4F0EA] text-xl shadow-sm">
-                      🐾
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#B6A799]/15 bg-[#F4F0EA] shadow-sm">
+                      <img
+                        src="/assets/progress/paw-progress.svg"
+                        alt=""
+                        aria-hidden="true"
+                        className="h-6 w-8 object-contain"
+                      />
                     </div>
 
                     <h1 className="font-serif text-lg font-black text-[#2D2A27] sm:text-xl">
@@ -426,8 +472,8 @@ const OnboardingWizard: React.FC = () => {
 
                     <p className="mx-auto max-w-xs text-xs text-[#2D2A27]/70">
                       Dog count saved for this session:{' '}
-                      <strong>{dogCount}</strong>. Next we'll load your owner
-                      profile fields.
+                      <strong>{dogCount}</strong>. Next we'll
+                      load your owner profile fields.
                     </p>
                   </section>
                 )}
@@ -451,18 +497,18 @@ const OnboardingWizard: React.FC = () => {
                     className="inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#B55D3B] px-4 py-2 text-xs font-black text-white shadow-md transition-all hover:bg-[#9C4E30] active:scale-[0.98] sm:px-6 sm:text-sm"
                   >
                     {step === 1
-                      ? "Let's Go!"
+                      ? "Let's Head Inside"
                       : step === 2
-                        ? 'Continue'
-                        : 'Next'}
+                        ? "Let's Keep Going"
+                        : 'Next Step'}
 
                     <ChevronRight size={15} />
                   </button>
                 </div>
 
                 <p className="text-center text-[10px] leading-normal text-[#2D2A27]/50">
-                  ☕ Need a break? No worries. We'll save your progress as you
-                  go.
+                  Need a break? No worries. We'll save your
+                  progress as you go.
                 </p>
               </div>
             </main>
