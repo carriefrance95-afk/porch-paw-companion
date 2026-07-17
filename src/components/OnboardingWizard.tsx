@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Check,
   ChevronLeft,
@@ -10,7 +10,7 @@ import {
   Plus,
   Sprout,
   UserRound,
-} from 'lucide-react';
+} from "lucide-react";
 
 type DogProfile = {
   name: string;
@@ -22,139 +22,138 @@ type DogProfile = {
 };
 
 const UNITED_STATES = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
-  'District of Columbia',
+  "Alabama",
+  "Alaska",
+  "Arizona",
+  "Arkansas",
+  "California",
+  "Colorado",
+  "Connecticut",
+  "Delaware",
+  "Florida",
+  "Georgia",
+  "Hawaii",
+  "Idaho",
+  "Illinois",
+  "Indiana",
+  "Iowa",
+  "Kansas",
+  "Kentucky",
+  "Louisiana",
+  "Maine",
+  "Maryland",
+  "Massachusetts",
+  "Michigan",
+  "Minnesota",
+  "Mississippi",
+  "Missouri",
+  "Montana",
+  "Nebraska",
+  "Nevada",
+  "New Hampshire",
+  "New Jersey",
+  "New Mexico",
+  "New York",
+  "North Carolina",
+  "North Dakota",
+  "Ohio",
+  "Oklahoma",
+  "Oregon",
+  "Pennsylvania",
+  "Rhode Island",
+  "South Carolina",
+  "South Dakota",
+  "Tennessee",
+  "Texas",
+  "Utah",
+  "Vermont",
+  "Virginia",
+  "Washington",
+  "West Virginia",
+  "Wisconsin",
+  "Wyoming",
+  "District of Columbia",
 ];
 
 const CANADIAN_PROVINCES = [
-  'Alberta',
-  'British Columbia',
-  'Manitoba',
-  'New Brunswick',
-  'Newfoundland and Labrador',
-  'Northwest Territories',
-  'Nova Scotia',
-  'Nunavut',
-  'Ontario',
-  'Prince Edward Island',
-  'Quebec',
-  'Saskatchewan',
-  'Yukon',
+  "Alberta",
+  "British Columbia",
+  "Manitoba",
+  "New Brunswick",
+  "Newfoundland and Labrador",
+  "Northwest Territories",
+  "Nova Scotia",
+  "Nunavut",
+  "Ontario",
+  "Prince Edward Island",
+  "Quebec",
+  "Saskatchewan",
+  "Yukon",
 ];
 
 const createEmptyDogProfile = (): DogProfile => ({
-  name: '',
-  breed: '',
-  sex: '',
-  lifeStage: '',
-  birthday: '',
-  weight: '',
+  name: "",
+  breed: "",
+  sex: "",
+  lifeStage: "",
+  birthday: "",
+  weight: "",
 });
 
 const getDetectedTimeZone = () => {
   try {
     return (
-      Intl.DateTimeFormat().resolvedOptions().timeZone ||
-      'America/New_York'
+      Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York"
     );
   } catch {
-    return 'America/New_York';
+    return "America/New_York";
   }
 };
 
 const getFriendlyTimeZoneName = (timeZone: string) => {
   const knownTimeZones: Record<string, string> = {
-    'America/New_York': 'Eastern Time',
-    'America/Detroit': 'Eastern Time',
-    'America/Indiana/Indianapolis': 'Eastern Time',
-    'America/Indiana/Marengo': 'Eastern Time',
-    'America/Indiana/Vevay': 'Eastern Time',
-    'America/Indiana/Vincennes': 'Eastern Time',
-    'America/Indiana/Winamac': 'Eastern Time',
-    'America/Kentucky/Louisville': 'Eastern Time',
-    'America/Kentucky/Monticello': 'Eastern Time',
-    'America/Chicago': 'Central Time',
-    'America/Indiana/Knox': 'Central Time',
-    'America/Indiana/Tell_City': 'Central Time',
-    'America/Menominee': 'Central Time',
-    'America/North_Dakota/Beulah': 'Central Time',
-    'America/North_Dakota/Center': 'Central Time',
-    'America/North_Dakota/New_Salem': 'Central Time',
-    'America/Denver': 'Mountain Time',
-    'America/Boise': 'Mountain Time',
-    'America/Phoenix': 'Arizona Time',
-    'America/Los_Angeles': 'Pacific Time',
-    'America/Anchorage': 'Alaska Time',
-    'America/Juneau': 'Alaska Time',
-    'America/Nome': 'Alaska Time',
-    'America/Sitka': 'Alaska Time',
-    'America/Yakutat': 'Alaska Time',
-    'Pacific/Honolulu': 'Hawaii Time',
-    'America/Toronto': 'Eastern Time',
-    'America/Vancouver': 'Pacific Time',
-    'America/Edmonton': 'Mountain Time',
-    'America/Winnipeg': 'Central Time',
-    'Europe/London': 'United Kingdom Time',
-    'Australia/Sydney': 'Sydney Time',
-    'Australia/Melbourne': 'Melbourne Time',
-    'Australia/Brisbane': 'Brisbane Time',
-    'Australia/Perth': 'Perth Time',
+    "America/New_York": "Eastern Time",
+    "America/Detroit": "Eastern Time",
+    "America/Indiana/Indianapolis": "Eastern Time",
+    "America/Indiana/Marengo": "Eastern Time",
+    "America/Indiana/Vevay": "Eastern Time",
+    "America/Indiana/Vincennes": "Eastern Time",
+    "America/Indiana/Winamac": "Eastern Time",
+    "America/Kentucky/Louisville": "Eastern Time",
+    "America/Kentucky/Monticello": "Eastern Time",
+    "America/Chicago": "Central Time",
+    "America/Indiana/Knox": "Central Time",
+    "America/Indiana/Tell_City": "Central Time",
+    "America/Menominee": "Central Time",
+    "America/North_Dakota/Beulah": "Central Time",
+    "America/North_Dakota/Center": "Central Time",
+    "America/North_Dakota/New_Salem": "Central Time",
+    "America/Denver": "Mountain Time",
+    "America/Boise": "Mountain Time",
+    "America/Phoenix": "Arizona Time",
+    "America/Los_Angeles": "Pacific Time",
+    "America/Anchorage": "Alaska Time",
+    "America/Juneau": "Alaska Time",
+    "America/Nome": "Alaska Time",
+    "America/Sitka": "Alaska Time",
+    "America/Yakutat": "Alaska Time",
+    "Pacific/Honolulu": "Hawaii Time",
+    "America/Toronto": "Eastern Time",
+    "America/Vancouver": "Pacific Time",
+    "America/Edmonton": "Mountain Time",
+    "America/Winnipeg": "Central Time",
+    "Europe/London": "United Kingdom Time",
+    "Australia/Sydney": "Sydney Time",
+    "Australia/Melbourne": "Melbourne Time",
+    "Australia/Brisbane": "Brisbane Time",
+    "Australia/Perth": "Perth Time",
   };
 
   if (knownTimeZones[timeZone]) {
     return knownTimeZones[timeZone];
   }
 
-  return timeZone.replaceAll('_', ' ').replaceAll('/', ' · ');
+  return timeZone.replaceAll("_", " ").replaceAll("/", " · ");
 };
 
 const OnboardingWizard: React.FC = () => {
@@ -162,19 +161,19 @@ const OnboardingWizard: React.FC = () => {
   const [dogCount, setDogCount] = useState(1);
   const [porchLoaded, setPorchLoaded] = useState(false);
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [preferredName, setPreferredName] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [preferredName, setPreferredName] = useState("");
   const [timeZone] = useState(getDetectedTimeZone);
-  const [country, setCountry] = useState('United States');
-  const [stateProvince, setStateProvince] = useState('');
+  const [country, setCountry] = useState("United States");
+  const [stateProvince, setStateProvince] = useState("");
 
   const [dogProfiles, setDogProfiles] = useState<DogProfile[]>([
     createEmptyDogProfile(),
   ]);
   const [currentDogIndex, setCurrentDogIndex] = useState(0);
 
-  const totalSteps = 7;
+  const totalSteps = 5;
 
   const friendlyTimeZone = useMemo(
     () => getFriendlyTimeZoneName(timeZone),
@@ -182,19 +181,32 @@ const OnboardingWizard: React.FC = () => {
   );
 
   const locationSuggestions = useMemo(() => {
-    if (country === 'United States') {
+    if (country === "United States") {
       return UNITED_STATES;
     }
 
-    if (country === 'Canada') {
+    if (country === "Canada") {
       return CANADIAN_PROVINCES;
     }
 
     return [];
   }, [country]);
 
-  const currentDog =
-    dogProfiles[currentDogIndex] || createEmptyDogProfile();
+  const currentDog = dogProfiles[currentDogIndex] || createEmptyDogProfile();
+
+  const displayName = preferredName.trim() || firstName.trim() || "friend";
+  const dogNames = dogProfiles
+    .map((dogProfile) => dogProfile.name.trim())
+    .filter(Boolean);
+
+  const dogNamesText =
+    dogNames.length === 0
+      ? "your dogs"
+      : dogNames.length === 1
+        ? dogNames[0]
+        : dogNames.length === 2
+          ? `${dogNames[0]} and ${dogNames[1]}`
+          : `${dogNames.slice(0, -1).join(", ")}, and ${dogNames.at(-1)}`;
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -228,15 +240,26 @@ const OnboardingWizard: React.FC = () => {
     );
   }, [dogCount]);
 
+  const completeOnboarding = async () => {
+    const { supabase } = await import("../utils/supabaseClient");
+    const { data } = await supabase.auth.getSession();
+    const userId = data.session?.user?.id;
+
+    if (!userId) {
+      return;
+    }
+
+    localStorage.setItem(`onboarding_complete_${userId}`, "true");
+    window.dispatchEvent(new Event("porchside:onboarding-complete"));
+  };
+
   const nextStep = () => {
     if (step === 4 && currentDogIndex < dogCount - 1) {
       setCurrentDogIndex((previousIndex) => previousIndex + 1);
       return;
     }
 
-    setStep((previousStep) =>
-      Math.min(previousStep + 1, totalSteps),
-    );
+    setStep((previousStep) => Math.min(previousStep + 1, totalSteps));
   };
 
   const prevStep = () => {
@@ -245,34 +268,23 @@ const OnboardingWizard: React.FC = () => {
       return;
     }
 
-    setStep((previousStep) =>
-      Math.max(previousStep - 1, 1),
-    );
+    setStep((previousStep) => Math.max(previousStep - 1, 1));
   };
 
   const increaseDogCount = () => {
-    setDogCount((previousCount) =>
-      Math.min(previousCount + 1, 10),
-    );
+    setDogCount((previousCount) => Math.min(previousCount + 1, 10));
   };
 
   const decreaseDogCount = () => {
-    setDogCount((previousCount) =>
-      Math.max(previousCount - 1, 1),
-    );
+    setDogCount((previousCount) => Math.max(previousCount - 1, 1));
   };
 
-  const handleCountryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setCountry(event.target.value);
-    setStateProvince('');
+    setStateProvince("");
   };
 
-  const updateCurrentDog = (
-    field: keyof DogProfile,
-    value: string,
-  ) => {
+  const updateCurrentDog = (field: keyof DogProfile, value: string) => {
     setDogProfiles((previousProfiles) =>
       previousProfiles.map((dogProfile, index) =>
         index === currentDogIndex
@@ -307,18 +319,22 @@ const OnboardingWizard: React.FC = () => {
     }
 
     if (step === 3) {
-      return 'Continue Home';
+      return "Continue Home";
     }
 
     if (step === 4 && currentDogIndex < dogCount - 1) {
-      return 'Meet the Next Dog';
+      return "Meet the Next Dog";
     }
 
     if (step === 4) {
-      return 'Welcome Them Home';
+      return "Welcome Them Home";
     }
 
-    return 'Next Step';
+    if (step === 5) {
+      return "Open My Porch";
+    }
+
+    return "Next Step";
   };
 
   const PawProgress = () => (
@@ -328,11 +344,7 @@ const OnboardingWizard: React.FC = () => {
           Step {step} of {totalSteps}
         </span>
 
-        <span>
-          {step === 1
-            ? 'About 5 minutes'
-            : 'You can add more later'}
-        </span>
+        <span>{step === 1 ? "About 5 minutes" : "You can add more later"}</span>
       </div>
 
       <div
@@ -547,7 +559,7 @@ const OnboardingWizard: React.FC = () => {
                 src="/assets/branding/stitch-welcome.png"
                 alt="Stitch waiting on the Porch & Paw porch"
                 className={`porch-stitch absolute inset-0 h-full w-full object-cover object-[52%_48%] ${
-                  porchLoaded ? 'porch-stitch-loaded' : ''
+                  porchLoaded ? "porch-stitch-loaded" : ""
                 }`}
               />
 
@@ -556,23 +568,19 @@ const OnboardingWizard: React.FC = () => {
               <div className="note-paper absolute bottom-7 left-5 right-5 z-20 rotate-[2deg] rounded-xl border border-white/70 bg-[#FFFDF8]/95 p-3.5 shadow-[0_5px_14px_rgba(45,42,39,0.07)] backdrop-blur-[2px] sm:bottom-8 sm:left-7 lg:bottom-7 lg:left-7 lg:w-[320px]">
                 {step === 1 && (
                   <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
-                    <p className="font-bold text-[#2D2A27]">
-                      Hi, friend.
-                    </p>
+                    <p className="font-bold text-[#2D2A27]">Hi, friend.</p>
 
                     <p>I'm so glad you're here.</p>
 
                     <p>
-                      I'll help you get everything ready before
-                      we head inside.
+                      I'll help you get everything ready before we head inside.
                     </p>
 
                     <p>There's no rush.</p>
 
                     <p>
-                      We'll take it one step at a time, and if
-                      you need to come back later, I'll be right
-                      here waiting.
+                      We'll take it one step at a time, and if you need to come
+                      back later, I'll be right here waiting.
                     </p>
                   </div>
                 )}
@@ -580,13 +588,11 @@ const OnboardingWizard: React.FC = () => {
                 {step === 2 && (
                   <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
                     <p>
-                      Every dog deserves their own little place
-                      to call home.
+                      Every dog deserves their own little place to call home.
                     </p>
 
                     <p className="font-bold text-[#B55D3B]">
-                      Tell me how many dogs you'd like to
-                      welcome today.
+                      Tell me how many dogs you'd like to welcome today.
                     </p>
                   </div>
                 )}
@@ -600,8 +606,7 @@ const OnboardingWizard: React.FC = () => {
                     <p>Let's make this one feel like yours.</p>
 
                     <p className="text-[#B55D3B]">
-                      Just the basics for now. You can change
-                      anything later.
+                      Just the basics for now. You can change anything later.
                     </p>
                   </div>
                 )}
@@ -613,8 +618,8 @@ const OnboardingWizard: React.FC = () => {
                     </p>
 
                     <p>
-                      Tell me a little about{' '}
-                      {currentDog.name.trim() || 'your dog'}.
+                      Tell me a little about{" "}
+                      {currentDog.name.trim() || "your dog"}.
                     </p>
 
                     <p className="text-[#B55D3B]">
@@ -623,16 +628,18 @@ const OnboardingWizard: React.FC = () => {
                   </div>
                 )}
 
-                {step > 4 && (
-                  <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
+                {step === 5 && (
+                  <div className="space-y-1.5 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
                     <p className="font-bold text-[#2D2A27]">
-                      They're going to love it here.
+                      Welcome home, {displayName}.
                     </p>
 
                     <p>
-                      Next we'll finish getting their porch
-                      ready.
+                      Your porch is ready, and I'll be right here whenever you
+                      need me.
                     </p>
+
+                    <p className="text-[#B55D3B]">Let's head inside.</p>
                   </div>
                 )}
               </div>
@@ -661,9 +668,8 @@ const OnboardingWizard: React.FC = () => {
                         </p>
 
                         <p>
-                          I'll help you get everything ready
-                          before we head inside. We'll take it
-                          one easy step at a time.
+                          I'll help you get everything ready before we head
+                          inside. We'll take it one easy step at a time.
                         </p>
                       </div>
                     </div>
@@ -682,8 +688,7 @@ const OnboardingWizard: React.FC = () => {
                       </div>
 
                       <p className="mt-2 text-sm leading-relaxed text-[#68645F]">
-                        Let's get a few things ready for you
-                        and your dogs.
+                        Let's get a few things ready for you and your dogs.
                       </p>
 
                       <div className="setup-card-grid mt-5 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-3 sm:gap-6">
@@ -717,14 +722,12 @@ const OnboardingWizard: React.FC = () => {
                       </p>
 
                       <h1 className="font-serif text-xl font-black leading-snug text-[#2D2A27] sm:text-2xl">
-                        How many dogs would you like to add
-                        today?
+                        How many dogs would you like to add today?
                       </h1>
 
                       <p className="max-w-sm text-xs leading-relaxed text-[#2D2A27]/75">
-                        Each dog will have their own health
-                        center, reminders, records, and
-                        milestones.
+                        Each dog will have their own health center, reminders,
+                        records, and milestones.
                       </p>
                     </div>
 
@@ -750,7 +753,7 @@ const OnboardingWizard: React.FC = () => {
                           </div>
 
                           <p className="mt-0.5 text-[10px] font-black text-[#2D2A27]/60">
-                            {dogCount === 1 ? 'dog' : 'dogs'}
+                            {dogCount === 1 ? "dog" : "dogs"}
                           </p>
                         </div>
 
@@ -779,9 +782,8 @@ const OnboardingWizard: React.FC = () => {
                       </h1>
 
                       <p className="max-w-md text-xs leading-relaxed text-[#2D2A27]/70">
-                        These details help personalize your
-                        porch, reminders, and recommendations.
-                        You can always change them later.
+                        These details help personalize your porch, reminders,
+                        and recommendations. You can always change them later.
                       </p>
                     </div>
 
@@ -807,9 +809,7 @@ const OnboardingWizard: React.FC = () => {
                           <label className="block">
                             <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
                               First Name
-                              <span className="ml-1 text-[#B55D3B]">
-                                *
-                              </span>
+                              <span className="ml-1 text-[#B55D3B]">*</span>
                             </span>
 
                             <input
@@ -926,21 +926,15 @@ const OnboardingWizard: React.FC = () => {
                                 United States
                               </option>
 
-                              <option value="Canada">
-                                Canada
-                              </option>
+                              <option value="Canada">Canada</option>
 
                               <option value="United Kingdom">
                                 United Kingdom
                               </option>
 
-                              <option value="Australia">
-                                Australia
-                              </option>
+                              <option value="Australia">Australia</option>
 
-                              <option value="Other">
-                                Other
-                              </option>
+                              <option value="Other">Other</option>
                             </select>
                           </label>
 
@@ -956,11 +950,11 @@ const OnboardingWizard: React.FC = () => {
                                 setStateProvince(event.target.value)
                               }
                               placeholder={
-                                country === 'Canada'
-                                  ? 'Start typing your province'
-                                  : country === 'United States'
-                                    ? 'Start typing your state'
-                                    : 'Enter your state or province'
+                                country === "Canada"
+                                  ? "Start typing your province"
+                                  : country === "United States"
+                                    ? "Start typing your state"
+                                    : "Enter your state or province"
                               }
                               autoComplete="address-level1"
                               list="state-province-options"
@@ -969,10 +963,7 @@ const OnboardingWizard: React.FC = () => {
 
                             <datalist id="state-province-options">
                               {locationSuggestions.map((location) => (
-                                <option
-                                  key={location}
-                                  value={location}
-                                />
+                                <option key={location} value={location} />
                               ))}
                             </datalist>
                           </label>
@@ -981,8 +972,8 @@ const OnboardingWizard: React.FC = () => {
                     </div>
 
                     <p className="text-center text-[10px] leading-relaxed text-[#2D2A27]/45">
-                      We only use this information to personalize
-                      your experience inside Porchside Pet Life.
+                      We only use this information to personalize your
+                      experience inside Porchside Pet Life.
                     </p>
                   </section>
                 )}
@@ -996,14 +987,12 @@ const OnboardingWizard: React.FC = () => {
                         </p>
 
                         <h1 className="font-serif text-xl font-black leading-tight text-[#2D2A27] sm:text-2xl">
-                          Now it's my turn to meet your best
-                          friend.
+                          Now it's my turn to meet your best friend.
                         </h1>
 
                         <p className="max-w-md text-xs leading-relaxed text-[#2D2A27]/70">
-                          Tell us the basics today. You can add
-                          photos, records, favorites, and more
-                          once you're inside.
+                          Tell us the basics today. You can add photos, records,
+                          favorites, and more once you're inside.
                         </p>
                       </div>
 
@@ -1035,19 +1024,14 @@ const OnboardingWizard: React.FC = () => {
                         <label className="block">
                           <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
                             Dog's Name
-                            <span className="ml-1 text-[#B55D3B]">
-                              *
-                            </span>
+                            <span className="ml-1 text-[#B55D3B]">*</span>
                           </span>
 
                           <input
                             type="text"
                             value={currentDog.name}
                             onChange={(event) =>
-                              updateCurrentDog(
-                                'name',
-                                event.target.value,
-                              )
+                              updateCurrentDog("name", event.target.value)
                             }
                             placeholder="Stitch"
                             autoComplete="off"
@@ -1067,10 +1051,7 @@ const OnboardingWizard: React.FC = () => {
                             type="text"
                             value={currentDog.breed}
                             onChange={(event) =>
-                              updateCurrentDog(
-                                'breed',
-                                event.target.value,
-                              )
+                              updateCurrentDog("breed", event.target.value)
                             }
                             placeholder="French Bulldog"
                             autoComplete="off"
@@ -1086,19 +1067,14 @@ const OnboardingWizard: React.FC = () => {
                           <select
                             value={currentDog.sex}
                             onChange={(event) =>
-                              updateCurrentDog(
-                                'sex',
-                                event.target.value,
-                              )
+                              updateCurrentDog("sex", event.target.value)
                             }
                             className="onboarding-field"
                           >
                             <option value="">Choose one</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
-                            <option value="unknown">
-                              Not sure
-                            </option>
+                            <option value="unknown">Not sure</option>
                           </select>
                         </label>
 
@@ -1110,10 +1086,7 @@ const OnboardingWizard: React.FC = () => {
                           <select
                             value={currentDog.lifeStage}
                             onChange={(event) =>
-                              updateCurrentDog(
-                                'lifeStage',
-                                event.target.value,
-                              )
+                              updateCurrentDog("lifeStage", event.target.value)
                             }
                             className="onboarding-field"
                           >
@@ -1121,9 +1094,7 @@ const OnboardingWizard: React.FC = () => {
                             <option value="puppy">Puppy</option>
                             <option value="adult">Adult</option>
                             <option value="senior">Senior</option>
-                            <option value="unknown">
-                              Not sure
-                            </option>
+                            <option value="unknown">Not sure</option>
                           </select>
                         </label>
 
@@ -1139,10 +1110,7 @@ const OnboardingWizard: React.FC = () => {
                             type="date"
                             value={currentDog.birthday}
                             onChange={(event) =>
-                              updateCurrentDog(
-                                'birthday',
-                                event.target.value,
-                              )
+                              updateCurrentDog("birthday", event.target.value)
                             }
                             className="onboarding-field"
                           />
@@ -1163,10 +1131,7 @@ const OnboardingWizard: React.FC = () => {
                               step="0.1"
                               value={currentDog.weight}
                               onChange={(event) =>
-                                updateCurrentDog(
-                                  'weight',
-                                  event.target.value,
-                                )
+                                updateCurrentDog("weight", event.target.value)
                               }
                               placeholder="24"
                               inputMode="decimal"
@@ -1182,48 +1147,46 @@ const OnboardingWizard: React.FC = () => {
                     </div>
 
                     <p className="text-center text-[10px] leading-relaxed text-[#2D2A27]/45">
-                      Only their name is required. Everything
-                      else can be completed later.
+                      Only their name is required. Everything else can be
+                      completed later.
                     </p>
                   </section>
                 )}
 
                 {step === 5 && (
-                  <section className="animate-in space-y-3 text-center fade-in slide-in-from-bottom-2 duration-300">
-                    <h1 className="font-serif text-xl font-black text-[#2D2A27]">
-                      Health Center is next.
-                    </h1>
+                  <section className="animate-in space-y-5 text-center fade-in slide-in-from-bottom-2 duration-500">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[#CBD3C3] bg-[#EEF1E9] text-[#B55D3B] shadow-[0_10px_24px_rgba(45,42,39,0.08)]">
+                      <Home size={30} strokeWidth={1.7} />
+                    </div>
 
-                    <p className="mx-auto max-w-sm text-xs text-[#2D2A27]/65">
-                      This is the next onboarding screen we will
-                      build.
-                    </p>
-                  </section>
-                )}
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#6F7250]">
+                        Welcome Home
+                      </p>
 
-                {step === 6 && (
-                  <section className="animate-in space-y-3 text-center fade-in slide-in-from-bottom-2 duration-300">
-                    <h1 className="font-serif text-xl font-black text-[#2D2A27]">
-                      Peace of Mind is next.
-                    </h1>
+                      <h1 className="font-serif text-3xl font-black leading-tight text-[#2D2A27] sm:text-4xl">
+                        Your porch is ready.
+                      </h1>
 
-                    <p className="mx-auto max-w-sm text-xs text-[#2D2A27]/65">
-                      This screen will cover the essential
-                      emergency setup.
-                    </p>
-                  </section>
-                )}
+                      <p className="mx-auto max-w-md text-sm leading-relaxed text-[#2D2A27]/70">
+                        Welcome to Porchside Pet Life, {displayName}. Stitch is
+                        ready to help you care for {dogNamesText}, keep the
+                        important things organized, and make room for all the
+                        memories still ahead.
+                      </p>
+                    </div>
 
-                {step === 7 && (
-                  <section className="animate-in space-y-3 text-center fade-in slide-in-from-bottom-2 duration-300">
-                    <h1 className="font-serif text-xl font-black text-[#2D2A27]">
-                      Welcome home.
-                    </h1>
+                    <div className="mx-auto max-w-md rounded-[24px] border border-[#CBD3C3] bg-[#EEF1E9] p-5 text-left shadow-[0_12px_28px_rgba(45,42,39,0.07)]">
+                      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#6F7250]">
+                        Once You're Inside
+                      </p>
 
-                    <p className="mx-auto max-w-sm text-xs text-[#2D2A27]/65">
-                      The final completion screen will open
-                      their new porch.
-                    </p>
+                      <p className="mt-2 text-sm leading-relaxed text-[#2D2A27]/70">
+                        Add photos, complete the Health Center, set reminders,
+                        build an emergency plan, and start capturing everyday
+                        moments whenever you're ready.
+                      </p>
+                    </div>
                   </section>
                 )}
               </div>
@@ -1242,19 +1205,22 @@ const OnboardingWizard: React.FC = () => {
 
                   <button
                     type="button"
-                    onClick={nextStep}
+                    onClick={step === 5 ? completeOnboarding : nextStep}
                     disabled={!isCurrentStepValid()}
                     className="inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#B55D3B] px-4 py-2 text-xs font-black text-white shadow-md transition-all hover:bg-[#9C4E30] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:px-6 sm:text-sm"
                   >
                     {getPrimaryButtonLabel()}
 
-                    <ChevronRight size={15} />
+                    {step === 5 ? (
+                      <Home size={15} />
+                    ) : (
+                      <ChevronRight size={15} />
+                    )}
                   </button>
                 </div>
 
                 <p className="text-center text-[10px] leading-normal text-[#2D2A27]/50">
-                  Need a break? No worries. We'll save your
-                  progress as you go.
+                  Need a break? No worries. We'll save your progress as you go.
                 </p>
               </div>
             </main>
