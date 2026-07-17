@@ -34,29 +34,70 @@ interface AuthMessage {
 
 const PublicEntryFlow: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#FDFBF7]">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#FDFBF7]">
       <WelcomeScreen onStart={() => {}} onSignIn={() => {}} />
     </div>
   );
 };
 
-const OnboardingGate: React.FC<{ session: any; children: React.ReactNode }> = ({ session, children }) => {
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(false);
+interface OnboardingGateProps {
+  session: any;
+  children: React.ReactNode;
+}
+
+const OnboardingGate: React.FC<OnboardingGateProps> = ({
+  session,
+  children,
+}) => {
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] =
+    useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!session?.user?.id) return;
+    const userId = session?.user?.id;
 
-    const checkOnboarding = async () => {
-      const stored = localStorage.getItem(`onboarding_${session.user.id}`);
-      setHasCompletedOnboarding(!!stored);
+    if (!userId) {
+      setHasCompletedOnboarding(false);
+      setLoading(false);
+      return;
+    }
+
+    const completionKey = `onboarding_complete_${userId}`;
+    const legacyKey = `onboarding_${userId}`;
+
+    const checkOnboardingStatus = () => {
+      const completed =
+        localStorage.getItem(completionKey) === 'true' ||
+        Boolean(localStorage.getItem(legacyKey));
+
+      setHasCompletedOnboarding(completed);
       setLoading(false);
     };
 
-    checkOnboarding();
+    checkOnboardingStatus();
+
+    window.addEventListener(
+      'porchside:onboarding-complete',
+      checkOnboardingStatus,
+    );
+
+    return () => {
+      window.removeEventListener(
+        'porchside:onboarding-complete',
+        checkOnboardingStatus,
+      );
+    };
   }, [session?.user?.id]);
 
-  if (loading) return <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#FDFBF7]">
+        <div className="text-sm font-medium text-[#2D2A27]/60">
+          Loading your porch...
+        </div>
+      </div>
+    );
+  }
 
   if (!hasCompletedOnboarding) {
     return <OnboardingWizard />;
@@ -66,35 +107,50 @@ const OnboardingGate: React.FC<{ session: any; children: React.ReactNode }> = ({
 };
 
 const YourPorch: React.FC = () => {
-  return <div className="p-6"><h1>Your Porch</h1></div>;
+  return (
+    <div className="p-6">
+      <h1>Your Porch</h1>
+    </div>
+  );
 };
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [profileOpen, setProfileOpen] = useState<boolean>(false);
-  const [planManagementOpen, setPlanManagementOpen] = useState<boolean>(false);
+  const [planManagementOpen, setPlanManagementOpen] =
+    useState<boolean>(false);
+
   const [humanProfile, setHumanProfile] = useState<OwnerProfile>({
     name: 'Beta Tester',
     address: '',
     phone: '',
     emergencyContact: '',
-    photo: ''
+    photo: '',
   });
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: currentSession } }: any) => {
-      setSession(currentSession);
-      setLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: currentSession } }: any) => {
+        setSession(currentSession);
+        setLoading(false);
+      });
 
-    const { data } = supabase.auth.onAuthStateChange((_event: any, currentSession: any) => {
-      setSession(currentSession);
-    });
+    const { data } = supabase.auth.onAuthStateChange(
+      (_event: any, currentSession: any) => {
+        setSession(currentSession);
+        setLoading(false);
+      },
+    );
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setProfileOpen(false);
       }
     };
@@ -105,14 +161,20 @@ const App: React.FC = () => {
       if (data?.subscription) {
         data.subscription.unsubscribe();
       }
+
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   useEffect(() => {
-    if (!session?.user?.id) return;
+    if (!session?.user?.id) {
+      return;
+    }
 
-    const storedProfile = localStorage.getItem(`owner_profile_${session.user.id}`);
+    const storedProfile = localStorage.getItem(
+      `owner_profile_${session.user.id}`,
+    );
+
     if (storedProfile) {
       try {
         setHumanProfile(JSON.parse(storedProfile));
@@ -122,7 +184,7 @@ const App: React.FC = () => {
           address: '',
           phone: '',
           emergencyContact: '',
-          photo: ''
+          photo: '',
         });
       }
     }
@@ -130,46 +192,72 @@ const App: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
-        <div className="text-[#2D2A27]/60 font-medium text-sm">🐾 Connecting...</div>
+      <div className="flex min-h-screen items-center justify-center bg-[#FDFBF7]">
+        <div className="text-sm font-medium text-[#2D2A27]/60">
+          🐾 Connecting...
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] flex flex-col justify-between relative">
-      <div className="flex-grow flex flex-col">
+    <div className="relative flex min-h-screen flex-col justify-between bg-[#FDFBF7]">
+      <div className="flex flex-grow flex-col">
         {!session ? (
           <PublicEntryFlow />
         ) : (
           <PetProvider>
             <OnboardingGate session={session}>
-              <div className="w-full flex-grow flex flex-col">
-                <nav className="bg-[#F4F0EA] border-b border-[#B6A799]/20 px-4 py-3 flex justify-between items-center relative z-40 shadow-sm">
+              <div className="flex w-full flex-grow flex-col">
+                <nav className="relative z-40 flex items-center justify-between border-b border-[#B6A799]/20 bg-[#F4F0EA] px-4 py-3 shadow-sm">
                   <div className="flex items-center gap-3">
-                    <img src={logoImg} alt="Porch & Paw Logo" className="h-7 w-auto object-contain" />
-                    <span className="text-[#2D2A27] font-serif font-bold text-sm hidden sm:inline">Porch & Paw Portal</span>
+                    <img
+                      src={logoImg}
+                      alt="Porch & Paw Logo"
+                      className="h-7 w-auto object-contain"
+                    />
+
+                    <span className="hidden font-serif text-sm font-bold text-[#2D2A27] sm:inline">
+                      Porch & Paw Portal
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-4" ref={dropdownRef}>
-                    <span className="text-[#2D2A27]/70 text-xs font-medium hidden md:inline">
-                      Logged in as: <strong className="text-[#2D2A27]">{session.user?.email}</strong>
+                  <div
+                    className="flex items-center gap-4"
+                    ref={dropdownRef}
+                  >
+                    <span className="hidden text-xs font-medium text-[#2D2A27]/70 md:inline">
+                      Logged in as:{' '}
+                      <strong className="text-[#2D2A27]">
+                        {session.user?.email}
+                      </strong>
                     </span>
 
                     <button
                       onClick={() => setProfileOpen(!profileOpen)}
                       type="button"
-                      className="h-9 w-9 rounded-full ring-2 ring-[#B55D3B] ring-offset-2 bg-[#B55D3B] text-white flex items-center justify-center font-bold text-sm shadow-sm hover:scale-105 active:scale-95 transition-all overflow-hidden cursor-pointer"
+                      className="flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#B55D3B] text-sm font-bold text-white shadow-sm ring-2 ring-[#B55D3B] ring-offset-2 transition-all hover:scale-105 active:scale-95"
+                      aria-label="Open profile menu"
                     >
                       {humanProfile.photo ? (
-                        <img src={humanProfile.photo} alt="Owner Pic" className="w-full h-full object-cover" />
+                        <img
+                          src={humanProfile.photo}
+                          alt="Owner profile"
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
-                        <span>{humanProfile.name?.charAt(0).toUpperCase() || session.user?.email?.charAt(0).toUpperCase() || '👤'}</span>
+                        <span>
+                          {humanProfile.name?.charAt(0).toUpperCase() ||
+                            session.user?.email
+                              ?.charAt(0)
+                              .toUpperCase() ||
+                            '👤'}
+                        </span>
                       )}
                     </button>
 
                     {profileOpen && (
-                      <div className="absolute right-4 top-14 w-80 md:w-96 bg-white border border-[#B6A799]/40 rounded-2xl shadow-xl p-5 text-left animate-in fade-in slide-in-from-top-2 duration-150 flex flex-col gap-4">
+                      <div className="absolute right-4 top-14 flex w-80 flex-col gap-4 rounded-2xl border border-[#B6A799]/40 bg-white p-5 text-left shadow-xl animate-in fade-in slide-in-from-top-2 duration-150 md:w-96">
                         {/* ... [Profile Dropdown Content remains the same] */}
                       </div>
                     )}
@@ -181,18 +269,23 @@ const App: React.FC = () => {
 
                   <div className="flex-1 overflow-y-auto">
                     <Routes>
-                      {/* UPDATED: Root path now loads YourPorch */}
                       <Route path="/" element={<YourPorch />} />
                       <Route path="/profiles" element={<Profiles />} />
                       <Route path="/health" element={<HealthWellness />} />
                       <Route path="/reminders" element={<Reminders />} />
-                      <Route path="/journal" element={<JournalMemories />} />
+                      <Route
+                        path="/journal"
+                        element={<JournalMemories />}
+                      />
                       <Route path="/content" element={<Kitchen />} />
                       <Route path="/travel" element={<Travel />} />
                       <Route path="/store" element={<Store />} />
                       <Route path="/emergency" element={<Emergency />} />
                       <Route path="/directory" element={<Directory />} />
-                      <Route path="*" element={<Navigate to="/" replace />} />
+                      <Route
+                        path="*"
+                        element={<Navigate to="/" replace />}
+                      />
                     </Routes>
                   </div>
                 </div>
