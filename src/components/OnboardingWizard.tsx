@@ -1,13 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  BookHeart,
+  CalendarDays,
   Check,
   ChevronLeft,
   ChevronRight,
   Clock3,
+  CookingPot,
   Dog,
+  HeartPulse,
   Home,
   Minus,
+  PawPrint,
   Plus,
+  ShieldCheck,
   Sprout,
   UserRound,
 } from "lucide-react";
@@ -199,14 +205,10 @@ const OnboardingWizard: React.FC = () => {
     .map((dogProfile) => dogProfile.name.trim())
     .filter(Boolean);
 
-  const dogNamesText =
-    dogNames.length === 0
-      ? "your dogs"
-      : dogNames.length === 1
-        ? dogNames[0]
-        : dogNames.length === 2
-          ? `${dogNames[0]} and ${dogNames[1]}`
-          : `${dogNames.slice(0, -1).join(", ")}, and ${dogNames.at(-1)}`;
+  const porchOwnerText =
+    dogNames.length === 1
+      ? `${dogNames[0]}'s new porch`
+      : "your family's porch";
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -537,6 +539,44 @@ const OnboardingWizard: React.FC = () => {
           box-shadow: 0 2px 6px rgba(45, 42, 39, 0.03);
         }
 
+        @keyframes final-paw-arrive {
+          0% {
+            opacity: 0;
+            transform: scale(0.72) rotate(-8deg);
+          }
+
+          70% {
+            opacity: 1;
+            transform: scale(1.06) rotate(2deg);
+          }
+
+          100% {
+            opacity: 1;
+            transform: scale(1) rotate(0);
+          }
+        }
+
+        @keyframes porch-button-glow {
+          0%,
+          100% {
+            box-shadow: 0 4px 10px rgba(45, 42, 39, 0.12);
+          }
+
+          50% {
+            box-shadow:
+              0 0 0 5px rgba(181, 93, 59, 0.1),
+              0 8px 20px rgba(181, 93, 59, 0.24);
+          }
+        }
+
+        .final-paw {
+          animation: final-paw-arrive 620ms ease-out both;
+        }
+
+        .open-porch-button {
+          animation: porch-button-glow 1100ms ease-in-out 500ms 1;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .setup-card-grid > * {
             animation: none !important;
@@ -545,7 +585,9 @@ const OnboardingWizard: React.FC = () => {
           .setup-card,
           .setup-card-image,
           .porch-stitch,
-          .onboarding-field {
+          .onboarding-field,
+          .final-paw,
+          .open-porch-button {
             transition: none !important;
           }
         }
@@ -634,19 +676,28 @@ const OnboardingWizard: React.FC = () => {
                       Welcome home, {displayName}.
                     </p>
 
-                    <p>
-                      Your porch is ready, and I'll be right here whenever you
-                      need me.
-                    </p>
+                    <p>Your porch is ready.</p>
 
-                    <p className="text-[#B55D3B]">Let's head inside.</p>
+                    <p>I'll be right here whenever you need me.</p>
+
+                    <p className="font-bold text-[#B55D3B]">
+                      Come on... let's go see your porch.
+                    </p>
                   </div>
                 )}
               </div>
             </div>
 
             <main className="relative z-30 flex min-h-[420px] flex-col justify-between bg-[#FCFAF6] p-5 sm:p-7 lg:min-h-0 lg:p-8">
-              <PawProgress />
+              {step < 5 ? (
+                <PawProgress />
+              ) : (
+                <div className="relative z-10 w-full">
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#6F7250]">
+                    Welcome Home
+                  </p>
+                </div>
+              )}
 
               <div className="flex flex-1 flex-col justify-center py-3 lg:py-1">
                 {step === 1 && (
@@ -1148,38 +1199,51 @@ const OnboardingWizard: React.FC = () => {
                 )}
 
                 {step === 5 && (
-                  <section className="animate-in space-y-5 text-center fade-in slide-in-from-bottom-2 duration-500">
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[#CBD3C3] bg-[#EEF1E9] text-[#B55D3B] shadow-[0_10px_24px_rgba(45,42,39,0.08)]">
-                      <Check size={30} strokeWidth={2.2} />
+                  <section className="animate-in space-y-4 text-center fade-in slide-in-from-bottom-2 duration-500">
+                    <div className="final-paw mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[#D8C8BA] bg-[#FFF8F3] text-[#B55D3B] shadow-[0_10px_24px_rgba(45,42,39,0.08)]">
+                      <PawPrint size={31} strokeWidth={1.9} />
                     </div>
 
                     <div className="space-y-2">
-                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#6F7250]">
-                        Welcome Home
-                      </p>
-
                       <h1 className="font-serif text-3xl font-black leading-tight text-[#2D2A27] sm:text-4xl">
                         Your porch is ready.
                       </h1>
 
                       <p className="mx-auto max-w-md text-sm leading-relaxed text-[#2D2A27]/70">
-                        Welcome to Porchside Pet Life, {displayName}. Stitch is
-                        ready to help you care for {dogNamesText}, keep the
-                        important things organized, and make room for all the
-                        memories still ahead.
+                        Welcome home, <strong className="text-[#2D2A27]">{displayName}</strong>.
+                        Everything is ready for <strong className="text-[#2D2A27]">{porchOwnerText}</strong>.
+                        From this point on, we'll grow it together—one memory, one
+                        adventure, and one milestone at a time.
                       </p>
                     </div>
 
-                    <div className="mx-auto max-w-md rounded-[24px] border border-[#CBD3C3] bg-[#EEF1E9] p-5 text-left shadow-[0_12px_28px_rgba(45,42,39,0.07)]">
+                    <div className="mx-auto w-full max-w-md rounded-[24px] border border-[#CBD3C3] bg-[#EEF1E9] p-4 text-left shadow-[0_12px_28px_rgba(45,42,39,0.07)]">
                       <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#6F7250]">
-                        Once You're Inside
+                        What's Waiting Inside
                       </p>
 
-                      <p className="mt-2 text-sm leading-relaxed text-[#2D2A27]/70">
-                        Add photos, complete the Health Center, set reminders,
-                        build an emergency plan, and start capturing everyday
-                        moments whenever you're ready.
-                      </p>
+                      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        {[
+                          { label: "Health & Wellness", Icon: HeartPulse },
+                          { label: "Journal & Memories", Icon: BookHeart },
+                          { label: "Emergency Planning", Icon: ShieldCheck },
+                          { label: "Kitchen & Recipes", Icon: CookingPot },
+                          { label: "Daily Reminders", Icon: CalendarDays },
+                          { label: "A Porch That Grows With You", Icon: Home },
+                        ].map(({ label, Icon }) => (
+                          <div
+                            key={label}
+                            className="flex items-center gap-2 rounded-xl bg-white/70 px-3 py-2 text-xs font-bold text-[#2D2A27]/75"
+                          >
+                            <Icon
+                              size={15}
+                              strokeWidth={1.9}
+                              className="flex-shrink-0 text-[#B55D3B]"
+                            />
+                            <span>{label}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </section>
                 )}
@@ -1201,7 +1265,9 @@ const OnboardingWizard: React.FC = () => {
                     type="button"
                     onClick={step === 5 ? completeOnboarding : nextStep}
                     disabled={!isCurrentStepValid()}
-                    className="inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#B55D3B] px-4 py-2 text-xs font-black text-white shadow-md transition-all hover:bg-[#9C4E30] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:px-6 sm:text-sm"
+                    className={`inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#B55D3B] px-4 py-2 text-xs font-black text-white shadow-md transition-all hover:bg-[#9C4E30] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:px-6 sm:text-sm ${
+                      step === 5 ? "open-porch-button" : ""
+                    }`}
                   >
                     {getPrimaryButtonLabel()}
 
