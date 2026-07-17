@@ -1,10 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Minus, Plus, Sprout } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  Minus,
+  Plus,
+  Sprout,
+  UserRound,
+} from 'lucide-react';
 
 const OnboardingWizard: React.FC = () => {
   const [step, setStep] = useState(1);
   const [dogCount, setDogCount] = useState(1);
   const [porchLoaded, setPorchLoaded] = useState(false);
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [preferredName, setPreferredName] = useState('');
+  const [timeZone, setTimeZone] = useState(
+    Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York',
+  );
+  const [country, setCountry] = useState('United States');
+  const [stateProvince, setStateProvince] = useState('');
 
   const totalSteps = 7;
 
@@ -204,6 +221,35 @@ const OnboardingWizard: React.FC = () => {
           transform: scale(1.03);
         }
 
+        .onboarding-field {
+          width: 100%;
+          border-radius: 14px;
+          border: 1px solid rgba(182, 167, 153, 0.38);
+          background: rgba(255, 255, 255, 0.96);
+          padding: 10px 12px;
+          color: #2d2a27;
+          font-size: 13px;
+          line-height: 1.4;
+          outline: none;
+          box-shadow: 0 2px 6px rgba(45, 42, 39, 0.035);
+          transition:
+            border-color 180ms ease,
+            box-shadow 180ms ease,
+            background-color 180ms ease;
+        }
+
+        .onboarding-field::placeholder {
+          color: rgba(45, 42, 39, 0.38);
+        }
+
+        .onboarding-field:focus {
+          border-color: rgba(181, 93, 59, 0.7);
+          background: #ffffff;
+          box-shadow:
+            0 0 0 3px rgba(181, 93, 59, 0.09),
+            0 4px 10px rgba(45, 42, 39, 0.05);
+        }
+
         @keyframes stitch-gentle-breathe {
           0%,
           100% {
@@ -249,7 +295,8 @@ const OnboardingWizard: React.FC = () => {
 
           .setup-card,
           .setup-card-image,
-          .porch-stitch {
+          .porch-stitch,
+          .onboarding-field {
             transition: none !important;
           }
         }
@@ -309,7 +356,24 @@ const OnboardingWizard: React.FC = () => {
                   </div>
                 )}
 
-                {step > 2 && (
+                {step === 3 && (
+                  <div className="space-y-1.5 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
+                    <p className="font-bold text-[#2D2A27]">
+                      Every porch is a little different.
+                    </p>
+
+                    <p>
+                      Let's make this one feel like yours.
+                    </p>
+
+                    <p className="text-[#B55D3B]">
+                      Just the basics for now. You can change
+                      anything later.
+                    </p>
+                  </div>
+                )}
+
+                {step > 3 && (
                   <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
                     <p className="font-bold text-[#2D2A27]">
                       Perfect.
@@ -456,24 +520,205 @@ const OnboardingWizard: React.FC = () => {
                 )}
 
                 {step === 3 && (
-                  <section className="animate-in space-y-3 text-center fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#B6A799]/15 bg-[#F4F0EA] shadow-sm">
-                      <img
-                        src="/assets/progress/paw-progress.svg"
-                        alt=""
-                        aria-hidden="true"
-                        className="h-6 w-8 object-contain"
-                      />
+                  <section className="animate-in space-y-3 fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#6F7250]">
+                        About You
+                      </p>
+
+                      <h1 className="font-serif text-xl font-black leading-tight text-[#2D2A27] sm:text-2xl">
+                        Let's get to know you.
+                      </h1>
+
+                      <p className="max-w-md text-xs leading-relaxed text-[#2D2A27]/70">
+                        These details help personalize your
+                        porch, reminders, and recommendations.
+                        You can always change them later.
+                      </p>
                     </div>
 
-                    <h1 className="font-serif text-lg font-black text-[#2D2A27] sm:text-xl">
-                      Screen 3 is next.
-                    </h1>
+                    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                      <div className="rounded-[20px] border border-[#B6A799]/20 bg-white p-4 shadow-[0_8px_20px_rgba(45,42,39,0.06)]">
+                        <div className="mb-3 flex items-center gap-2">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4F0EA] text-[#B55D3B]">
+                            <UserRound size={16} strokeWidth={1.8} />
+                          </div>
 
-                    <p className="mx-auto max-w-xs text-xs text-[#2D2A27]/70">
-                      Dog count saved for this session:{' '}
-                      <strong>{dogCount}</strong>. Next we'll
-                      load your owner profile fields.
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#6F7250]">
+                              You
+                            </p>
+
+                            <p className="text-xs text-[#2D2A27]/55">
+                              What should we call you?
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2.5">
+                          <label className="block">
+                            <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                              First Name
+                              <span className="ml-1 text-[#B55D3B]">*</span>
+                            </span>
+
+                            <input
+                              type="text"
+                              value={firstName}
+                              onChange={(event) =>
+                                setFirstName(event.target.value)
+                              }
+                              placeholder="Carrie"
+                              autoComplete="given-name"
+                              className="onboarding-field"
+                            />
+                          </label>
+
+                          <label className="block">
+                            <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                              Last Name
+                            </span>
+
+                            <input
+                              type="text"
+                              value={lastName}
+                              onChange={(event) =>
+                                setLastName(event.target.value)
+                              }
+                              placeholder="Your last name"
+                              autoComplete="family-name"
+                              className="onboarding-field"
+                            />
+                          </label>
+
+                          <label className="block">
+                            <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                              Preferred Name
+                              <span className="ml-1 normal-case tracking-normal text-[#2D2A27]/40">
+                                optional
+                              </span>
+                            </span>
+
+                            <input
+                              type="text"
+                              value={preferredName}
+                              onChange={(event) =>
+                                setPreferredName(event.target.value)
+                              }
+                              placeholder="What friends call you"
+                              className="onboarding-field"
+                            />
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className="rounded-[20px] border border-[#CBD3C3] bg-[#EEF1E9] p-4 shadow-[0_8px_20px_rgba(45,42,39,0.06)]">
+                        <div className="mb-3 flex items-center gap-2">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#7A7147] shadow-sm">
+                            <Home size={16} strokeWidth={1.8} />
+                          </div>
+
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#6F7250]">
+                              Your Home
+                            </p>
+
+                            <p className="text-xs text-[#2D2A27]/55">
+                              For local reminders and timing.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2.5">
+                          <label className="block">
+                            <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                              Time Zone
+                            </span>
+
+                            <select
+                              value={timeZone}
+                              onChange={(event) =>
+                                setTimeZone(event.target.value)
+                              }
+                              className="onboarding-field"
+                            >
+                              <option value="America/New_York">
+                                Eastern Time
+                              </option>
+                              <option value="America/Chicago">
+                                Central Time
+                              </option>
+                              <option value="America/Denver">
+                                Mountain Time
+                              </option>
+                              <option value="America/Phoenix">
+                                Arizona Time
+                              </option>
+                              <option value="America/Los_Angeles">
+                                Pacific Time
+                              </option>
+                              <option value="America/Anchorage">
+                                Alaska Time
+                              </option>
+                              <option value="Pacific/Honolulu">
+                                Hawaii Time
+                              </option>
+                            </select>
+                          </label>
+
+                          <label className="block">
+                            <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                              Country
+                            </span>
+
+                            <select
+                              value={country}
+                              onChange={(event) =>
+                                setCountry(event.target.value)
+                              }
+                              className="onboarding-field"
+                            >
+                              <option value="United States">
+                                United States
+                              </option>
+                              <option value="Canada">
+                                Canada
+                              </option>
+                              <option value="United Kingdom">
+                                United Kingdom
+                              </option>
+                              <option value="Australia">
+                                Australia
+                              </option>
+                              <option value="Other">
+                                Other
+                              </option>
+                            </select>
+                          </label>
+
+                          <label className="block">
+                            <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
+                              State / Province
+                            </span>
+
+                            <input
+                              type="text"
+                              value={stateProvince}
+                              onChange={(event) =>
+                                setStateProvince(event.target.value)
+                              }
+                              placeholder="Indiana"
+                              autoComplete="address-level1"
+                              className="onboarding-field"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-center text-[10px] leading-relaxed text-[#2D2A27]/45">
+                      We only use this information to personalize
+                      your experience inside Porchside Pet Life.
                     </p>
                   </section>
                 )}
@@ -494,13 +739,16 @@ const OnboardingWizard: React.FC = () => {
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#B55D3B] px-4 py-2 text-xs font-black text-white shadow-md transition-all hover:bg-[#9C4E30] active:scale-[0.98] sm:px-6 sm:text-sm"
+                    disabled={step === 3 && firstName.trim().length === 0}
+                    className="inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#B55D3B] px-4 py-2 text-xs font-black text-white shadow-md transition-all hover:bg-[#9C4E30] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:px-6 sm:text-sm"
                   >
                     {step === 1
                       ? "Let's Head Inside"
                       : step === 2
                         ? "Let's Keep Going"
-                        : 'Next Step'}
+                        : step === 3
+                          ? 'Continue Home'
+                          : 'Next Step'}
 
                     <ChevronRight size={15} />
                   </button>
