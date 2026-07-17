@@ -1,13 +1,139 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
+  Check,
   ChevronLeft,
   ChevronRight,
+  Clock3,
   Home,
   Minus,
   Plus,
   Sprout,
   UserRound,
 } from 'lucide-react';
+
+const UNITED_STATES = [
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',
+  'Colorado',
+  'Connecticut',
+  'Delaware',
+  'Florida',
+  'Georgia',
+  'Hawaii',
+  'Idaho',
+  'Illinois',
+  'Indiana',
+  'Iowa',
+  'Kansas',
+  'Kentucky',
+  'Louisiana',
+  'Maine',
+  'Maryland',
+  'Massachusetts',
+  'Michigan',
+  'Minnesota',
+  'Mississippi',
+  'Missouri',
+  'Montana',
+  'Nebraska',
+  'Nevada',
+  'New Hampshire',
+  'New Jersey',
+  'New Mexico',
+  'New York',
+  'North Carolina',
+  'North Dakota',
+  'Ohio',
+  'Oklahoma',
+  'Oregon',
+  'Pennsylvania',
+  'Rhode Island',
+  'South Carolina',
+  'South Dakota',
+  'Tennessee',
+  'Texas',
+  'Utah',
+  'Vermont',
+  'Virginia',
+  'Washington',
+  'West Virginia',
+  'Wisconsin',
+  'Wyoming',
+  'District of Columbia',
+];
+
+const CANADIAN_PROVINCES = [
+  'Alberta',
+  'British Columbia',
+  'Manitoba',
+  'New Brunswick',
+  'Newfoundland and Labrador',
+  'Northwest Territories',
+  'Nova Scotia',
+  'Nunavut',
+  'Ontario',
+  'Prince Edward Island',
+  'Quebec',
+  'Saskatchewan',
+  'Yukon',
+];
+
+const getDetectedTimeZone = () => {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
+  } catch {
+    return 'America/New_York';
+  }
+};
+
+const getFriendlyTimeZoneName = (timeZone: string) => {
+  const knownTimeZones: Record<string, string> = {
+    'America/New_York': 'Eastern Time',
+    'America/Detroit': 'Eastern Time',
+    'America/Indiana/Indianapolis': 'Eastern Time',
+    'America/Indiana/Marengo': 'Eastern Time',
+    'America/Indiana/Vevay': 'Eastern Time',
+    'America/Indiana/Vincennes': 'Eastern Time',
+    'America/Indiana/Winamac': 'Eastern Time',
+    'America/Kentucky/Louisville': 'Eastern Time',
+    'America/Kentucky/Monticello': 'Eastern Time',
+    'America/Chicago': 'Central Time',
+    'America/Indiana/Knox': 'Central Time',
+    'America/Indiana/Tell_City': 'Central Time',
+    'America/Menominee': 'Central Time',
+    'America/North_Dakota/Beulah': 'Central Time',
+    'America/North_Dakota/Center': 'Central Time',
+    'America/North_Dakota/New_Salem': 'Central Time',
+    'America/Denver': 'Mountain Time',
+    'America/Boise': 'Mountain Time',
+    'America/Phoenix': 'Arizona Time',
+    'America/Los_Angeles': 'Pacific Time',
+    'America/Anchorage': 'Alaska Time',
+    'America/Juneau': 'Alaska Time',
+    'America/Nome': 'Alaska Time',
+    'America/Sitka': 'Alaska Time',
+    'America/Yakutat': 'Alaska Time',
+    'Pacific/Honolulu': 'Hawaii Time',
+    'America/Toronto': 'Eastern Time',
+    'America/Vancouver': 'Pacific Time',
+    'America/Edmonton': 'Mountain Time',
+    'America/Winnipeg': 'Central Time',
+    'Europe/London': 'United Kingdom Time',
+    'Australia/Sydney': 'Sydney Time',
+    'Australia/Melbourne': 'Melbourne Time',
+    'Australia/Brisbane': 'Brisbane Time',
+    'Australia/Perth': 'Perth Time',
+  };
+
+  if (knownTimeZones[timeZone]) {
+    return knownTimeZones[timeZone];
+  }
+
+  return timeZone.replaceAll('_', ' ').replaceAll('/', ' · ');
+};
 
 const OnboardingWizard: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -17,16 +143,33 @@ const OnboardingWizard: React.FC = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [preferredName, setPreferredName] = useState('');
-  const [timeZone, setTimeZone] = useState(
-    Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York',
-  );
+  const [timeZone] = useState(getDetectedTimeZone);
   const [country, setCountry] = useState('United States');
   const [stateProvince, setStateProvince] = useState('');
 
   const totalSteps = 7;
 
+  const friendlyTimeZone = useMemo(
+    () => getFriendlyTimeZoneName(timeZone),
+    [timeZone],
+  );
+
+  const locationSuggestions = useMemo(() => {
+    if (country === 'United States') {
+      return UNITED_STATES;
+    }
+
+    if (country === 'Canada') {
+      return CANADIAN_PROVINCES;
+    }
+
+    return [];
+  }, [country]);
+
   useEffect(() => {
-    const timer = window.setTimeout(() => setPorchLoaded(true), 120);
+    const timer = window.setTimeout(() => {
+      setPorchLoaded(true);
+    }, 120);
 
     return () => window.clearTimeout(timer);
   }, []);
@@ -53,6 +196,13 @@ const OnboardingWizard: React.FC = () => {
     setDogCount((previousCount) =>
       Math.max(previousCount - 1, 1),
     );
+  };
+
+  const handleCountryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    setCountry(event.target.value);
+    setStateProvince('');
   };
 
   const PawProgress = () => (
@@ -159,16 +309,14 @@ const OnboardingWizard: React.FC = () => {
 
         .porch-stitch {
           opacity: 0;
-          transform: scale(1.17) translateY(4px);
-          transition:
-            opacity 700ms ease,
-            transform 1000ms ease;
+          transform: scale(1.14);
           transform-origin: 52% 52%;
+          transition: opacity 700ms ease;
         }
 
         .porch-stitch-loaded {
           opacity: 1;
-          transform: scale(1.14) translateY(0);
+          transform: scale(1.14);
         }
 
         @keyframes card-rise {
@@ -250,45 +398,18 @@ const OnboardingWizard: React.FC = () => {
             0 4px 10px rgba(45, 42, 39, 0.05);
         }
 
-        @keyframes stitch-gentle-breathe {
-          0%,
-          100% {
-            transform: scale(1.14) translateX(0) rotate(0deg);
-          }
-
-          50% {
-            transform: scale(1.145) translateX(-1px) rotate(0deg);
-          }
-        }
-
-        @keyframes stitch-curious-tilt {
-          0%,
-          72%,
-          100% {
-            transform: scale(1.14) translateX(0) rotate(0deg);
-          }
-
-          78% {
-            transform: scale(1.145) translateX(-2px) rotate(-0.7deg);
-          }
-
-          84% {
-            transform: scale(1.145) translateX(-2px) rotate(-0.7deg);
-          }
-
-          91% {
-            transform: scale(1.14) translateX(0) rotate(0deg);
-          }
-        }
-
-        .porch-stitch-loaded.stitch-alive {
-          animation:
-            stitch-gentle-breathe 7s ease-in-out infinite,
-            stitch-curious-tilt 18s ease-in-out 4s infinite;
+        .detected-time-zone {
+          width: 100%;
+          min-height: 41px;
+          border-radius: 14px;
+          border: 1px solid rgba(182, 167, 153, 0.3);
+          background: rgba(255, 255, 255, 0.82);
+          padding: 9px 11px;
+          color: #2d2a27;
+          box-shadow: 0 2px 6px rgba(45, 42, 39, 0.03);
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .porch-stitch-loaded.stitch-alive,
           .setup-card-grid > * {
             animation: none !important;
           }
@@ -309,7 +430,7 @@ const OnboardingWizard: React.FC = () => {
               <img
                 src="/assets/branding/stitch-welcome.png"
                 alt="Stitch waiting on the Porch & Paw porch"
-                className={`porch-stitch stitch-alive absolute inset-0 h-full w-full object-cover object-[52%_48%] ${
+                className={`porch-stitch absolute inset-0 h-full w-full object-cover object-[52%_48%] ${
                   porchLoaded
                     ? 'porch-stitch-loaded'
                     : ''
@@ -328,16 +449,16 @@ const OnboardingWizard: React.FC = () => {
                     <p>I'm so glad you're here.</p>
 
                     <p>
-                      I'll help you get everything ready
-                      before we head inside.
+                      I'll help you get everything ready before
+                      we head inside.
                     </p>
 
                     <p>There's no rush.</p>
 
                     <p>
-                      We'll take it one step at a time, and
-                      if you need to come back later, I'll
-                      be right here waiting.
+                      We'll take it one step at a time, and if
+                      you need to come back later, I'll be right
+                      here waiting.
                     </p>
                   </div>
                 )}
@@ -345,8 +466,8 @@ const OnboardingWizard: React.FC = () => {
                 {step === 2 && (
                   <div className="space-y-1 text-xs font-medium leading-snug text-[#2D2A27]/85 sm:text-sm">
                     <p>
-                      Every dog deserves their own little
-                      place to call home.
+                      Every dog deserves their own little place
+                      to call home.
                     </p>
 
                     <p className="font-bold text-[#B55D3B]">
@@ -380,8 +501,8 @@ const OnboardingWizard: React.FC = () => {
                     </p>
 
                     <p>
-                      Next we'll build the rest of your
-                      family's porch one step at a time.
+                      Next we'll build the rest of your family's
+                      porch one step at a time.
                     </p>
                   </div>
                 )}
@@ -559,7 +680,9 @@ const OnboardingWizard: React.FC = () => {
                           <label className="block">
                             <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
                               First Name
-                              <span className="ml-1 text-[#B55D3B]">*</span>
+                              <span className="ml-1 text-[#B55D3B]">
+                                *
+                              </span>
                             </span>
 
                             <input
@@ -630,41 +753,37 @@ const OnboardingWizard: React.FC = () => {
                         </div>
 
                         <div className="space-y-2.5">
-                          <label className="block">
+                          <div>
                             <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
                               Time Zone
                             </span>
 
-                            <select
-                              value={timeZone}
-                              onChange={(event) =>
-                                setTimeZone(event.target.value)
-                              }
-                              className="onboarding-field"
-                            >
-                              <option value="America/New_York">
-                                Eastern Time
-                              </option>
-                              <option value="America/Chicago">
-                                Central Time
-                              </option>
-                              <option value="America/Denver">
-                                Mountain Time
-                              </option>
-                              <option value="America/Phoenix">
-                                Arizona Time
-                              </option>
-                              <option value="America/Los_Angeles">
-                                Pacific Time
-                              </option>
-                              <option value="America/Anchorage">
-                                Alaska Time
-                              </option>
-                              <option value="Pacific/Honolulu">
-                                Hawaii Time
-                              </option>
-                            </select>
-                          </label>
+                            <div className="detected-time-zone flex items-center justify-between gap-3">
+                              <div className="flex min-w-0 items-center gap-2">
+                                <Clock3
+                                  size={15}
+                                  strokeWidth={1.8}
+                                  className="flex-shrink-0 text-[#7A7147]"
+                                />
+
+                                <div className="min-w-0">
+                                  <p className="truncate text-[13px] font-medium text-[#2D2A27]">
+                                    {friendlyTimeZone}
+                                  </p>
+
+                                  <p className="truncate text-[9px] text-[#2D2A27]/45">
+                                    Detected automatically
+                                  </p>
+                                </div>
+                              </div>
+
+                              <Check
+                                size={15}
+                                strokeWidth={2.2}
+                                className="flex-shrink-0 text-[#6F7250]"
+                              />
+                            </div>
+                          </div>
 
                           <label className="block">
                             <span className="mb-1 block text-[10px] font-black uppercase tracking-[0.14em] text-[#2D2A27]/65">
@@ -673,23 +792,25 @@ const OnboardingWizard: React.FC = () => {
 
                             <select
                               value={country}
-                              onChange={(event) =>
-                                setCountry(event.target.value)
-                              }
+                              onChange={handleCountryChange}
                               className="onboarding-field"
                             >
                               <option value="United States">
                                 United States
                               </option>
+
                               <option value="Canada">
                                 Canada
                               </option>
+
                               <option value="United Kingdom">
                                 United Kingdom
                               </option>
+
                               <option value="Australia">
                                 Australia
                               </option>
+
                               <option value="Other">
                                 Other
                               </option>
@@ -707,10 +828,26 @@ const OnboardingWizard: React.FC = () => {
                               onChange={(event) =>
                                 setStateProvince(event.target.value)
                               }
-                              placeholder="Indiana"
+                              placeholder={
+                                country === 'Canada'
+                                  ? 'Start typing your province'
+                                  : country === 'United States'
+                                    ? 'Start typing your state'
+                                    : 'Enter your state or province'
+                              }
                               autoComplete="address-level1"
+                              list="state-province-options"
                               className="onboarding-field"
                             />
+
+                            <datalist id="state-province-options">
+                              {locationSuggestions.map((location) => (
+                                <option
+                                  key={location}
+                                  value={location}
+                                />
+                              ))}
+                            </datalist>
                           </label>
                         </div>
                       </div>
@@ -739,7 +876,10 @@ const OnboardingWizard: React.FC = () => {
                   <button
                     type="button"
                     onClick={nextStep}
-                    disabled={step === 3 && firstName.trim().length === 0}
+                    disabled={
+                      step === 3 &&
+                      firstName.trim().length === 0
+                    }
                     className="inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#B55D3B] px-4 py-2 text-xs font-black text-white shadow-md transition-all hover:bg-[#9C4E30] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:px-6 sm:text-sm"
                   >
                     {step === 1
