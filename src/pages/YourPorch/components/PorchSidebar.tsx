@@ -172,7 +172,7 @@ const PorchSidebar: React.FC = () => {
         ].join(' ')}
       >
         <img
-          src="/assets/branding/BRAND MARK 2.svg"
+          src="/assets/branding/porchside-pet-life-brand.svg"
           alt="Porchside Pet Life"
           className="h-auto max-h-[94px] w-auto max-w-[148px] object-contain"
         />
