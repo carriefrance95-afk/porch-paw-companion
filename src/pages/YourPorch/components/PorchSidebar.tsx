@@ -37,7 +37,7 @@ const primaryNavigation: NavigationItem[] = [
   },
 ];
 
-const exploreNavigation: NavigationItem[] = [
+const secondaryNavigation: NavigationItem[] = [
   {
     label: 'Porch & Paw Kitchen',
     path: '/content',
@@ -60,42 +60,42 @@ const exploreNavigation: NavigationItem[] = [
   },
 ];
 
-const EmergencyIcon: React.FC<{ isActive: boolean }> = ({ isActive }) => (
+const EmergencyIcon: React.FC = () => (
   <svg
-    viewBox="0 0 64 64"
+    viewBox="0 0 72 72"
     aria-hidden="true"
-    className="h-[52px] w-[52px]"
+    className="h-[68px] w-[68px] shrink-0"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <circle
-      cx="32"
-      cy="32"
-      r="29"
-      fill={isActive ? '#FFFFFF' : '#FFF8F4'}
-      stroke="#E7B9A4"
-      strokeWidth="2"
+      cx="36"
+      cy="36"
+      r="33"
+      fill="#FAF7F2"
+      stroke="#BF6A43"
+      strokeWidth="2.4"
     />
 
     <path
-      d="M32 11L50 17.5V30.5C50 42 42.7 51.7 32 55.5C21.3 51.7 14 42 14 30.5V17.5L32 11Z"
-      fill="#FFF3EC"
+      d="M36 14L55 21V34.5C55 47 47.2 57.2 36 61C24.8 57.2 17 47 17 34.5V21L36 14Z"
+      fill="#F4E7DE"
       stroke="#BF6A43"
       strokeWidth="2.5"
       strokeLinejoin="round"
     />
 
     <path
-      d="M32 21V42"
+      d="M36 25V47"
       stroke="#BF6A43"
-      strokeWidth="5"
+      strokeWidth="5.5"
       strokeLinecap="round"
     />
 
     <path
-      d="M21.5 31.5H42.5"
+      d="M25 36H47"
       stroke="#BF6A43"
-      strokeWidth="5"
+      strokeWidth="5.5"
       strokeLinecap="round"
     />
   </svg>
@@ -104,13 +104,13 @@ const EmergencyIcon: React.FC<{ isActive: boolean }> = ({ isActive }) => (
 const PorchSidebar: React.FC = () => {
   const navigationClass = ({ isActive }: { isActive: boolean }) =>
     [
-      'group flex min-h-[72px] w-full items-center gap-4',
-      'rounded-[22px] px-3 py-2 text-left',
-      'text-[17px] font-semibold leading-[1.2]',
+      'group flex w-full items-center gap-4',
+      'rounded-[22px] px-3 py-2',
+      'text-[20px] font-bold leading-tight',
       'transition-all duration-200',
       isActive
-        ? 'bg-[#DCE4D6] text-[#2D2A27] shadow-[0_10px_26px_rgba(45,42,39,0.09)]'
-        : 'text-[#514B46] hover:bg-white hover:text-[#2D2A27] hover:shadow-[0_7px_20px_rgba(45,42,39,0.06)]',
+        ? 'bg-[#DCE4D6] text-[#2D2A27] shadow-[0_8px_22px_rgba(45,42,39,0.08)]'
+        : 'text-[#403A35] hover:bg-[#F3EEE7] hover:text-[#2D2A27]',
     ].join(' ');
 
   const renderNavigationItem = (item: NavigationItem) => (
@@ -124,14 +124,10 @@ const PorchSidebar: React.FC = () => {
         src={item.iconPath}
         alt=""
         aria-hidden="true"
-        className={[
-          'h-[54px] w-[54px] shrink-0 rounded-full object-contain',
-          'transition-transform duration-200',
-          'group-hover:scale-[1.04]',
-        ].join(' ')}
+        className="h-[68px] w-[68px] shrink-0 object-contain"
       />
 
-      <span className="min-w-0 pr-2">
+      <span className="min-w-0 flex-1">
         {item.label}
       </span>
     </NavLink>
@@ -140,86 +136,62 @@ const PorchSidebar: React.FC = () => {
   return (
     <aside
       className={[
-        'hidden h-full w-[330px] min-w-[330px] flex-col',
-        'border-r border-[#E8E1D8] bg-[#FAF7F2]',
-        'px-5 pb-5 pt-5 lg:flex',
+        'hidden h-screen w-[350px] min-w-[350px] flex-col',
+        'border-r border-[#E8E1D8]',
+        'bg-[#FAF7F2]',
+        'lg:flex',
       ].join(' ')}
     >
-      <div className="mb-6 px-2">
-        <div className="flex items-center gap-4">
-          <img
-            src="/assets/branding/BRAND MARK.svg"
-            alt="Porch & Paw brand mark"
-            className="h-[70px] w-[82px] shrink-0 object-contain"
-          />
-
-          <div className="min-w-0">
-            <p className="font-serif text-[27px] font-semibold leading-[0.95] text-[#2D2A27]">
-              Porchside
-            </p>
-
-            <p className="mt-2 text-[14px] font-semibold uppercase tracking-[0.18em] text-[#7A7147]">
-              Pet Life
-            </p>
-
-            <p className="mt-1.5 text-[12px] font-medium text-[#9A7362]">
-              by Porch &amp; Paw
-            </p>
-          </div>
-        </div>
+      <div className="shrink-0 px-5 pb-3 pt-5">
+        <img
+          src="/assets/branding/BRAND MARK 2.svg"
+          alt="Porchside Pet Life by Porch & Paw"
+          className="mx-auto h-auto w-full max-w-[265px] object-contain"
+        />
       </div>
 
-      <nav
-        aria-label="Main navigation"
-        className={[
-          'flex min-h-0 flex-1 flex-col overflow-y-auto pr-1',
-          '[scrollbar-width:thin]',
-          '[scrollbar-color:#D8CFC4_transparent]',
-        ].join(' ')}
-      >
-        <div className="space-y-2">
+      <div className="flex-1 overflow-y-auto px-4 pb-5">
+        <nav
+          aria-label="Main navigation"
+          className="space-y-1"
+        >
           {primaryNavigation.map(renderNavigationItem)}
-        </div>
+        </nav>
 
-        <div className="my-6 h-px shrink-0 bg-[#E3DCD3]" />
+        <div className="my-5 flex items-center gap-3 px-2">
+          <div className="h-px flex-1 bg-[#D9CDBF]" />
 
-        <div>
-          <p className="mb-3 px-3 text-[12px] font-bold uppercase tracking-[0.22em] text-[#93887D]">
+          <p className="shrink-0 text-[14px] font-bold uppercase tracking-[0.18em] text-[#7A7147]">
             More Rooms
           </p>
 
-          <div className="space-y-2">
-            {exploreNavigation.map(renderNavigationItem)}
-          </div>
+          <div className="h-px flex-1 bg-[#D9CDBF]" />
         </div>
 
-        <div className="mt-6 border-t border-[#E3DCD3] pt-6">
-          <NavLink
-            to="/emergency"
-            className={({ isActive }) =>
-              [
-                'group flex min-h-[74px] w-full items-center gap-4',
-                'rounded-[22px] border px-3 py-2',
-                'text-[17px] font-semibold transition-all duration-200',
-                isActive
-                  ? 'border-[#BF6A43] bg-[#BF6A43] text-white shadow-[0_12px_28px_rgba(191,106,67,0.22)]'
-                  : 'border-[#E2C7B8] bg-[#FFF8F4] text-[#9B4F31] hover:border-[#BF6A43] hover:bg-[#FFF3EC]',
-              ].join(' ')
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <EmergencyIcon isActive={isActive} />
-                <span>Emergency</span>
-              </>
-            )}
-          </NavLink>
+        <nav
+          aria-label="More rooms"
+          className="space-y-1"
+        >
+          {secondaryNavigation.map(renderNavigationItem)}
+        </nav>
 
-          <p className="mx-auto mt-4 max-w-[250px] px-2 text-center text-[12px] leading-[1.55] text-[#93887D]">
-            A warm home for every part of life with your dogs.
-          </p>
-        </div>
-      </nav>
+        <div className="my-5 h-px bg-[#D9CDBF]" />
+
+        <NavLink
+          to="/emergency"
+          className={navigationClass}
+        >
+          <EmergencyIcon />
+
+          <span className="min-w-0 flex-1">
+            Emergency
+          </span>
+        </NavLink>
+
+        <p className="px-5 pb-3 pt-5 text-center font-serif text-[16px] font-semibold italic leading-relaxed text-[#7A7147]">
+          A warm home for every part of life with your dogs.
+        </p>
+      </div>
     </aside>
   );
 };
