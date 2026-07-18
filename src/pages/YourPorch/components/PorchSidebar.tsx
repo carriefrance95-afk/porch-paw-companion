@@ -64,7 +64,7 @@ const EmergencyIcon: React.FC = () => (
   <svg
     viewBox="0 0 72 72"
     aria-hidden="true"
-    className="h-[42px] w-[42px] shrink-0"
+    className="h-[48px] w-[48px] shrink-0"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
@@ -104,9 +104,9 @@ const EmergencyIcon: React.FC = () => (
 const PorchSidebar: React.FC = () => {
   const navigationClass = ({ isActive }: { isActive: boolean }) =>
     [
-      'group relative flex min-h-[44px] w-full items-center gap-3',
-      'rounded-[14px] px-2.5 py-1',
-      'font-sans text-[15px] font-semibold leading-[1.15]',
+      'group relative flex min-h-[54px] w-full items-center gap-[14px]',
+      'rounded-[16px] px-3 py-1.5',
+      'font-sans text-[17px] font-semibold leading-[1.2]',
       'transition-colors duration-200',
       'focus-visible:outline-none focus-visible:ring-2',
       'focus-visible:ring-[#BF6A43]/40 focus-visible:ring-offset-2',
@@ -115,9 +115,9 @@ const PorchSidebar: React.FC = () => {
         ? [
             'bg-[#DCE4D6]',
             'text-[#2D2A27]',
-            'shadow-[0_5px_16px_rgba(45,42,39,0.07)]',
-            'before:absolute before:bottom-2 before:left-0',
-            'before:top-2 before:w-[3px] before:rounded-full',
+            'shadow-[0_5px_16px_rgba(45,42,39,0.08)]',
+            'before:absolute before:bottom-2.5 before:left-0',
+            'before:top-2.5 before:w-[4px] before:rounded-full',
             'before:bg-[#BF6A43]',
           ].join(' ')
         : [
@@ -134,13 +134,13 @@ const PorchSidebar: React.FC = () => {
       end={item.end}
       className={navigationClass}
     >
-      <span className="flex h-[42px] w-[42px] shrink-0 items-center justify-center">
+      <span className="flex h-[48px] w-[48px] shrink-0 items-center justify-center">
         <img
           src={item.iconPath}
           alt=""
           aria-hidden="true"
           className={[
-            'h-[40px] w-[40px]',
+            'h-[46px] w-[46px]',
             'object-contain',
             'mix-blend-multiply',
             'transition-transform duration-200',
@@ -158,7 +158,7 @@ const PorchSidebar: React.FC = () => {
   return (
     <aside
       className={[
-        'hidden h-screen w-[272px] min-w-[272px] flex-col',
+        'hidden h-screen w-[300px] min-w-[300px] flex-col',
         'border-r border-[#E8E1D8]',
         'bg-[#FAF7F2]',
         'lg:flex',
@@ -166,41 +166,41 @@ const PorchSidebar: React.FC = () => {
     >
       <div
         className={[
-          'flex h-[118px] shrink-0 items-center justify-center',
+          'flex h-[140px] shrink-0 items-center justify-center',
           'border-b border-[#E8E1D8]/80',
-          'px-5 py-3',
+          'px-5 py-4',
         ].join(' ')}
       >
         <img
           src="/assets/branding/porchside-pet-life-brand.svg"
           alt="Porchside Pet Life"
-          className="h-auto max-h-[94px] w-auto max-w-[148px] object-contain"
+          className="h-auto max-h-[118px] w-auto max-w-[130px] object-contain"
         />
       </div>
 
       <div
         className={[
           'min-h-0 flex-1 overflow-y-auto',
-          'px-3 pb-3 pt-3',
+          'px-4 pb-4 pt-3',
           '[scrollbar-width:none]',
           '[&::-webkit-scrollbar]:hidden',
         ].join(' ')}
       >
         <nav
           aria-label="Main navigation"
-          className="space-y-0.5"
+          className="space-y-1"
         >
           {primaryNavigation.map(renderNavigationItem)}
         </nav>
 
-        <div className="my-3 flex items-center gap-2.5 px-2">
+        <div className="my-3 flex items-center gap-3 px-2">
           <div className="h-px flex-1 bg-[#D9CDBF]" />
 
           <p
             className={[
               'shrink-0 font-sans',
-              'text-[10px] font-bold uppercase',
-              'tracking-[0.2em] text-[#7A7147]',
+              'text-[11px] font-bold uppercase',
+              'tracking-[0.18em] text-[#7A7147]',
             ].join(' ')}
           >
             More Rooms
@@ -211,7 +211,7 @@ const PorchSidebar: React.FC = () => {
 
         <nav
           aria-label="More rooms"
-          className="space-y-0.5"
+          className="space-y-1"
         >
           {secondaryNavigation.map(renderNavigationItem)}
         </nav>
@@ -222,7 +222,7 @@ const PorchSidebar: React.FC = () => {
           to="/emergency"
           className={navigationClass}
         >
-          <span className="flex h-[42px] w-[42px] shrink-0 items-center justify-center">
+          <span className="flex h-[48px] w-[48px] shrink-0 items-center justify-center">
             <EmergencyIcon />
           </span>
 
@@ -233,9 +233,9 @@ const PorchSidebar: React.FC = () => {
 
         <p
           className={[
-            'px-4 pb-1 pt-3 text-center',
-            'font-serif text-[13px] font-semibold italic',
-            'leading-[1.35] text-[#7A7147]',
+            'px-4 pb-2 pt-4 text-center',
+            'font-serif text-[14px] font-semibold italic',
+            'leading-[1.4] text-[#7A7147]',
           ].join(' ')}
         >
           A warm home for every part of life with your dogs.
