@@ -10,6 +10,12 @@ interface SummaryCardsProps {
   latestMemory?: string;
 }
 
+type BotanicalType =
+  | 'parlor-palm'
+  | 'spider-plant'
+  | 'boston-fern'
+  | 'peperomia';
+
 interface SummaryCardProps {
   eyebrow: string;
   title: string;
@@ -19,177 +25,317 @@ interface SummaryCardProps {
   iconPath: string;
   cardClassName: string;
   accentClassName: string;
-  botanical: 'olive' | 'rosemary' | 'fern' | 'peperomia';
+  botanical: BotanicalType;
 }
 
 const BotanicalAccent: React.FC<{
-  type: SummaryCardProps['botanical'];
+  type: BotanicalType;
   className: string;
 }> = ({ type, className }) => {
-  if (type === 'olive') {
+  if (type === 'parlor-palm') {
     return (
       <svg
         aria-hidden="true"
-        viewBox="0 0 150 170"
+        viewBox="0 0 180 190"
         className={className}
+        fill="none"
       >
         <path
-          d="M124 161C109 122 89 87 50 37"
-          fill="none"
+          d="M113 180C109 137 101 98 85 57"
           stroke="currentColor"
-          strokeWidth="2.2"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M87 63C73 44 56 31 35 25"
+          stroke="currentColor"
+          strokeWidth="1.8"
           strokeLinecap="round"
         />
         <path
-          d="M89 86C104 80 114 69 119 54C102 56 91 66 89 86Z"
-          fill="currentColor"
+          d="M88 72C106 48 126 33 151 28"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
         />
         <path
-          d="M73 66C73 50 67 37 55 27C51 43 57 56 73 66Z"
-          fill="currentColor"
+          d="M96 98C74 81 53 74 29 76"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
         />
         <path
-          d="M105 118C120 114 132 104 139 90C122 89 110 99 105 118Z"
-          fill="currentColor"
+          d="M100 111C122 91 143 82 166 84"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
         />
         <path
-          d="M89 101C85 85 76 74 62 67C62 84 71 95 89 101Z"
-          fill="currentColor"
+          d="M105 139C86 125 67 120 46 123"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M69 48C57 40 46 37 35 38"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
         />
         <path
-          d="M116 145C129 142 140 134 147 122C132 121 121 129 116 145Z"
-          fill="currentColor"
+          d="M76 55C64 52 52 53 42 58"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M108 51C119 41 131 36 144 36"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+        <path
+          d="M101 61C114 57 126 58 138 64"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M69 84C56 80 44 81 33 86"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+        <path
+          d="M78 92C64 92 52 97 42 105"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M124 96C136 92 147 93 158 99"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+        <path
+          d="M117 106C131 106 143 111 153 120"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M78 128C66 127 55 131 46 138"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+        <path
+          d="M88 137C76 140 66 147 59 157"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M92 174H132L127 188H98L92 174Z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinejoin="round"
         />
       </svg>
     );
   }
 
-  if (type === 'rosemary') {
+  if (type === 'spider-plant') {
     return (
       <svg
         aria-hidden="true"
-        viewBox="0 0 150 170"
+        viewBox="0 0 180 190"
         className={className}
+        fill="none"
       >
         <path
-          d="M117 163C105 126 89 90 67 48"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M79 73L103 58"
-          fill="none"
+          d="M88 170C78 126 62 92 38 61"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
         />
         <path
-          d="M84 83L112 76"
-          fill="none"
+          d="M94 170C96 121 104 83 120 44"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
         />
         <path
-          d="M90 97L121 94"
-          fill="none"
+          d="M91 169C91 120 87 77 76 35"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
         />
         <path
-          d="M96 112L128 113"
-          fill="none"
+          d="M87 169C70 132 49 105 22 86"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.8"
           strokeLinecap="round"
         />
         <path
-          d="M102 128L134 134"
-          fill="none"
+          d="M96 169C112 131 133 103 160 84"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.8"
           strokeLinecap="round"
         />
         <path
-          d="M74 65L58 45"
-          fill="none"
+          d="M89 164C67 147 46 140 25 143"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.7"
           strokeLinecap="round"
         />
         <path
-          d="M82 88L59 75"
-          fill="none"
+          d="M98 162C120 144 141 137 163 140"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.7"
           strokeLinecap="round"
         />
+
         <path
-          d="M89 104L63 98"
-          fill="none"
+          d="M121 44C132 34 143 30 155 32"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.5"
           strokeLinecap="round"
         />
-        <path
-          d="M95 120L68 119"
-          fill="none"
+        <circle
+          cx="158"
+          cy="33"
+          r="4"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.5"
+        />
+
+        <path
+          d="M79 35C70 24 61 19 50 20"
+          stroke="currentColor"
+          strokeWidth="1.5"
           strokeLinecap="round"
+        />
+        <circle
+          cx="47"
+          cy="21"
+          r="4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+
+        <path
+          d="M76 166H110L106 188H81L76 166Z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinejoin="round"
         />
       </svg>
     );
   }
 
-  if (type === 'fern') {
+  if (type === 'boston-fern') {
     return (
       <svg
         aria-hidden="true"
-        viewBox="0 0 150 170"
+        viewBox="0 0 180 190"
         className={className}
+        fill="none"
       >
         <path
-          d="M113 163C104 125 89 91 60 47"
-          fill="none"
+          d="M111 180C106 137 94 98 69 52"
           stroke="currentColor"
-          strokeWidth="2.2"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M74 63C89 61 101 54 110 43"
+          stroke="currentColor"
+          strokeWidth="1.7"
           strokeLinecap="round"
         />
         <path
-          d="M68 59C86 58 99 50 108 36C90 34 76 42 68 59Z"
-          fill="currentColor"
+          d="M79 75C95 74 109 67 119 56"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
         />
         <path
-          d="M77 73C95 72 109 64 119 50C100 48 86 56 77 73Z"
-          fill="currentColor"
+          d="M85 89C103 87 118 80 129 68"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
         />
         <path
-          d="M86 90C105 88 120 80 130 65C110 64 95 72 86 90Z"
-          fill="currentColor"
+          d="M91 104C110 101 126 94 138 81"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
         />
         <path
-          d="M95 108C114 106 130 98 141 83C120 82 105 90 95 108Z"
-          fill="currentColor"
+          d="M97 121C117 117 134 109 147 96"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
         />
         <path
-          d="M63 62C54 49 42 42 26 41C33 56 45 63 63 62Z"
-          fill="currentColor"
+          d="M103 139C123 134 140 126 153 112"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M67 61C56 53 44 50 31 52"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
         />
         <path
-          d="M72 77C60 65 47 60 31 62C41 76 55 81 72 77Z"
-          fill="currentColor"
+          d="M73 74C60 66 47 64 33 67"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
         />
         <path
-          d="M80 94C67 83 52 79 36 83C48 96 63 100 80 94Z"
-          fill="currentColor"
+          d="M79 89C65 82 51 80 36 84"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
         />
         <path
-          d="M89 112C75 102 60 99 43 104C56 117 72 120 89 112Z"
-          fill="currentColor"
+          d="M85 105C70 98 55 97 40 102"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+        <path
+          d="M91 122C75 116 60 116 44 122"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+        <path
+          d="M98 140C81 135 65 136 49 143"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+
+        <path
+          d="M91 174H130L125 188H97L91 174Z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinejoin="round"
         />
       </svg>
     );
@@ -198,39 +344,88 @@ const BotanicalAccent: React.FC<{
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 150 170"
+      viewBox="0 0 180 190"
       className={className}
+      fill="none"
     >
       <path
-        d="M115 163C104 127 91 97 72 68"
-        fill="none"
+        d="M106 178C104 137 98 102 86 70"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M87 75C70 75 57 67 48 53C65 52 79 60 87 75Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M91 91C108 90 122 82 131 68C114 67 100 75 91 91Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M94 109C76 109 62 101 52 87C70 85 84 93 94 109Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M99 128C117 127 132 119 142 104C123 103 109 111 99 128Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M101 146C83 146 68 139 57 125C76 122 91 130 101 146Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+
+      <path
+        d="M88 70C95 52 106 39 122 31"
+        stroke="currentColor"
+        strokeWidth="1.7"
         strokeLinecap="round"
       />
       <path
-        d="M76 72C92 71 104 63 111 50C95 50 83 57 76 72Z"
-        fill="currentColor"
+        d="M120 32C128 25 137 22 147 24"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
       />
-      <path
-        d="M86 89C103 88 116 80 124 66C107 66 94 73 86 89Z"
-        fill="currentColor"
+
+      <circle
+        cx="149"
+        cy="25"
+        r="3"
+        stroke="currentColor"
+        strokeWidth="1.4"
       />
-      <path
-        d="M95 108C112 107 126 99 135 84C117 84 104 92 95 108Z"
-        fill="currentColor"
+      <circle
+        cx="140"
+        cy="31"
+        r="2.5"
+        stroke="currentColor"
+        strokeWidth="1.4"
       />
-      <path
-        d="M72 72C64 58 53 50 38 47C43 63 54 71 72 72Z"
-        fill="currentColor"
+      <circle
+        cx="132"
+        cy="38"
+        r="2"
+        stroke="currentColor"
+        strokeWidth="1.4"
       />
+
       <path
-        d="M82 90C72 77 59 70 44 69C51 84 63 91 82 90Z"
-        fill="currentColor"
-      />
-      <path
-        d="M91 109C80 97 66 91 50 92C59 106 72 112 91 109Z"
-        fill="currentColor"
+        d="M87 173H126L122 188H92L87 173Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -251,7 +446,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
     <Link
       to={to}
       className={[
-        'group relative flex min-h-[260px] flex-col overflow-hidden',
+        'group relative flex min-h-[288px] flex-col overflow-hidden',
         'rounded-[30px] border px-6 pb-6 pt-5 no-underline',
         'shadow-[0_12px_30px_rgba(45,42,39,0.055)]',
         'transition duration-300',
@@ -266,24 +461,27 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       <BotanicalAccent
         type={botanical}
         className={[
-          'pointer-events-none absolute -right-4 -top-2',
-          'h-[158px] w-[138px]',
-          'opacity-[0.12]',
+          'pointer-events-none absolute -bottom-5 -right-4',
+          'h-[160px] w-[150px]',
+          'opacity-[0.11]',
           accentClassName,
         ].join(' ')}
       />
 
       <div className="relative z-10 flex items-start justify-between gap-4">
-        <img
-          src={iconPath}
-          alt=""
-          aria-hidden="true"
-          className={[
-            'h-[82px] w-[82px] shrink-0 object-contain',
-            'transition-transform duration-300',
-            'group-hover:scale-[1.035]',
-          ].join(' ')}
-        />
+        <div className="flex h-[84px] w-[84px] shrink-0 items-center justify-center overflow-hidden rounded-full">
+          <img
+            src={iconPath}
+            alt=""
+            aria-hidden="true"
+            className={[
+              'h-full w-full rounded-full object-contain',
+              'mix-blend-multiply',
+              'transition-transform duration-300',
+              'group-hover:scale-[1.035]',
+            ].join(' ')}
+          />
+        </div>
 
         <span
           aria-hidden="true"
@@ -302,7 +500,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           {eyebrow}
         </p>
 
-        <h3 className="mt-2 font-serif text-[27px] font-semibold leading-[1.08] text-[#2D2A27]">
+        <h3 className="mt-2 max-w-[275px] font-serif text-[27px] font-semibold leading-[1.08] text-[#2D2A27]">
           {title}
         </h3>
 
@@ -314,6 +512,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       <div className="relative z-10 mt-auto pt-6">
         <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#2D2A27]">
           {linkLabel}
+
           <span
             aria-hidden="true"
             className="text-[#BF6A43] transition-transform duration-300 group-hover:translate-x-1"
@@ -323,7 +522,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
         </span>
       </div>
 
-      <div className="pointer-events-none absolute -bottom-16 -left-12 h-40 w-40 rounded-full bg-white/35 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-16 -left-12 h-40 w-40 rounded-full bg-white/30 blur-3xl" />
     </Link>
   );
 };
@@ -336,13 +535,17 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
   memoryCount = 0,
   latestMemory,
 }) => {
-  const dogCount = dogNames.length;
+  const cleanDogNames = dogNames
+    .map((name) => name.trim())
+    .filter(Boolean);
+
+  const dogCount = cleanDogNames.length;
 
   const dogTitle =
     dogCount === 0
       ? 'Room for someone special'
       : dogCount === 1
-        ? dogNames[0]
+        ? cleanDogNames[0]
         : `${dogCount} dogs call this home`;
 
   const dogDescription =
@@ -350,7 +553,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
       ? 'Add your first dog and begin making this porch feel like home.'
       : dogCount === 1
         ? 'Their profile, routines, and important details are gathered here.'
-        : `${dogNames.join(', ')} are all gathered together in one place.`;
+        : `${cleanDogNames.join(', ')} are all gathered together in one place.`;
 
   const healthTitle =
     activeMedicationCount === 0
@@ -422,8 +625,8 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           to="/profiles"
           iconPath="/assets/icons/meetyourdog.png"
           cardClassName="border-[#CFD9C9] bg-[#EEF2EA]"
-          accentClassName="text-[#7A8A70]"
-          botanical="olive"
+          accentClassName="text-[#718169]"
+          botanical="parlor-palm"
         />
 
         <SummaryCard
@@ -434,8 +637,8 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           to="/health"
           iconPath="/assets/icons/MAIN - HEALTH CENTER.png"
           cardClassName="border-[#E7DCCB] bg-[#F8F1E6]"
-          accentClassName="text-[#91836F]"
-          botanical="rosemary"
+          accentClassName="text-[#807867]"
+          botanical="spider-plant"
         />
 
         <SummaryCard
@@ -446,8 +649,8 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           to="/reminders"
           iconPath="/assets/icons/WELLNESS.png"
           cardClassName="border-[#E5C7B8] bg-[#F7E8DF]"
-          accentClassName="text-[#A86B4E]"
-          botanical="fern"
+          accentClassName="text-[#9B654D]"
+          botanical="boston-fern"
         />
 
         <SummaryCard
@@ -458,7 +661,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           to="/journal"
           iconPath="/assets/icons/MEMORIES.png"
           cardClassName="border-[#DDD4CA] bg-[#F1ECE6]"
-          accentClassName="text-[#81766C]"
+          accentClassName="text-[#766D65]"
           botanical="peperomia"
         />
       </div>
