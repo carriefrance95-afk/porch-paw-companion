@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import WelcomeHero from './components/WelcomeHero';
-import SummaryCards from './components/SummaryCards';
+import SummaryCards from './SummaryCards';
 
 const YourPorch: React.FC = () => {
   const navigate = useNavigate();
