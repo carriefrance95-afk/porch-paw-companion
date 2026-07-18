@@ -36,119 +36,46 @@ const BotanicalAccent: React.FC<{
     return (
       <svg
         aria-hidden="true"
-        viewBox="0 0 180 190"
+        viewBox="0 0 220 220"
         className={className}
         fill="none"
       >
-        <path
-          d="M113 180C109 137 101 98 85 57"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
+        <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M116 198C113 157 109 118 103 74" strokeWidth="2.4" />
+          <path d="M104 87C91 61 73 43 47 31" strokeWidth="2.2" />
+          <path d="M106 96C126 66 148 47 178 38" strokeWidth="2.2" />
+          <path d="M108 119C83 95 58 82 27 79" strokeWidth="2.2" />
+          <path d="M111 133C139 105 165 93 196 94" strokeWidth="2.2" />
+          <path d="M113 158C88 137 65 128 38 130" strokeWidth="2.2" />
+          <path d="M114 169C139 146 162 137 187 139" strokeWidth="2.2" />
 
-        <path
-          d="M87 63C73 44 56 31 35 25"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-        <path
-          d="M88 72C106 48 126 33 151 28"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-        <path
-          d="M96 98C74 81 53 74 29 76"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-        <path
-          d="M100 111C122 91 143 82 166 84"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-        <path
-          d="M105 139C86 125 67 120 46 123"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
+          <path d="M91 66C79 49 66 39 50 34" strokeWidth="1.45" />
+          <path d="M86 72C72 59 59 53 43 52" strokeWidth="1.45" />
+          <path d="M82 79C68 70 55 67 40 70" strokeWidth="1.45" />
 
-        <path
-          d="M69 48C57 40 46 37 35 38"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M76 55C64 52 52 53 42 58"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
+          <path d="M126 68C140 54 154 47 170 44" strokeWidth="1.45" />
+          <path d="M122 76C138 65 153 61 169 63" strokeWidth="1.45" />
+          <path d="M118 84C134 77 149 76 164 81" strokeWidth="1.45" />
 
-        <path
-          d="M108 51C119 41 131 36 144 36"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M101 61C114 57 126 58 138 64"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
+          <path d="M82 101C66 91 51 88 35 91" strokeWidth="1.45" />
+          <path d="M76 109C60 103 45 103 30 108" strokeWidth="1.45" />
+          <path d="M71 117C55 115 42 118 29 126" strokeWidth="1.45" />
 
-        <path
-          d="M69 84C56 80 44 81 33 86"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M78 92C64 92 52 97 42 105"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
+          <path d="M139 111C155 103 170 101 186 105" strokeWidth="1.45" />
+          <path d="M134 120C151 116 167 118 182 125" strokeWidth="1.45" />
+          <path d="M128 129C145 129 160 134 173 144" strokeWidth="1.45" />
 
-        <path
-          d="M124 96C136 92 147 93 158 99"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M117 106C131 106 143 111 153 120"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
+          <path d="M89 143C74 136 60 135 46 139" strokeWidth="1.45" />
+          <path d="M84 151C69 148 56 151 44 158" strokeWidth="1.45" />
+          <path d="M80 160C66 161 55 166 46 176" strokeWidth="1.45" />
 
-        <path
-          d="M78 128C66 127 55 131 46 138"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-        <path
-          d="M88 137C76 140 66 147 59 157"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
+          <path d="M139 151C153 145 167 145 181 150" strokeWidth="1.45" />
+          <path d="M135 160C150 158 163 162 175 170" strokeWidth="1.45" />
+          <path d="M130 169C144 171 155 177 164 187" strokeWidth="1.45" />
 
-        <path
-          d="M92 174H132L127 188H98L92 174Z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinejoin="round"
-        />
+          <path d="M88 188H145L138 213H96L88 188Z" strokeWidth="2.2" />
+          <path d="M94 194H139" strokeWidth="1.4" />
+        </g>
       </svg>
     );
   }
@@ -157,87 +84,31 @@ const BotanicalAccent: React.FC<{
     return (
       <svg
         aria-hidden="true"
-        viewBox="0 0 180 190"
+        viewBox="0 0 220 220"
         className={className}
         fill="none"
       >
-        <path
-          d="M88 170C78 126 62 92 38 61"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M94 170C96 121 104 83 120 44"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M91 169C91 120 87 77 76 35"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M87 169C70 132 49 105 22 86"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-        <path
-          d="M96 169C112 131 133 103 160 84"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-        <path
-          d="M89 164C67 147 46 140 25 143"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M98 162C120 144 141 137 163 140"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
+        <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M107 189C91 141 72 105 42 66" strokeWidth="2.4" />
+          <path d="M111 189C108 137 111 91 124 42" strokeWidth="2.4" />
+          <path d="M112 189C125 140 147 102 181 71" strokeWidth="2.4" />
+          <path d="M108 188C82 157 54 139 21 134" strokeWidth="2.1" />
+          <path d="M113 188C140 156 170 140 203 137" strokeWidth="2.1" />
+          <path d="M109 187C93 129 92 82 99 31" strokeWidth="2.1" />
+          <path d="M108 187C77 146 48 120 16 108" strokeWidth="1.9" />
+          <path d="M114 187C145 145 174 120 207 109" strokeWidth="1.9" />
 
-        <path
-          d="M121 44C132 34 143 30 155 32"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <circle
-          cx="158"
-          cy="33"
-          r="4"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        />
+          <path d="M125 42C140 28 154 23 169 27" strokeWidth="1.6" />
+          <path d="M169 27C181 29 190 36 196 47" strokeWidth="1.6" />
+          <circle cx="198" cy="51" r="4.5" strokeWidth="1.6" />
 
-        <path
-          d="M79 35C70 24 61 19 50 20"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <circle
-          cx="47"
-          cy="21"
-          r="4"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        />
+          <path d="M99 31C87 17 73 11 59 14" strokeWidth="1.6" />
+          <path d="M59 14C47 17 39 25 35 37" strokeWidth="1.6" />
+          <circle cx="34" cy="41" r="4.5" strokeWidth="1.6" />
 
-        <path
-          d="M76 166H110L106 188H81L76 166Z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinejoin="round"
-        />
+          <path d="M82 187H141L135 213H89L82 187Z" strokeWidth="2.2" />
+          <path d="M88 194H136" strokeWidth="1.4" />
+        </g>
       </svg>
     );
   }
@@ -246,97 +117,41 @@ const BotanicalAccent: React.FC<{
     return (
       <svg
         aria-hidden="true"
-        viewBox="0 0 180 190"
+        viewBox="0 0 220 220"
         className={className}
         fill="none"
       >
-        <path
-          d="M111 180C106 137 94 98 69 52"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
+        <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M111 197C108 154 99 114 82 69" strokeWidth="2.4" />
+          <path d="M82 69C77 54 75 42 78 30" strokeWidth="1.8" />
 
-        <path
-          d="M74 63C89 61 101 54 110 43"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M79 75C95 74 109 67 119 56"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M85 89C103 87 118 80 129 68"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M91 104C110 101 126 94 138 81"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M97 121C117 117 134 109 147 96"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M103 139C123 134 140 126 153 112"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
+          {[
+            ['88 79', '106 72 122 61'],
+            ['91 91', '112 83 130 69'],
+            ['95 104', '119 95 139 80'],
+            ['99 118', '126 108 149 92'],
+            ['103 133', '132 122 158 105'],
+            ['106 149', '138 137 166 119'],
+            ['108 166', '143 153 173 133'],
+          ].map(([start, end]) => (
+            <path key={`${start}-${end}`} d={`M${start}C${end}`} strokeWidth="1.65" />
+          ))}
 
-        <path
-          d="M67 61C56 53 44 50 31 52"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M73 74C60 66 47 64 33 67"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M79 89C65 82 51 80 36 84"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M85 105C70 98 55 97 40 102"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M91 122C75 116 60 116 44 122"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <path
-          d="M98 140C81 135 65 136 49 143"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
+          {[
+            ['85 79', '67 72 51 61'],
+            ['88 91', '67 83 49 70'],
+            ['91 104', '67 95 47 81'],
+            ['94 118', '67 108 44 93'],
+            ['98 133', '69 122 43 106'],
+            ['101 149', '69 137 41 120'],
+            ['104 166', '69 153 39 135'],
+          ].map(([start, end]) => (
+            <path key={`${start}-${end}`} d={`M${start}C${end}`} strokeWidth="1.65" />
+          ))}
 
-        <path
-          d="M91 174H130L125 188H97L91 174Z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinejoin="round"
-        />
+          <path d="M89 190H145L138 213H96L89 190Z" strokeWidth="2.2" />
+          <path d="M95 197H139" strokeWidth="1.4" />
+        </g>
       </svg>
     );
   }
@@ -344,89 +159,29 @@ const BotanicalAccent: React.FC<{
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 180 190"
+      viewBox="0 0 220 220"
       className={className}
       fill="none"
     >
-      <path
-        d="M106 178C104 137 98 102 86 70"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
+      <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M111 198C109 157 105 120 96 83" strokeWidth="2.4" />
+        <path d="M96 84C90 65 92 49 101 34" strokeWidth="1.8" />
 
-      <path
-        d="M87 75C70 75 57 67 48 53C65 52 79 60 87 75Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M91 91C108 90 122 82 131 68C114 67 100 75 91 91Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M94 109C76 109 62 101 52 87C70 85 84 93 94 109Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M99 128C117 127 132 119 142 104C123 103 109 111 99 128Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M101 146C83 146 68 139 57 125C76 122 91 130 101 146Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
+        <path d="M95 88C73 88 57 77 47 59C70 57 87 67 95 88Z" strokeWidth="1.8" />
+        <path d="M99 105C122 103 140 91 150 72C126 70 108 82 99 105Z" strokeWidth="1.8" />
+        <path d="M102 125C77 124 59 113 48 94C73 91 92 102 102 125Z" strokeWidth="1.8" />
+        <path d="M106 145C132 143 151 131 162 111C136 109 116 121 106 145Z" strokeWidth="1.8" />
+        <path d="M109 165C84 165 65 155 53 137C79 133 99 145 109 165Z" strokeWidth="1.8" />
 
-      <path
-        d="M88 70C95 52 106 39 122 31"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-      />
-      <path
-        d="M120 32C128 25 137 22 147 24"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
+        <path d="M101 35C113 20 128 13 144 15" strokeWidth="1.6" />
+        <path d="M144 15C157 16 168 22 176 33" strokeWidth="1.6" />
+        <circle cx="179" cy="37" r="4" strokeWidth="1.5" />
+        <circle cx="167" cy="27" r="3.2" strokeWidth="1.5" />
+        <circle cx="155" cy="20" r="2.7" strokeWidth="1.5" />
 
-      <circle
-        cx="149"
-        cy="25"
-        r="3"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
-      <circle
-        cx="140"
-        cy="31"
-        r="2.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
-      <circle
-        cx="132"
-        cy="38"
-        r="2"
-        stroke="currentColor"
-        strokeWidth="1.4"
-      />
-
-      <path
-        d="M87 173H126L122 188H92L87 173Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
+        <path d="M88 190H145L138 213H96L88 190Z" strokeWidth="2.2" />
+        <path d="M95 197H139" strokeWidth="1.4" />
+      </g>
     </svg>
   );
 };
@@ -461,9 +216,9 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       <BotanicalAccent
         type={botanical}
         className={[
-          'pointer-events-none absolute -bottom-5 -right-4',
-          'h-[160px] w-[150px]',
-          'opacity-[0.11]',
+          'pointer-events-none absolute -bottom-7 -right-5',
+          'h-[185px] w-[175px]',
+          'opacity-[0.22]',
           accentClassName,
         ].join(' ')}
       />
@@ -475,24 +230,13 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
             alt=""
             aria-hidden="true"
             className={[
-              'h-full w-full rounded-full object-contain',
+              'h-full w-full scale-[1.06] rounded-full object-cover',
               'mix-blend-multiply',
               'transition-transform duration-300',
               'group-hover:scale-[1.035]',
             ].join(' ')}
           />
         </div>
-
-        <span
-          aria-hidden="true"
-          className={[
-            'mt-2 text-[22px] leading-none text-[#BF6A43]',
-            'transition-transform duration-300',
-            'group-hover:translate-x-1 group-hover:-translate-y-1',
-          ].join(' ')}
-        >
-          ↗
-        </span>
       </div>
 
       <div className="relative z-10 mt-4">
