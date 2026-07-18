@@ -72,7 +72,7 @@ const YourPorch: React.FC = () => {
       return emailName.charAt(0).toUpperCase() + emailName.slice(1);
     }
 
-    return 'there';
+    return undefined;
   }, [user]);
 
   const dogNames = useMemo(
@@ -83,7 +83,7 @@ const YourPorch: React.FC = () => {
     [profiles],
   );
 
-  const primaryDogName = dogNames[0] ?? 'your dogs';
+  const primaryDogName = dogNames[0];
 
   const activeMedicationCount = useMemo(
     () => medications.filter((medication) => medication.active).length,
@@ -110,11 +110,15 @@ const YourPorch: React.FC = () => {
       })
       .sort((firstAppointment, secondAppointment) => {
         const firstDate = new Date(
-          `${firstAppointment.date}T${firstAppointment.time || '23:59:00'}`,
+          `${firstAppointment.date}T${
+            firstAppointment.time || '23:59:00'
+          }`,
         ).getTime();
 
         const secondDate = new Date(
-          `${secondAppointment.date}T${secondAppointment.time || '23:59:00'}`,
+          `${secondAppointment.date}T${
+            secondAppointment.time || '23:59:00'
+          }`,
         ).getTime();
 
         return firstDate - secondDate;
@@ -147,6 +151,8 @@ const YourPorch: React.FC = () => {
       });
   }, [appointments, profiles]);
 
+  const nextReminderLabel = upcomingItems[0]?.title;
+
   const handleViewReminders = () => {
     navigate('/reminders');
   };
@@ -170,6 +176,7 @@ const YourPorch: React.FC = () => {
           firstName={firstName}
           dogName={primaryDogName}
           reminderCount={upcomingItems.length}
+          nextReminderLabel={nextReminderLabel}
           onViewReminders={handleViewReminders}
         />
 
@@ -182,6 +189,7 @@ const YourPorch: React.FC = () => {
 
         <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,0.75fr)]">
           <ComingUp items={upcomingItems} />
+
           <QuickActions />
         </div>
       </div>
