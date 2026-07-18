@@ -47,7 +47,7 @@ const WelcomeHero: React.FC<WelcomeHeroProps> = ({
           <div className="absolute bottom-4 left-1/2 h-24 w-[85%] -translate-x-1/2 rounded-[50%] bg-[#DCE4D6]/55 blur-2xl" />
 
           <img
-            src="/assets/stitch/stitch-home-hero.png"
+            src="/assets/stitch/stitch-porch-home.svg"
             alt={`${dogName} resting comfortably`}
             className="relative z-10 max-h-[340px] w-auto max-w-full object-contain drop-shadow-[0_18px_18px_rgba(45,42,39,0.16)] sm:max-h-[380px]"
           />
