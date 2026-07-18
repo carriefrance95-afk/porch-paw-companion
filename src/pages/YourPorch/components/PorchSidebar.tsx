@@ -1,51 +1,39 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import {
-  AlertTriangle,
-  Bell,
-  BookHeart,
-  ChefHat,
-  HeartPulse,
-  Home,
-  MapPinned,
-  PawPrint,
-  Plane,
-  ShoppingBag,
-} from 'lucide-react';
 
-type NavigationItem = {
+interface NavigationItem {
   label: string;
   path: string;
-  icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
+  iconPath: string;
   end?: boolean;
-};
+}
 
 const primaryNavigation: NavigationItem[] = [
   {
     label: 'Your Porch',
     path: '/',
-    icon: Home,
+    iconPath: '/assets/icons/PEACE OF MIND.png',
     end: true,
   },
   {
     label: 'My Dogs',
     path: '/profiles',
-    icon: PawPrint,
+    iconPath: '/assets/icons/meetyourdog.png',
   },
   {
     label: 'Health Center',
     path: '/health',
-    icon: HeartPulse,
+    iconPath: '/assets/icons/MAIN - HEALTH CENTER.png',
   },
   {
     label: 'Reminders',
     path: '/reminders',
-    icon: Bell,
+    iconPath: '/assets/icons/WELLNESS.png',
   },
   {
     label: 'Journal & Memories',
     path: '/journal',
-    icon: BookHeart,
+    iconPath: '/assets/icons/MEMORIES.png',
   },
 ];
 
@@ -53,30 +41,30 @@ const exploreNavigation: NavigationItem[] = [
   {
     label: 'Porch & Paw Kitchen',
     path: '/content',
-    icon: ChefHat,
+    iconPath: '/assets/icons/NUTRITION.png',
   },
   {
     label: 'Travel',
     path: '/travel',
-    icon: Plane,
+    iconPath: '/assets/icons/activity.png',
   },
   {
     label: 'Directory',
     path: '/directory',
-    icon: MapPinned,
+    iconPath: '/assets/icons/VET VISITS.png',
   },
   {
     label: 'Boutique',
     path: '/store',
-    icon: ShoppingBag,
+    iconPath: '/assets/icons/allset.png',
   },
 ];
 
 const PorchSidebar: React.FC = () => {
-  const getNavigationClass = ({ isActive }: { isActive: boolean }) =>
+  const navigationClass = ({ isActive }: { isActive: boolean }) =>
     [
-      'group flex min-h-[62px] w-full items-center gap-4 rounded-[20px]',
-      'px-5 py-3 text-left text-[16px] font-semibold',
+      'group flex min-h-[64px] w-full items-center gap-4 rounded-[20px]',
+      'px-4 py-3 text-left text-[16px] font-semibold',
       'transition-all duration-200',
       isActive
         ? 'bg-[#DCE4D6] text-[#2D2A27] shadow-[0_8px_22px_rgba(45,42,39,0.08)]'
@@ -84,27 +72,30 @@ const PorchSidebar: React.FC = () => {
     ].join(' ');
 
   const renderNavigationItem = (item: NavigationItem) => {
-    const Icon = item.icon;
-
     return (
       <NavLink
         key={item.path}
         to={item.path}
         end={item.end}
-        className={getNavigationClass}
+        className={navigationClass}
       >
         {({ isActive }) => (
           <>
             <span
               className={[
-                'flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl',
-                'transition-all duration-200',
+                'flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl',
+                'border transition-all duration-200',
                 isActive
-                  ? 'bg-white text-[#BF6A43] shadow-sm'
-                  : 'bg-[#F3EEE7] text-[#7A7147] group-hover:bg-[#FAF7F2] group-hover:text-[#BF6A43]',
+                  ? 'border-white/80 bg-white shadow-[0_5px_14px_rgba(45,42,39,0.08)]'
+                  : 'border-[#E8E1D8] bg-[#F8F4EE] group-hover:bg-white',
               ].join(' ')}
             >
-              <Icon size={23} strokeWidth={1.8} />
+              <img
+                src={item.iconPath}
+                alt=""
+                aria-hidden="true"
+                className="h-9 w-9 object-contain"
+              />
             </span>
 
             <span className="leading-tight">{item.label}</span>
@@ -115,39 +106,16 @@ const PorchSidebar: React.FC = () => {
   };
 
   return (
-    <aside
-      className="
-        hidden
-        h-full
-        w-[280px]
-        min-w-[280px]
-        flex-col
-        border-r
-        border-[#E8E1D8]
-        bg-[#FAF7F2]
-        px-5
-        py-7
-        lg:flex
-      "
-    >
+    <aside className="hidden h-full w-[280px] min-w-[280px] flex-col border-r border-[#E8E1D8] bg-[#FAF7F2] px-5 py-7 lg:flex">
       <div className="mb-8 px-3">
         <div className="flex items-center gap-3">
-          <div
-            className="
-              flex
-              h-12
-              w-12
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-[#D8CFC4]
-              bg-white
-              text-[#BF6A43]
-              shadow-[0_6px_18px_rgba(45,42,39,0.08)]
-            "
-          >
-            <PawPrint size={25} strokeWidth={1.7} />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#D8CFC4] bg-white shadow-[0_6px_18px_rgba(45,42,39,0.08)]">
+            <img
+              src="/assets/icons/stitch-porch.svg"
+              alt=""
+              aria-hidden="true"
+              className="h-9 w-9 object-contain"
+            />
           </div>
 
           <div>
@@ -187,8 +155,8 @@ const PorchSidebar: React.FC = () => {
             to="/emergency"
             className={({ isActive }) =>
               [
-                'group flex min-h-[64px] w-full items-center gap-4 rounded-[20px]',
-                'border px-5 py-3 text-[16px] font-semibold',
+                'group flex min-h-[66px] w-full items-center gap-4 rounded-[20px]',
+                'border px-4 py-3 text-[16px] font-semibold',
                 'transition-all duration-200',
                 isActive
                   ? 'border-[#BF6A43] bg-[#BF6A43] text-white shadow-[0_10px_24px_rgba(191,106,67,0.22)]'
@@ -200,13 +168,18 @@ const PorchSidebar: React.FC = () => {
               <>
                 <span
                   className={[
-                    'flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl',
+                    'flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border',
                     isActive
-                      ? 'bg-white/15 text-white'
-                      : 'bg-white text-[#BF6A43] shadow-sm',
+                      ? 'border-white/20 bg-white'
+                      : 'border-[#F0D5C7] bg-white shadow-sm',
                   ].join(' ')}
                 >
-                  <AlertTriangle size={23} strokeWidth={1.8} />
+                  <img
+                    src="/assets/icons/EMERGENCY.png"
+                    alt=""
+                    aria-hidden="true"
+                    className="h-9 w-9 object-contain"
+                  />
                 </span>
 
                 <span>Emergency</span>
