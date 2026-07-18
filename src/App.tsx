@@ -5,7 +5,7 @@ import { supabase } from './utils/supabaseClient';
 import logoImg from '../Porch & Paw Logo (6).png';
 
 import { PetProvider } from './context/PetContext';
-import Sidebar from './components/Sidebar';
+import PorchSidebar from './pages/YourPorch/components/PorchSidebar';
 import OnboardingWizard from './components/OnboardingWizard';
 import WelcomeScreen from './components/arrival/WelcomeScreen';
 
@@ -194,24 +194,24 @@ const App: React.FC = () => {
         <PetProvider>
           <OnboardingGate session={session}>
             <div className="flex min-h-screen w-full flex-col">
-              <nav className="relative z-40 flex items-center justify-between border-b border-[#B6A799]/20 bg-[#F4F0EA] px-4 py-3 shadow-sm">
-                <div className="flex items-center gap-3">
+              <nav className="relative z-40 flex min-h-[76px] items-center justify-between border-b border-[#B6A799]/20 bg-[#F4F0EA] px-6 py-4 shadow-sm lg:px-8">
+                <div className="flex items-center gap-4">
                   <img
                     src={logoImg}
                     alt="Porch & Paw Logo"
-                    className="h-7 w-auto object-contain"
+                    className="h-10 w-auto object-contain"
                   />
 
-                  <span className="hidden font-serif text-sm font-bold text-[#2D2A27] sm:inline">
+                  <span className="hidden font-serif text-xl font-semibold text-[#2D2A27] sm:inline">
                     Porchside Pet Life
                   </span>
                 </div>
 
                 <div
                   ref={dropdownRef}
-                  className="relative flex items-center gap-4"
+                  className="relative flex items-center gap-5"
                 >
-                  <span className="hidden text-xs font-medium text-[#2D2A27]/70 md:inline">
+                  <span className="hidden text-sm font-medium text-[#2D2A27]/70 md:inline">
                     Logged in as:{' '}
                     <strong className="text-[#2D2A27]">
                       {session.user?.email}
@@ -221,7 +221,7 @@ const App: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setProfileOpen((current) => !current)}
-                    className="flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#BF6A43] text-sm font-bold text-white shadow-sm ring-2 ring-[#BF6A43] ring-offset-2 transition-transform hover:scale-105 active:scale-95"
+                    className="flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#BF6A43] text-base font-bold text-white shadow-sm ring-2 ring-[#BF6A43] ring-offset-2 transition-transform hover:scale-105 active:scale-95"
                     aria-label="Open profile menu"
                     aria-expanded={profileOpen}
                   >
@@ -241,7 +241,7 @@ const App: React.FC = () => {
                   </button>
 
                   {profileOpen && (
-                    <div className="absolute right-0 top-12 z-50 w-72 rounded-2xl border border-[#E8E1D8] bg-white p-5 text-left shadow-xl">
+                    <div className="absolute right-0 top-14 z-50 w-72 rounded-2xl border border-[#E8E1D8] bg-white p-5 text-left shadow-xl">
                       <p className="font-serif text-xl font-semibold text-[#2D2A27]">
                         {humanProfile.name || 'Your Profile'}
                       </p>
@@ -266,9 +266,9 @@ const App: React.FC = () => {
               </nav>
 
               <div className="flex min-h-0 flex-1 items-stretch">
-                <Sidebar />
+                <PorchSidebar />
 
-                <div className="min-w-0 flex-1 overflow-y-auto">
+                <main className="min-w-0 flex-1 overflow-y-auto bg-[#FDFBF7]">
                   <Routes>
                     <Route path="/" element={<YourPorch />} />
                     <Route path="/profiles" element={<Profiles />} />
@@ -288,7 +288,7 @@ const App: React.FC = () => {
                       element={<Navigate to="/" replace />}
                     />
                   </Routes>
-                </div>
+                </main>
               </div>
             </div>
           </OnboardingGate>
