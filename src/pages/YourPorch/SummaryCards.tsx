@@ -1,12 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  ArrowUpRight,
-  BookHeart,
-  CalendarDays,
-  HeartPulse,
-  PawPrint,
-} from 'lucide-react';
 
 interface SummaryCardsProps {
   dogNames?: string[];
@@ -23,9 +16,9 @@ interface SummaryCardProps {
   description: string;
   linkLabel: string;
   to: string;
-  icon: React.ReactNode;
+  iconPath: string;
   cardClassName: string;
-  iconClassName: string;
+  iconContainerClassName: string;
 }
 
 const SummaryCard: React.FC<SummaryCardProps> = ({
@@ -34,29 +27,55 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   description,
   linkLabel,
   to,
-  icon,
+  iconPath,
   cardClassName,
-  iconClassName,
+  iconContainerClassName,
 }) => {
   return (
     <Link
       to={to}
-      className={`group relative flex min-h-[220px] flex-col overflow-hidden rounded-[28px] border p-6 no-underline shadow-[0_12px_30px_rgba(45,42,39,0.055)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_38px_rgba(45,42,39,0.09)] ${cardClassName}`}
+      className={[
+        'group relative flex min-h-[220px] flex-col overflow-hidden',
+        'rounded-[28px] border p-6 no-underline',
+        'shadow-[0_12px_30px_rgba(45,42,39,0.055)]',
+        'transition duration-300',
+        'hover:-translate-y-1',
+        'hover:shadow-[0_18px_38px_rgba(45,42,39,0.09)]',
+        'focus-visible:outline-none focus-visible:ring-2',
+        'focus-visible:ring-[#BF6A43]/40 focus-visible:ring-offset-2',
+        'focus-visible:ring-offset-[#FAF7F2]',
+        cardClassName,
+      ].join(' ')}
     >
       <div className="relative z-10">
         <div
-          className={`flex h-12 w-12 items-center justify-center rounded-full border bg-white/75 shadow-[0_6px_18px_rgba(45,42,39,0.06)] ${iconClassName}`}
+          className={[
+            'flex h-[62px] w-[62px] items-center justify-center',
+            'rounded-[18px] border bg-white/70',
+            'shadow-[0_6px_18px_rgba(45,42,39,0.06)]',
+            iconContainerClassName,
+          ].join(' ')}
         >
-          {icon}
+          <img
+            src={iconPath}
+            alt=""
+            aria-hidden="true"
+            className={[
+              'h-[54px] w-[54px] object-contain',
+              'mix-blend-multiply',
+              'transition-transform duration-300',
+              'group-hover:scale-[1.04]',
+            ].join(' ')}
+          />
         </div>
 
         <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.24em] text-[#7A7147]">
           {eyebrow}
         </p>
 
-        <h2 className="mt-2 font-serif text-[28px] font-semibold leading-tight text-[#2D2A27]">
+        <h3 className="mt-2 font-serif text-[28px] font-semibold leading-tight text-[#2D2A27]">
           {title}
-        </h2>
+        </h3>
 
         <p className="mt-3 max-w-[250px] text-sm leading-6 text-[#2D2A27]/65">
           {description}
@@ -68,8 +87,16 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           {linkLabel}
         </span>
 
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 text-[#BF6A43] transition duration-300 group-hover:translate-x-1 group-hover:bg-white">
-          <ArrowUpRight size={17} strokeWidth={2} />
+        <span
+          aria-hidden="true"
+          className={[
+            'flex h-9 w-9 items-center justify-center rounded-full',
+            'bg-white/70 text-[20px] leading-none text-[#BF6A43]',
+            'transition duration-300',
+            'group-hover:translate-x-1 group-hover:bg-white',
+          ].join(' ')}
+        >
+          ↗
         </span>
       </div>
 
@@ -79,7 +106,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 };
 
 const SummaryCards: React.FC<SummaryCardsProps> = ({
-  dogNames = ['Stitch'],
+  dogNames = [],
   activeMedicationCount = 0,
   reminderCount = 0,
   nextReminder,
@@ -167,9 +194,9 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           description={dogDescription}
           linkLabel="Visit your dogs"
           to="/profiles"
-          icon={<PawPrint size={22} strokeWidth={1.7} />}
+          iconPath="/assets/icons/meetyourdog.png"
           cardClassName="border-[#CFD9C9] bg-[#EEF2EA]"
-          iconClassName="border-[#CFD9C9] text-[#7A7147]"
+          iconContainerClassName="border-[#CFD9C9]"
         />
 
         <SummaryCard
@@ -178,9 +205,9 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           description={healthDescription}
           linkLabel="Open Health Center"
           to="/health"
-          icon={<HeartPulse size={22} strokeWidth={1.7} />}
+          iconPath="/assets/icons/MAIN - HEALTH CENTER.png"
           cardClassName="border-[#E7DCCB] bg-[#F8F1E6]"
-          iconClassName="border-[#E7DCCB] text-[#9A765E]"
+          iconContainerClassName="border-[#E7DCCB]"
         />
 
         <SummaryCard
@@ -189,9 +216,9 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           description={remindersDescription}
           linkLabel="See your schedule"
           to="/reminders"
-          icon={<CalendarDays size={22} strokeWidth={1.7} />}
+          iconPath="/assets/icons/WELLNESS.png"
           cardClassName="border-[#E5C7B8] bg-[#F7E8DF]"
-          iconClassName="border-[#E5C7B8] text-[#BF6A43]"
+          iconContainerClassName="border-[#E5C7B8]"
         />
 
         <SummaryCard
@@ -200,9 +227,9 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           description={memoriesDescription}
           linkLabel="Open your journal"
           to="/journal"
-          icon={<BookHeart size={22} strokeWidth={1.7} />}
+          iconPath="/assets/icons/MEMORIES.png"
           cardClassName="border-[#DDD4CA] bg-[#F1ECE6]"
-          iconClassName="border-[#DDD4CA] text-[#74685E]"
+          iconContainerClassName="border-[#DDD4CA]"
         />
       </div>
     </section>
