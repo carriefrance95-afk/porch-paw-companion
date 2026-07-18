@@ -10,16 +10,94 @@ interface SummaryCardsProps {
   latestMemory?: string;
 }
 
+type CardIconType = 'image' | 'calendar';
+
 interface SummaryCardProps {
   eyebrow: string;
   title: string;
   description: string;
   linkLabel: string;
   to: string;
-  iconPath: string;
+  iconType?: CardIconType;
+  iconPath?: string;
   cardClassName: string;
+  iconBackgroundClassName: string;
+  iconAccentClassName: string;
+  statusClassName: string;
   statusLabel?: string;
 }
+
+const CalendarIcon: React.FC = () => {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 64 64"
+      className="h-11 w-11"
+      fill="none"
+    >
+      <rect
+        x="13"
+        y="17"
+        width="38"
+        height="34"
+        rx="7"
+        stroke="currentColor"
+        strokeWidth="2.4"
+      />
+
+      <path
+        d="M13 27H51"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M23 12V22"
+        stroke="currentColor"
+        strokeWidth="2.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M41 12V22"
+        stroke="currentColor"
+        strokeWidth="2.8"
+        strokeLinecap="round"
+      />
+
+      <circle cx="23" cy="35" r="2.2" fill="currentColor" />
+      <circle cx="32" cy="35" r="2.2" fill="currentColor" />
+      <circle cx="41" cy="35" r="2.2" fill="currentColor" />
+      <circle cx="23" cy="43" r="2.2" fill="currentColor" />
+      <circle cx="32" cy="43" r="2.2" fill="currentColor" />
+
+      <path
+        d="M41 41L44 44L49 38"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      <path
+        d="M20 15C23 10 28 8 32 8"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        opacity="0.45"
+      />
+
+      <path
+        d="M44 14C41 10 37 8 33 8"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        opacity="0.45"
+      />
+    </svg>
+  );
+};
 
 const SummaryCard: React.FC<SummaryCardProps> = ({
   eyebrow,
@@ -27,63 +105,86 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   description,
   linkLabel,
   to,
+  iconType = 'image',
   iconPath,
   cardClassName,
+  iconBackgroundClassName,
+  iconAccentClassName,
+  statusClassName,
   statusLabel,
 }) => {
   return (
     <Link
       to={to}
       className={[
-        'group relative flex min-h-[275px] flex-col overflow-hidden',
+        'group relative flex min-h-[300px] flex-col overflow-hidden',
         'rounded-[28px] border p-6 no-underline',
-        'shadow-[0_12px_30px_rgba(45,42,39,0.055)]',
+        'shadow-[0_14px_32px_rgba(45,42,39,0.08)]',
         'transition duration-300',
         'hover:-translate-y-1',
-        'hover:shadow-[0_20px_42px_rgba(45,42,39,0.09)]',
+        'hover:shadow-[0_22px_46px_rgba(45,42,39,0.13)]',
         'focus-visible:outline-none focus-visible:ring-2',
-        'focus-visible:ring-[#BF6A43]/40 focus-visible:ring-offset-2',
+        'focus-visible:ring-[#BF6A43]/45 focus-visible:ring-offset-2',
         'focus-visible:ring-offset-[#FAF7F2]',
         cardClassName,
       ].join(' ')}
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-white/45 blur-3xl"
+        className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-white/50 blur-3xl"
       />
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-20 -left-16 h-44 w-44 rounded-full bg-white/30 blur-3xl"
+        className="pointer-events-none absolute -bottom-20 -left-14 h-44 w-44 rounded-full bg-white/25 blur-3xl"
       />
 
       <div className="relative z-10 flex items-start justify-between gap-4">
-        <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-full">
-          <img
-            src={iconPath}
-            alt=""
-            aria-hidden="true"
-            className="h-full w-full rounded-full object-cover mix-blend-multiply transition-transform duration-300 group-hover:scale-[1.04]"
-          />
+        <div
+          className={[
+            'flex h-[78px] w-[78px] shrink-0 items-center justify-center',
+            'rounded-full border-2 border-white/90',
+            'shadow-[0_8px_20px_rgba(45,42,39,0.13)]',
+            iconBackgroundClassName,
+            iconAccentClassName,
+          ].join(' ')}
+        >
+          {iconType === 'calendar' ? (
+            <CalendarIcon />
+          ) : (
+            <img
+              src={iconPath}
+              alt=""
+              aria-hidden="true"
+              className="h-[68px] w-[68px] rounded-full object-cover mix-blend-multiply transition-transform duration-300 group-hover:scale-[1.04]"
+            />
+          )}
         </div>
 
         {statusLabel && (
-          <span className="rounded-full border border-white/80 bg-white/65 px-3 py-1 text-[11px] font-semibold text-[#655F59] shadow-sm">
+          <span
+            className={[
+              'rounded-full border px-3 py-1.5',
+              'text-[11px] font-bold',
+              'shadow-[0_4px_12px_rgba(45,42,39,0.06)]',
+              statusClassName,
+            ].join(' ')}
+          >
             {statusLabel}
           </span>
         )}
       </div>
 
       <div className="relative z-10 mt-5">
-        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#7A7147]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#6F673F]">
           {eyebrow}
         </p>
 
-        <h3 className="mt-2 max-w-[290px] font-serif text-[28px] font-semibold leading-[1.08] text-[#2D2A27]">
+        <h3 className="mt-2 max-w-[290px] font-serif text-[28px] font-semibold leading-[1.06] text-[#2D2A27]">
           {title}
         </h3>
 
-        <p className="mt-3 max-w-[300px] text-[15px] leading-6 text-[#655F59]">
+        <p className="mt-3 max-w-[300px] text-[15px] leading-6 text-[#554F49]">
           {description}
         </p>
       </div>
@@ -100,6 +201,8 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           </span>
         </span>
       </div>
+
+      <div className="absolute inset-x-0 bottom-0 h-1.5 bg-[#BF6A43]/70" />
     </Link>
   );
 };
@@ -221,7 +324,10 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           linkLabel="Open My Dogs"
           to="/profiles"
           iconPath="/assets/icons/meetyourdog.png"
-          cardClassName="border-[#CFD9C9] bg-[#EEF2EA]"
+          cardClassName="border-[#BFCFB6] bg-[#DDE8D7]"
+          iconBackgroundClassName="bg-[#F6FAF3]"
+          iconAccentClassName="text-[#65765C]"
+          statusClassName="border-[#B9C9B1] bg-[#F5F9F2] text-[#55644F]"
           statusLabel={dogStatusLabel}
         />
 
@@ -232,7 +338,10 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           linkLabel="Open Health Center"
           to="/health"
           iconPath="/assets/icons/MAIN - HEALTH CENTER.png"
-          cardClassName="border-[#E7DCCB] bg-[#F8F1E6]"
+          cardClassName="border-[#DEC9A9] bg-[#F2E3C9]"
+          iconBackgroundClassName="bg-[#FFF9EF]"
+          iconAccentClassName="text-[#7A7147]"
+          statusClassName="border-[#D9C6A7] bg-[#FFF8EB] text-[#6F653E]"
           statusLabel={healthStatusLabel}
         />
 
@@ -242,8 +351,11 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           description={remindersDescription}
           linkLabel="View Reminders"
           to="/reminders"
-          iconPath="/assets/icons/WELLNESS.png"
-          cardClassName="border-[#E5C7B8] bg-[#F7E8DF]"
+          iconType="calendar"
+          cardClassName="border-[#DBA98F] bg-[#F1D3C3]"
+          iconBackgroundClassName="bg-[#FFF8F4]"
+          iconAccentClassName="text-[#BF6A43]"
+          statusClassName="border-[#DFAE95] bg-[#FFF6F1] text-[#9D5435]"
           statusLabel={remindersStatusLabel}
         />
 
@@ -254,7 +366,10 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           linkLabel="Open Journal"
           to="/journal"
           iconPath="/assets/icons/MEMORIES.png"
-          cardClassName="border-[#DDD4CA] bg-[#F1ECE6]"
+          cardClassName="border-[#C8B5AE] bg-[#E5D8D2]"
+          iconBackgroundClassName="bg-[#FCF8F6]"
+          iconAccentClassName="text-[#77645D]"
+          statusClassName="border-[#CBB9B1] bg-[#FAF5F2] text-[#6D5D57]"
           statusLabel={memoriesStatusLabel}
         />
       </div>
