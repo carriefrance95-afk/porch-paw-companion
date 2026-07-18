@@ -10,94 +10,19 @@ interface SummaryCardsProps {
   latestMemory?: string;
 }
 
-type CardIconType = 'image' | 'calendar';
-
 interface SummaryCardProps {
   eyebrow: string;
   title: string;
   description: string;
   linkLabel: string;
   to: string;
-  iconType?: CardIconType;
-  iconPath?: string;
+  iconPath: string;
   cardClassName: string;
   iconBackgroundClassName: string;
-  iconAccentClassName: string;
   statusClassName: string;
+  accentClassName: string;
   statusLabel?: string;
 }
-
-const CalendarIcon: React.FC = () => {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 64 64"
-      className="h-11 w-11"
-      fill="none"
-    >
-      <rect
-        x="13"
-        y="17"
-        width="38"
-        height="34"
-        rx="7"
-        stroke="currentColor"
-        strokeWidth="2.4"
-      />
-
-      <path
-        d="M13 27H51"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M23 12V22"
-        stroke="currentColor"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M41 12V22"
-        stroke="currentColor"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-      />
-
-      <circle cx="23" cy="35" r="2.2" fill="currentColor" />
-      <circle cx="32" cy="35" r="2.2" fill="currentColor" />
-      <circle cx="41" cy="35" r="2.2" fill="currentColor" />
-      <circle cx="23" cy="43" r="2.2" fill="currentColor" />
-      <circle cx="32" cy="43" r="2.2" fill="currentColor" />
-
-      <path
-        d="M41 41L44 44L49 38"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-
-      <path
-        d="M20 15C23 10 28 8 32 8"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        opacity="0.45"
-      />
-
-      <path
-        d="M44 14C41 10 37 8 33 8"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        opacity="0.45"
-      />
-    </svg>
-  );
-};
 
 const SummaryCard: React.FC<SummaryCardProps> = ({
   eyebrow,
@@ -105,12 +30,11 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   description,
   linkLabel,
   to,
-  iconType = 'image',
   iconPath,
   cardClassName,
   iconBackgroundClassName,
-  iconAccentClassName,
   statusClassName,
+  accentClassName,
   statusLabel,
 }) => {
   return (
@@ -119,54 +43,54 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       className={[
         'group relative flex min-h-[300px] flex-col overflow-hidden',
         'rounded-[28px] border p-6 no-underline',
-        'shadow-[0_14px_32px_rgba(45,42,39,0.08)]',
+        'shadow-[0_14px_32px_rgba(46,43,40,0.08)]',
         'transition duration-300',
         'hover:-translate-y-1',
-        'hover:shadow-[0_22px_46px_rgba(45,42,39,0.13)]',
+        'hover:shadow-[0_22px_46px_rgba(46,43,40,0.13)]',
         'focus-visible:outline-none focus-visible:ring-2',
-        'focus-visible:ring-[#BF6A43]/45 focus-visible:ring-offset-2',
-        'focus-visible:ring-offset-[#FAF7F2]',
+        'focus-visible:ring-[#B65E3C]/40 focus-visible:ring-offset-2',
+        'focus-visible:ring-offset-[#F5F1EA]',
         cardClassName,
       ].join(' ')}
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-white/50 blur-3xl"
+        className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-white/35 blur-3xl"
       />
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-20 -left-14 h-44 w-44 rounded-full bg-white/25 blur-3xl"
+        className="pointer-events-none absolute -bottom-20 -left-14 h-44 w-44 rounded-full bg-white/20 blur-3xl"
       />
 
       <div className="relative z-10 flex items-start justify-between gap-4">
         <div
           className={[
-            'flex h-[78px] w-[78px] shrink-0 items-center justify-center',
-            'rounded-full border-2 border-white/90',
-            'shadow-[0_8px_20px_rgba(45,42,39,0.13)]',
+            'flex h-[88px] w-[88px] shrink-0 items-center justify-center',
+            'overflow-hidden rounded-full border-2 border-white/90',
+            'shadow-[0_9px_22px_rgba(46,43,40,0.13)]',
             iconBackgroundClassName,
-            iconAccentClassName,
           ].join(' ')}
         >
-          {iconType === 'calendar' ? (
-            <CalendarIcon />
-          ) : (
-            <img
-              src={iconPath}
-              alt=""
-              aria-hidden="true"
-              className="h-[68px] w-[68px] rounded-full object-cover mix-blend-multiply transition-transform duration-300 group-hover:scale-[1.04]"
-            />
-          )}
+          <img
+            src={iconPath}
+            alt=""
+            aria-hidden="true"
+            className={[
+              'h-[82px] w-[82px] rounded-full object-cover',
+              'mix-blend-multiply',
+              'transition-transform duration-300',
+              'group-hover:scale-[1.04]',
+            ].join(' ')}
+          />
         </div>
 
         {statusLabel && (
           <span
             className={[
-              'rounded-full border px-3 py-1.5',
-              'text-[11px] font-bold',
-              'shadow-[0_4px_12px_rgba(45,42,39,0.06)]',
+              'max-w-[130px] rounded-full border px-3 py-1.5',
+              'text-center text-[11px] font-bold leading-tight',
+              'shadow-[0_4px_12px_rgba(46,43,40,0.06)]',
               statusClassName,
             ].join(' ')}
           >
@@ -176,33 +100,39 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       </div>
 
       <div className="relative z-10 mt-5">
-        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#6F673F]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#7A7B5A]">
           {eyebrow}
         </p>
 
-        <h3 className="mt-2 max-w-[290px] font-serif text-[28px] font-semibold leading-[1.06] text-[#2D2A27]">
+        <h3 className="mt-2 max-w-[290px] font-serif text-[28px] font-semibold leading-[1.06] text-[#2E2B28]">
           {title}
         </h3>
 
-        <p className="mt-3 max-w-[300px] text-[15px] leading-6 text-[#554F49]">
+        <p className="mt-3 max-w-[300px] text-[15px] leading-6 text-[#665F59]">
           {description}
         </p>
       </div>
 
       <div className="relative z-10 mt-auto pt-6">
-        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#2D2A27]">
+        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#2E2B28]">
           {linkLabel}
 
           <span
             aria-hidden="true"
-            className="text-[#BF6A43] transition-transform duration-300 group-hover:translate-x-1"
+            className="text-[#B65E3C] transition-transform duration-300 group-hover:translate-x-1"
           >
             →
           </span>
         </span>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 h-1.5 bg-[#BF6A43]/70" />
+      <div
+        aria-hidden="true"
+        className={[
+          'absolute inset-x-0 bottom-0 h-1.5',
+          accentClassName,
+        ].join(' ')}
+      />
     </Link>
   );
 };
@@ -230,9 +160,9 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
 
   const dogDescription =
     dogCount === 0
-      ? 'Create a profile for your dog and keep their routines, important details, and care information together.'
+      ? 'Create a profile and keep their routines, important details, and care information together.'
       : dogCount === 1
-        ? 'Open their profile to view routines, important details, and everything that makes them unique.'
+        ? 'Open their profile to view routines, care details, and everything that makes them unique.'
         : `${cleanDogNames.join(', ')} are all gathered together in one place.`;
 
   const dogStatusLabel =
@@ -250,7 +180,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
   const healthDescription =
     activeMedicationCount === 0
       ? 'Keep medications, health records, weight, allergies, and vet information organized.'
-      : 'Review active medications and keep health records, appointments, and important details close at hand.';
+      : 'Review active medications and keep health records and important care details close at hand.';
 
   const healthStatusLabel =
     activeMedicationCount === 0
@@ -299,18 +229,18 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
       className="mt-9"
     >
       <div className="mb-6">
-        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#7A7147]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#7A7B5A]">
           Around the House
         </p>
 
         <h2
           id="around-the-house-heading"
-          className="mt-2 font-serif text-3xl font-semibold leading-tight text-[#2D2A27]"
+          className="mt-2 font-serif text-3xl font-semibold leading-tight text-[#2E2B28]"
         >
           Everything has its place here
         </h2>
 
-        <p className="mt-2 max-w-2xl text-[15px] leading-6 text-[#655F59]">
+        <p className="mt-2 max-w-2xl text-[15px] leading-6 text-[#665F59]">
           Open the spaces that hold your dogs&apos; profiles, health,
           reminders, and memories.
         </p>
@@ -324,10 +254,10 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           linkLabel="Open My Dogs"
           to="/profiles"
           iconPath="/assets/icons/meetyourdog.png"
-          cardClassName="border-[#BFCFB6] bg-[#DDE8D7]"
-          iconBackgroundClassName="bg-[#F6FAF3]"
-          iconAccentClassName="text-[#65765C]"
-          statusClassName="border-[#B9C9B1] bg-[#F5F9F2] text-[#55644F]"
+          cardClassName="border-[#C4CEBB] bg-[#DFE8D9]"
+          iconBackgroundClassName="bg-[#F5F1EA]"
+          statusClassName="border-[#BFCAB5] bg-[#F5F1EA]/90 text-[#667052]"
+          accentClassName="bg-[#7A7B5A]/75"
           statusLabel={dogStatusLabel}
         />
 
@@ -338,10 +268,10 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           linkLabel="Open Health Center"
           to="/health"
           iconPath="/assets/icons/MAIN - HEALTH CENTER.png"
-          cardClassName="border-[#DEC9A9] bg-[#F2E3C9]"
-          iconBackgroundClassName="bg-[#FFF9EF]"
-          iconAccentClassName="text-[#7A7147]"
-          statusClassName="border-[#D9C6A7] bg-[#FFF8EB] text-[#6F653E]"
+          cardClassName="border-[#D8C8B3] bg-[#EEE2D2]"
+          iconBackgroundClassName="bg-[#F5F1EA]"
+          statusClassName="border-[#D3C3AD] bg-[#F5F1EA]/90 text-[#8A6A52]"
+          accentClassName="bg-[#8A6A52]/70"
           statusLabel={healthStatusLabel}
         />
 
@@ -351,11 +281,11 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           description={remindersDescription}
           linkLabel="View Reminders"
           to="/reminders"
-          iconType="calendar"
-          cardClassName="border-[#DBA98F] bg-[#F1D3C3]"
-          iconBackgroundClassName="bg-[#FFF8F4]"
-          iconAccentClassName="text-[#BF6A43]"
-          statusClassName="border-[#DFAE95] bg-[#FFF6F1] text-[#9D5435]"
+          iconPath="/assets/icons/reminders.png"
+          cardClassName="border-[#D9B2A2] bg-[#F0D6CA]"
+          iconBackgroundClassName="bg-[#F5F1EA]"
+          statusClassName="border-[#D5AD9C] bg-[#F5F1EA]/90 text-[#B65E3C]"
+          accentClassName="bg-[#B65E3C]/80"
           statusLabel={remindersStatusLabel}
         />
 
@@ -366,10 +296,10 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({
           linkLabel="Open Journal"
           to="/journal"
           iconPath="/assets/icons/MEMORIES.png"
-          cardClassName="border-[#C8B5AE] bg-[#E5D8D2]"
-          iconBackgroundClassName="bg-[#FCF8F6]"
-          iconAccentClassName="text-[#77645D]"
-          statusClassName="border-[#CBB9B1] bg-[#FAF5F2] text-[#6D5D57]"
+          cardClassName="border-[#CFC0B6] bg-[#E6DCD5]"
+          iconBackgroundClassName="bg-[#F5F1EA]"
+          statusClassName="border-[#CBBBAF] bg-[#F5F1EA]/90 text-[#8A6A52]"
+          accentClassName="bg-[#C9785C]/75"
           statusLabel={memoriesStatusLabel}
         />
       </div>
