@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import WelcomeHero from './components/WelcomeHero';
+import SummaryCards from './components/SummaryCards';
 
 const YourPorch: React.FC = () => {
   const navigate = useNavigate();
@@ -17,6 +18,13 @@ const YourPorch: React.FC = () => {
           dogName="Stitch"
           reminderCount={0}
           onViewReminders={handleViewReminders}
+        />
+
+        <SummaryCards
+          dogNames={['Stitch']}
+          activeMedicationCount={0}
+          reminderCount={0}
+          memoryCount={0}
         />
       </div>
     </main>
